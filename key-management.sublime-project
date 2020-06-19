@@ -1,0 +1,15 @@
+{
+	"folders":
+	[
+		{
+			"path": "."
+		}
+	],
+	"build_systems":
+	[
+		{
+			"name": "Django",
+			"shell_cmd": "source .django-env/bin/activate && python manage.py runserver"
+		}
+	]
+}

@@ -128,6 +128,8 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-
 # venv
 .django-env
+
+# sublime
+*.sublime-workspace

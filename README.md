@@ -1,14 +1,13 @@
 # key-management
 A key management system written in django
 
-# Dev env
+## dev-env
 `brew update`
 `brew upgrade python3`
 
 `python3 -m pip install --upgrade pip`
 
 `python3 -m venv .django-env`
-
 `source .django-env/bin/activate`
 
 `pip install -r requirements.txt`

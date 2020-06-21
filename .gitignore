@@ -133,3 +133,6 @@ dmypy.json
 
 # sublime
 *.sublime-workspace
+
+# macOS
+.DS_Store

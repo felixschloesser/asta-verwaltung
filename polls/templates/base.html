@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <meta name="description" content="A key management system for the AStA TUHH.">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+        <a class="navbar-item" href="http://127.0.0.1:8000/polls/">
+        <img src="https://cloud.tuhh.de/index.php/apps/files_sharing/publicpreview/btjsXLiei7ZmXwM?x=2466&y=1934&a=true&file=AStA%2520Cloud%2520wei%25C3%259F%253Agrau.png&scalingup=0" width="48" height="28">
+        </a>
+
+        <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        </a>
+    </div>
+
+    <div id="navbar" class="navbar-menu">
+        <div class="navbar-start">
+            <a class="navbar-item">Schlüssel</a>
+            <a class="navbar-item">Personen</a>
+            </div>
+
+            <div class="navbar-end">
+                <div class="navbar-item">
+                    <div class="buttons">
+                        <a class="button is-light" href="http://127.0.0.1:8000/admin/">Log in</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content -->
+    {% block content %} {% endblock %}
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="content has-text-centered">
+            <p>
+            <strong>Schlüsselverwaltungssystem</strong> by <a href="https://twitter.com/TinTinUnbekannt">TinTin</a>. The source code is licensed
+            <a href="http://opensource.org/licenses/mit-license.php">MIT</a>. The website content is licensed <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY NC SA 4.0</a>.
+            </p>
+        </div>
+    </footer>
+</body>
+</html>
+
+
+

@@ -1,9 +1,26 @@
-<h1>Result for {{ question.question_text }}</h1>
+{% extends "base.html" %}
 
-<ul>
+{% block content %}
+<section class="section">
+<div class="container is-desktop">
+
+<h1 class="title">Results for {{ question.question_text }}</h1>
+
+
+
+<nav class="level">
 {% for choice in question.choice_set.all %}
-    <li>{{ choice.choice_text }}: {{ choice.votes }} vote{{ choice.votes|pluralize }}</li>
+  <div class="level-item has-text-centered">
+    <div>
+      <p class="heading">{{ choice.choice_text }}</p>
+      <p class="title">{{ choice.votes }} vote{{ choice.votes|pluralize }}</p>
+    </div>
+  </div>
 {% endfor %}
-</ul>
+</nav>
 
-<a href="{% url 'polls:detail' question.id %}">Vote again?</a>
+<a class="button" href="{% url 'polls:detail' question.id %}">Vote again?</a>
+
+</div>
+</section>
+{% endblock %}

@@ -135,4 +135,5 @@ dmypy.json
 *.sublime-workspace
 
 # macOS
+.DS_STORE
 .DS_Store

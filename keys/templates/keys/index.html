@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="section">
+    <div class="columns is-mobile is-centered">
+        <div class="column is-narrow-tablet">
+            <h1 class="title">Polls</h1>
+            <h2 class="subtitle">Please choose one of the polls</h2>
+            <div class="content is-medium">
+            {% if latest_question_list %}
+            <ul>
+            {% for question in latest_question_list %}
+                <li><a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a></li>
+            {% endfor %}
+            </ul>
+
+            {% else %}
+                <p>No polls are available.</p>
+
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+{% endblock %}

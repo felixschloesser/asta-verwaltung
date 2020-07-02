@@ -13,8 +13,7 @@ A key management system written in django
 `pip install -r requirements.txt`
 
 ## Database Setup
-for macOS
-
+### macOS
 `brew update`
 `brew install mariadb`
 `brew services start mariadb`
@@ -27,4 +26,9 @@ Access mariadb as root
 `GRANT ALL PRIVILEGES ON keyManagement.* TO 'django'@'localhost'`
 `FLUSH PRIVILEGES;`
 
+### ubuntu
+`sudo apt update`
+`sudo apt install mariadb-server`
+`sudo mysql_secure_installation`
 
+`sudo apt install libmariadbclient-dev`

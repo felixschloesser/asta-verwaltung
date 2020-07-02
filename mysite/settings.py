@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'keys.apps.KeysConfig',
     'polls.apps.PollsConfig',
+    'phonenumber_field',
     'django_extensions',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -109,9 +110,12 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'de-DE'
 
-TIME_ZONE = 'UTC'
+PHONENUMBER_DEFAULT_REGION = 'DE'
+PHONENUMBER_DEFAULT_FORMAT = 'NATIONAL'
+
+TIME_ZONE = 'Europe/Berlin'
 
 USE_I18N = True
 

@@ -70,7 +70,10 @@ class Room(models.Model):
         return "{}{}".format(self.building, self.number)
 
     def full_name(self):
-        return "{} {}".format(self.group, self.name)
+        if self.name:
+            return "{} {}".format(self.group, self.name)
+        else:
+            return self.group
 
     identifier.short_description = "Raumnummer"
     full_name.short_description = "Name"
@@ -107,8 +110,6 @@ class Door(models.Model):
                 return "Verbindungstür zum {} ({})".format(self.room.name, self.room.number)
             else:
                 return "Verbindungstür zu {}{}".format(self.room.name, self.room.number)
-
-        get_discription.short_description = "Bescheibung"
 
 
 
@@ -202,8 +203,8 @@ class Person(models.Model): # Add a chron job ro delete after a 2 years of not r
     university_email = models.EmailField('Uni-Mail', unique=True)
     private_email = models.EmailField('Private Mail', unique=True)
     phone_number = PhoneNumberField('Telefon', unique=True)
-    group = models.ForeignKey('group', verbose_name='Gruppe', on_delete=models.PROTECT, blank=True, null=True)
-    deposit_made = models.BooleanField('Kaution hinterlegt', default=False)
+    group = models.ForeignKey('Group', verbose_name='Gruppe', on_delete=models.PROTECT, blank=True, null=True)
+    deposit_paid = models.BooleanField('Kaution hinterlegt', default=False)
     created_at = models.DateTimeField('Erstellungszeitpunkt', auto_now_add=True)
     updated_at = models.DateTimeField('Aktualisierungszeitpunkt', auto_now=True)
 
@@ -247,7 +248,6 @@ class Group(models.Model):
         return "{}".format(self.name)
 
 
-
 class Issue(models.Model):
     person = models.ForeignKey('Person', verbose_name='Person', on_delete=models.CASCADE)
     key = models.ForeignKey('Key', verbose_name='Schlüssel', on_delete=models.CASCADE)
@@ -265,7 +265,6 @@ class Issue(models.Model):
         constraints = [
             models.UniqueConstraint(fields=['person', 'key'], name='person+key_is_unique')
         ]
-
 
 
 

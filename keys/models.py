@@ -67,7 +67,10 @@ class Room(models.Model):
         return "{}{}".format(self.building, self.number)
 
     def full_name(self):
-        return "{} {}".format(self.group, self.name)
+        if self.name:
+            return "{} {}".format(self.group, self.name)
+        else:
+            return self.group
 
     identifier.short_description = "Raumnummer"
     full_name.short_description = "Name"
@@ -93,7 +96,17 @@ class Door(models.Model):
         verbose_name = "Tür"
         verbose_name_plural = "Türen"
 
-
+    def __str__(self):
+        if self.kind == 'access':
+            if self.room.name:
+                return "Zugangstür zum {} ({})".format(self.room.name, self.room.number)
+            else:
+                return "Zugangstür zu {}{}".format(self.room.name, self.room.number)
+        else:
+            if self.room.name:
+                return "Verbindungstür zum {} ({})".format(self.room.name, self.room.number)
+            else:
+                return "Verbindungstür zu {}{}".format(self.room.name, self.room.number)
 
 class Key(models.Model):
     number = models.CharField("Schlüsselnummer", max_length=32)
@@ -184,6 +197,7 @@ class Person(models.Model): # Add a chron job ro delete after a 2 years of not r
     private_email = models.EmailField('Private Mail', unique=True)
     phone_number = PhoneNumberField('Telefon', unique=True)
     group = models.ForeignKey('Group', verbose_name='Gruppe', on_delete=models.PROTECT, blank=True, null=True)
+    deposit_paid = models.BooleanField('Kaution hinterlegt', default=False)
     created_at = models.DateTimeField('Erstellungszeitpunkt', auto_now_add=True)
     updated_at = models.DateTimeField('Aktualisierungszeitpunkt', auto_now=True)
 
@@ -191,7 +205,6 @@ class Person(models.Model): # Add a chron job ro delete after a 2 years of not r
         verbose_name = "Person"
         verbose_name_plural = "Personen"
         ordering = ['family_name', 'first_name']
-
 
         constraints = [
             models.UniqueConstraint(fields=['first_name', 'family_name'], name='first_name+family_name_is_unique')
@@ -215,3 +228,6 @@ class Group(models.Model):
 
     def __str__(self):
         return "{}".format(self.name)
+
+
+

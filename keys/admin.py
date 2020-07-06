@@ -12,8 +12,11 @@ class DoorInline(admin.TabularInline):
 
 @admin.register(Room)
 class RoomAdmin(admin.ModelAdmin):
+    def get_locking_system(self, obj):
+        return obj.room.locking_system_door
+
     list_display = ('full_name', 'identifier')
-    list_filter = ('building', 'group', 'purpose')
+    list_filter = ('building', 'group', 'purpose' )
 
     inlines = [DoorInline]
 
@@ -96,9 +99,11 @@ class StorageLocationAdmin(admin.ModelAdmin):
 
 @admin.register(Person)
 class PersonAdmin(admin.ModelAdmin):
-    list_display = ('__str__', 'university_email', 'private_email', 'phone_number')
-    list_filter = ('group', 'updated_at')
+    list_display = ('__str__', 'university_email', 'private_email', 'phone_number', 'deposit_paid')
+    list_filter = ('group', 'deposit_paid', 'updated_at')
     search_fields = ['first_name', 'family_name']
+
+    list_editable = ['deposit_paid']
 
 
 @admin.register(Group)

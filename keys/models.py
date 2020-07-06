@@ -1,6 +1,9 @@
 from django.db import models
+from django.utils import timezone
+
 from phonenumber_field.modelfields import PhoneNumberField
-from datetime import datetime
+
+import datetime
 
 # Create your models here.
 class Building(models.Model):
@@ -81,7 +84,7 @@ class Door(models.Model):
                     ('connecting', 'Verbindungstür')]
     kind = models.CharField('Typ', max_length=32, choices=kind_choices,
                              default=('access', 'Zugangstüre'))
-    locking_system_door = models.ForeignKey('lockingSystem',
+    locking_system_door = models.ForeignKey('LockingSystem',
                                              related_name='locking_system_door',
                                              verbose_name='Schließsystem',
                                              on_delete = models.CASCADE)
@@ -93,12 +96,26 @@ class Door(models.Model):
         verbose_name = "Tür"
         verbose_name_plural = "Türen"
 
+    def __str__(self):
+        if self.kind == 'access':
+            if self.room.name:
+                return "Zugangstür zum {} ({})".format(self.room.name, self.room.number)
+            else:
+                return "Zugangstür zu {}{}".format(self.room.name, self.room.number)
+        else:
+            if self.room.name:
+                return "Verbindungstür zum {} ({})".format(self.room.name, self.room.number)
+            else:
+                return "Verbindungstür zu {}{}".format(self.room.name, self.room.number)
+
+        get_discription.short_description = "Bescheibung"
+
 
 
 class Key(models.Model):
     number = models.CharField("Schlüsselnummer", max_length=32)
-    doors = models.ManyToManyField("Door")
-    locking_system_key = models.ForeignKey('lockingSystem',
+    doors = models.ManyToManyField("Door", verbose_name='Türen')
+    locking_system_key = models.ForeignKey('LockingSystem',
                                             related_name='locking_system_key',
                                             verbose_name='Schließsystem',
                                             on_delete = models.CASCADE)
@@ -113,11 +130,16 @@ class Key(models.Model):
         verbose_name = "Schlüssel"
         verbose_name_plural = "Schlüssel"
 
+        ordering = ['locking_system_key', 'number']
+
+        indexes = [
+            models.Index(fields=['number'], name='key_number_idx')
+        ]
+
         constraints = [
             models.UniqueConstraint(fields=['number', 'locking_system_key'],
                                     name='key_number+locking_system_is_unique')
     ]
-
 
     # if not rented -> require location, key-safe?
     def __str__(self):
@@ -125,11 +147,9 @@ class Key(models.Model):
 
 
 
-
-
 class StorageLocation(models.Model):
     name = models.CharField("Name", max_length=32)
-    location = models.ForeignKey("Room", verbose_name='Ort', on_delete=models.CASCADE)
+    location = models.ForeignKey("room", verbose_name='Ort', on_delete=models.CASCADE)
     created_at = models.DateTimeField('Erstellungszeitpunkt', auto_now_add=True)
     updated_at = models.DateTimeField('Aktualisierungszeitpunkt', auto_now=True)
 
@@ -145,7 +165,6 @@ class StorageLocation(models.Model):
         return Key.objects.filter(storage_location__name=self.name).count()
 
     get_number_of_keys.short_description = "Anzahl Schlüssel"
-
 
 
 
@@ -183,15 +202,21 @@ class Person(models.Model): # Add a chron job ro delete after a 2 years of not r
     university_email = models.EmailField('Uni-Mail', unique=True)
     private_email = models.EmailField('Private Mail', unique=True)
     phone_number = PhoneNumberField('Telefon', unique=True)
-    group = models.ForeignKey('Group', verbose_name='Gruppe', on_delete=models.PROTECT, blank=True, null=True)
+    group = models.ForeignKey('group', verbose_name='Gruppe', on_delete=models.PROTECT, blank=True, null=True)
+    deposit_made = models.BooleanField('Kaution hinterlegt', default=False)
     created_at = models.DateTimeField('Erstellungszeitpunkt', auto_now_add=True)
     updated_at = models.DateTimeField('Aktualisierungszeitpunkt', auto_now=True)
+
 
     class Meta:
         verbose_name = "Person"
         verbose_name_plural = "Personen"
         ordering = ['family_name', 'first_name']
 
+        indexes = [
+            models.Index(fields=['family_name', 'first_name']),
+            models.Index(fields=['first_name'], name='first_name_idx'),
+        ]
 
         constraints = [
             models.UniqueConstraint(fields=['first_name', 'family_name'], name='first_name+family_name_is_unique')
@@ -199,6 +224,11 @@ class Person(models.Model): # Add a chron job ro delete after a 2 years of not r
 
     def __str__(self):
         return "{} {}".format(self.first_name, self.family_name)
+
+    def deposit_display(self):
+        return "%s €" % self.deposit
+
+    deposit_display.short_description = "Kaution hinterlegt"
 
 
 
@@ -215,3 +245,28 @@ class Group(models.Model):
 
     def __str__(self):
         return "{}".format(self.name)
+
+
+
+class Issue(models.Model):
+    person = models.ForeignKey('Person', verbose_name='Person', on_delete=models.CASCADE)
+    key = models.ForeignKey('Key', verbose_name='Schlüssel', on_delete=models.CASCADE)
+    duration = models.DurationField('Erstellungszeitpunkt', default=datetime.timedelta(days=365))
+    out_date = models.DateField('Ausgabedatum', default=timezone.now())
+    in_date = models.DateField('Rückgabedatum', blank=True, null=True)
+    created_at = models.DateTimeField('Erstellungszeitpunkt', auto_now_add=True)
+    updated_at = models.DateTimeField('Aktualisierungszeitpunkt', auto_now=True)
+
+    class Meta:
+        verbose_name='Aus­hän­di­gung'
+        verbose_name_plural='Aus­hän­di­gungen'
+        ordering = ['-out_date']
+
+        constraints = [
+            models.UniqueConstraint(fields=['person', 'key'], name='person+key_is_unique')
+        ]
+
+
+
+
+

@@ -30,24 +30,11 @@ class DoorAdmin(admin.ModelAdmin):
     def get_building(self, obj):
         return obj.room.building.identifier
 
-    def get_discription(self, obj):
-        if obj.kind == 'access':
-            if obj.room.name:
-                return "Zugangstür zum {} ({})".format(obj.room.name, obj.room.number)
-            else:
-                return "Zugangstür zu {}{}".format(obj.room.name, obj.room.number)
-        else:
-            if obj.room.name:
-                return "Verbindungstür zum {} ({})".format(obj.room.name, obj.room.number)
-            else:
-                return "Verbindungstür zu {}{}".format(obj.room.name, obj.room.number)
-
     get_building.short_description = "Gebäude"
-    get_discription.short_description = "Bescheibung"
 
     # List
-    list_display = ('get_discription', 'get_building', 'comment', 'active')
-    list_display_links = ['get_discription']
+    list_display = ('__str__', 'get_building', 'comment', 'active')
+    list_display_links = ['__str__']
 
     list_editable = ['active']
     list_filter = ('room__building', 'kind', 'locking_system_door__method')
@@ -91,17 +78,26 @@ class StorageLocationAdmin(admin.ModelAdmin):
 
 
 
-
-
-
 @admin.register(Person)
 class PersonAdmin(admin.ModelAdmin):
-    list_display = ('__str__', 'university_email', 'private_email', 'phone_number')
-    list_filter = ('group', 'updated_at')
+    list_display = ('__str__', 'university_email', 'private_email', 'phone_number', 'deposit_made')
+    list_filter = ('group', 'deposit_made', 'updated_at')
     search_fields = ['first_name', 'family_name']
+    list_editable = ['deposit_made']
+
 
 
 @admin.register(Group)
 class GroupAdmin(admin.ModelAdmin):
     list_display = ['name']
+
+
+class IssueAdmin(admin.ModelAdmin):
+    list_display = ['person', 'key', 'duration', 'out_date', 'in_date', 'get_deposit']
+
+    search_fields = ['first_name', 'family_name', 'key__number']
+
+
+
+
 

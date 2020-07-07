@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,7 +23,7 @@
     <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
         <a class="navbar-item" href="http://127.0.0.1:8000/keys/">
-        <img src="https://cloud.tuhh.de/index.php/apps/files_sharing/publicpreview/btjsXLiei7ZmXwM?x=2466&y=1934&a=true&file=AStA%2520Cloud%2520wei%25C3%259F%253Agrau.png&scalingup=0" width="48" height="28">
+        <img src="{% static "keys/images/AStA_cloud_grau.png" %}" alt="AStA-Cloud Logo" width="48" height="28">
         </a>
     <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
         <span aria-hidden="true"></span>

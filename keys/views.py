@@ -15,6 +15,12 @@ class IndexView(generic.ListView):
         """
         return Key.objects.all()
 
+
+
+class KeyList(generic.ListView):
+    model = Key
+    ctemplate_name = 'keys/index.html'
+
 # Schlüssel ausleiehn
     # If logged in: termin vereinbaren
     #

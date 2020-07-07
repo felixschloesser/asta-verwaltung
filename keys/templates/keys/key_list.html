@@ -1,0 +1,10 @@
+{% extends "keys/base.html" %}
+
+{% block content %}
+    <h2>Keys</h2>
+    <ul>
+        {% for key in object_list %}
+            <li>{{ key.number }} by {{ key.locking_system.name}}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

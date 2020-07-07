@@ -79,6 +79,7 @@ class Room(models.Model):
     full_name.short_description = "Name"
 
 
+
 class Door(models.Model):
     active = models.BooleanField("Aktiv", default=True)
     room = models.ForeignKey("Room", verbose_name="führt in Raum",
@@ -87,10 +88,10 @@ class Door(models.Model):
                     ('connecting', 'Verbindungstür')]
     kind = models.CharField('Typ', max_length=32, choices=kind_choices,
                              default=('access', 'Zugangstüre'))
-    locking_system_door = models.ForeignKey('LockingSystem',
-                                             related_name='locking_system_door',
-                                             verbose_name='Schließsystem',
-                                             on_delete = models.CASCADE)
+    locking_system = models.ForeignKey('LockingSystem',
+                                        related_name='locking_system_door',
+                                        verbose_name='Schließsystem',
+                                        on_delete = models.CASCADE)
     comment = models.CharField("Kommentar",max_length=64, blank=True)
     created_at = models.DateTimeField('Erstellungszeitpunkt', auto_now_add=True)
     updated_at = models.DateTimeField('Aktualisierungszeitpunkt', auto_now=True)
@@ -116,10 +117,10 @@ class Door(models.Model):
 class Key(models.Model):
     number = models.CharField("Schlüsselnummer", max_length=32)
     doors = models.ManyToManyField("Door", verbose_name='Türen')
-    locking_system_key = models.ForeignKey('LockingSystem',
-                                            related_name='locking_system_key',
-                                            verbose_name='Schließsystem',
-                                            on_delete = models.CASCADE)
+    locking_system = models.ForeignKey('LockingSystem',
+                                        related_name='locking_system_key',
+                                        verbose_name='Schließsystem',
+                                        on_delete = models.CASCADE)
     storage_location = models.ForeignKey('StorageLocation',
                                           verbose_name='Aufbewahrungsort',
                                           on_delete=models.PROTECT)
@@ -131,20 +132,30 @@ class Key(models.Model):
         verbose_name = "Schlüssel"
         verbose_name_plural = "Schlüssel"
 
-        ordering = ['locking_system_key', 'number']
+        ordering = ['locking_system', 'number']
 
         indexes = [
             models.Index(fields=['number'], name='key_number_idx')
         ]
 
         constraints = [
-            models.UniqueConstraint(fields=['number', 'locking_system_key'],
+            models.UniqueConstraint(fields=['number', 'locking_system'],
                                     name='key_number+locking_system_is_unique')
     ]
 
     # if not rented -> require location, key-safe?
     def __str__(self):
         return self.number
+
+    def get_locking_system_method(self):
+        return self.locking_system.method
+
+    def get_number_of_doors(self):
+        return self.doors.all().count()
+
+    get_number_of_doors.short_description = "Anzahl Türen"
+
+    get_locking_system_method.short_description = 'Typ'
 
 
 

@@ -13,7 +13,7 @@ class DoorInline(admin.TabularInline):
 @admin.register(Room)
 class RoomAdmin(admin.ModelAdmin):
     def get_locking_system(self, obj):
-        return obj.room.locking_system_door
+        return obj.room.locking_system
 
     list_display = ('full_name', 'identifier')
     list_filter = ('building', 'group', 'purpose' )
@@ -40,22 +40,17 @@ class DoorAdmin(admin.ModelAdmin):
     list_display_links = ['__str__']
 
     list_editable = ['active']
-    list_filter = ('room__building', 'kind', 'locking_system_door__method')
+    list_filter = ('room__building', 'kind', 'locking_system__method')
     list_select_related = ['room__building'] #smaller sql querry
 
 
 
 @admin.register(Key)
 class KeyAdmin(admin.ModelAdmin):
-    def get_kind(self, obj):
-        return obj.locking_system_key.kind
-
-    get_kind.short_description = 'Typ'
-
     # List
-    list_display = ('number', 'get_kind')
-    list_filter = ('storage_location', 'locking_system_key__method', 'created_at')
-    list_select_related = ['locking_system_key'] #smaller sql query
+    list_display = ('number', 'locking_system', 'get_number_of_doors')
+    list_filter = ('storage_location', 'locking_system__method', 'created_at')
+    list_select_related = ['locking_system'] #smaller sql query
 
 
 

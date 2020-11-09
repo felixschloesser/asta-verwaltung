@@ -3,41 +3,40 @@
 {% block content %}
     <section class="section">
     <div class="container is-max-desktop">
-        <h1 class='title'>Schlüssel</h1>
+        <h1 class='title'>Aktuelle Ausleihen</h1>
 
-        {% if key_list %}
+        {% if issue_list %}
         <table class="table">
             <thead>
-                 <th>Nummer</th>
-                 <th>Schließsystem</th>
-                 <th>Türen</th>
+                 <th>Schlüssel</th>
+                 <th>Person</th>
+                 <th>Ausgabedatum</th>
             </thead>
 
             <tbody>
-            {% for key in key_list %}
+            {% for issue in issue_list %}
                 <tr>
                     <td>
-                        <a href="{{ key.get_absolute_url }}">{{ key }}</a>
+                        <a href="{{ issue.get_absolute_url }}"> {{ issue.keys }}</a>
                     </td>
                     <td>
-                        {{ key.locking_system }}
+                        {{ issue.person }}
                     </td>
                     <td>
-                        {% for door in key.doors.all %}
-                            {{ door }}{% if not forloop.last %}, {% endif %}
-                        {% endfor %}
+                        {{ issue.out_date }}
                     </td>
                 </tr>
             {% endfor %}
             </tbody>
         </table>
         {% else %}
-            <p>Keine Schlüssel gefunden.</p>
+            <p>Keine Ausleihen gefunden.</p>
         {% endif %}
 
         {% if is_paginated %}
             {% include 'keys/pagination.html' %}
         {% endif %}
+
     </div>
 </section>
 

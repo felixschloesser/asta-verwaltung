@@ -1,0 +1,76 @@
+{% extends "keys/base.html" %}
+
+{% block title %}Neue Ausgabe | Schlüsselsystem{% endblock %}
+
+{% load widget_tweaks %}
+
+{% block content %}
+<section class="section">
+    <div class="container is-max-desktop">
+
+        <h1 class="title">Neue Ausgabe</h1>
+
+        <form method='post'>
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <article class="message is-danger">
+                    <div class="message-body">
+                        {{ form.non_field_errors }}
+                    </div>
+                </article>
+            {% endif %}
+            <div class="field">
+                <label class="label" for="{{ form.keys.id_for_label }}">{{ form.keys.label_tag }}</label>
+                    <div class="control">
+                        {% if not form.keys.errors %}
+                            {{ form.keys|add_class:"input" }}
+                        {% else %}
+                            {{ form.keys|add_class:"input is-danger"}}
+                        {% endif %}
+                    </div>
+                {% for error in form.keys.errors %}
+                    <p class="help is-danger">{{ error }}</p>
+                {% endfor %}
+            </div>
+
+            <div class="field">
+                <label class="label" for="{{ form.out_date.id_for_label }}">{{ form.out_date.label_tag }}</label>
+                    <div class="control">
+                        {% if not form.out_date.errors %}
+                            {{ form.out_date|add_class:"input" }}
+                        {% else %}
+                            {{ form.out_date|add_class:"input is-danger"}}
+                        {% endif %}
+                    </div>
+                {% for error in form.out_date.errors %}
+                    <p class="help is-danger">{{ error }}</p>
+                {% endfor %}
+            </div>
+
+            <div class="buttons is-right">
+                <p class="control">
+                    <input class="button is-primary" type="submit" value="Anlegen">
+                </p>
+            </div>
+        </form>
+
+
+    </div>
+</section>
+
+{% endblock %}
+
+{% block additional_js %}
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="/resources/demos/style.css">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script>
+    $(function () {
+        $("#person").autocomplete({
+            source: '{% url 'keys:issue-new' %}',
+            minLength: 2});
+    });
+</script>
+{% endblock %}

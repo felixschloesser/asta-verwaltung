@@ -2,23 +2,9 @@
 
 {% block content %}
 <section class="section">
-    <div class="columns is-mobile is-centered">
-        <div class="column is-narrow-tablet">
-            <h1 class="title">Keys</h1>
-            <h2 class="subtitle">The following keys are availible</h2>
-            <div class="content is-medium">
-            {% if latest_key_list %}
-            <ul>
-            {% for key in latest_key_list %}
-                <li>{{ key }} by {{ key.locking_system }} ({{ key.kind }})</li>
-            {% endfor %}
-            </ul>
-
-            {% else %}
-                <p>No keys are available.</p>
-
-            {% endif %}
-        </div>
+    <div class="container is-max-desktop">
+            <h1 class="title">Wilkommen!</h1>
+            <p class="content">Das hier ist das neue Schlüsselsystem des AStAs. Toll oder?</p>
     </div>
 </section>
 

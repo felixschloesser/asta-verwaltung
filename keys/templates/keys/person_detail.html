@@ -1,0 +1,23 @@
+{% extends "keys/base.html" %}
+
+{% block title %}{{ person.get_full_name }} | Person | Schlüsselsystem{% endblock %}
+
+
+{% block content %}
+<section class="section">
+    <div class="container is-max-desktop">
+        <h1 class='title'>{{ person.get_full_name }}</h1>
+        <div class="content">
+                <p class='text'><b>Gruppe: </b>{{ person.group }}</p>
+                <p class='text'><b>TU Mail: </b> {{ person.university_email }}</p>
+                <p class='text'><b>Private Mail: </b>{{ person.private_email }}</p>
+                <p class='text'><b>Telefon: </b>{{ person.phone_number }}</p>
+                <p class='text'><b>Kation: </b>{% if person.deposit_paid %} bezahlt. {% else %} nicht bezahlt.{% endif %}</p>
+        </div>
+        <div class="buttons is-left">
+            <a class="button is-link" href="{% url 'keys:person-list' %}">Zurück zur Liste</a>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

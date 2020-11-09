@@ -20,8 +20,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '6ey7y$78$t&-)f7z(o44(^z%_mw#)d21_33wr5rw3qy0bfcr^f'
+SECRET_KEY = "6ey7y$78$t&-)f7z(o44(^z%_mw#)d21_33wr5rw3qy0bfcr^f"
 
+HASHID_FIELD_SALT = "+9-@)z1&t4mh5@ggez!0gf)5i4zk-7ikxa=+)puqy4d4bu!441"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -33,6 +34,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'keys.apps.KeysConfig',
     'polls.apps.PollsConfig',
+    'widget_tweaks',
     'phonenumber_field',
     'django_extensions',
     'django.contrib.admin',
@@ -122,6 +124,14 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+# Mail
+EMAIL_HOST = 'mail.your-server.de'
+EMAIL_HOST_USER = 'dev@felixschloesser.de'
+EMAIL_HOST_PASSWORD = 'MY1p5x6s9OnNSrT0'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/

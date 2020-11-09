@@ -1,11 +1,39 @@
 from django.db import models
-from django.utils import timezone
+from django.utils import timezone, text
+from django.core.exceptions import ValidationError
+from django.urls import reverse
 
 from phonenumber_field.modelfields import PhoneNumberField
+from hashid_field import HashidAutoField
+
+from django.db import models
 
 import datetime
 
+# Create your validators here.
+def validate_university_mail(value):
+    if "@tuhh.de" in value:
+        return value
+    else:
+        raise ValidationError("Bitte die @tuhh.de Adresse angeben.")
+
+
+def present_or_future_date(value):
+    if value > datetime.date.today():
+        return value
+    else:
+        raise ValidationError("Das Datum darf nicht in der Verangenheit liegen.")
+
+def present_or_past_date(value):
+    if value < datetime.date.today():
+        return value
+    else:
+        raise ValidationError("Das Datum darf nicht in der Zukunft liegen.")
+
+
+
 # Create your models here.
+
 class Building(models.Model):
     identifier = models.CharField('Gebäude', max_length=8, unique=True) # not NULL
     name = models.CharField('Name', max_length=32, unique=True, blank=True, null=True)
@@ -30,6 +58,7 @@ class Building(models.Model):
     get_number_of_rooms.short_description = "Anzahl Räume"
 
 
+
 class Room(models.Model):
     building = models.ForeignKey('building', verbose_name='Gebäude',
                                   on_delete=models.CASCADE)
@@ -37,7 +66,6 @@ class Room(models.Model):
     group = models.ForeignKey('group', verbose_name='Gruppe',
                                on_delete=models.PROTECT)
     name = models.CharField('Raumname', max_length=32, unique=True, blank=True, null=True)
-
 
     purpose_choices = [('committee', 'Gremienraum'),
                        ('office', 'Büroraum'),
@@ -47,6 +75,7 @@ class Room(models.Model):
                        ('multipurpose', 'Mehrzweckraum'),
                        ('hallway', 'Flur'),
                        ('other', 'Anderer')]
+
     purpose = models.CharField('Zweck', max_length=32, choices=purpose_choices)
     created_at = models.DateTimeField('Erstellungszeitpunkt', auto_now_add=True)
     updated_at = models.DateTimeField('Aktualisierungszeitpunkt', auto_now=True)
@@ -59,6 +88,7 @@ class Room(models.Model):
             models.UniqueConstraint(fields=['building', 'number'],
                                     name='room_is_unique')
         ]
+
 
     def __str__(self):
         if self.name:
@@ -89,7 +119,6 @@ class Door(models.Model):
     kind = models.CharField('Typ', max_length=32, choices=kind_choices,
                              default=('access', 'Zugangstüre'))
     locking_system = models.ForeignKey('LockingSystem',
-                                        related_name='locking_system_door',
                                         verbose_name='Schließsystem',
                                         on_delete = models.CASCADE)
     comment = models.CharField("Kommentar",max_length=64, blank=True)
@@ -99,6 +128,7 @@ class Door(models.Model):
     class Meta:
         verbose_name = "Tür"
         verbose_name_plural = "Türen"
+
 
     def __str__(self):
         if self.kind == 'access':
@@ -118,15 +148,17 @@ class Key(models.Model):
     number = models.CharField("Schlüsselnummer", max_length=32)
     doors = models.ManyToManyField("Door", verbose_name='Türen')
     locking_system = models.ForeignKey('LockingSystem',
-                                        related_name='locking_system_key',
                                         verbose_name='Schließsystem',
                                         on_delete = models.CASCADE)
     storage_location = models.ForeignKey('StorageLocation',
                                           verbose_name='Aufbewahrungsort',
                                           on_delete=models.PROTECT)
+    stolen_or_lost = models.BooleanField('gestohlen oder verloren', default=False)
 
     created_at = models.DateTimeField('Erstellungszeitpunkt', auto_now_add=True)
     updated_at = models.DateTimeField('Aktualisierungszeitpunkt', auto_now=True)
+
+    id = HashidAutoField(primary_key=True)
 
     class Meta:
         verbose_name = "Schlüssel"
@@ -143,6 +175,7 @@ class Key(models.Model):
                                     name='key_number+locking_system_is_unique')
     ]
 
+
     # if not rented -> require location, key-safe?
     def __str__(self):
         return self.number
@@ -153,30 +186,12 @@ class Key(models.Model):
     def get_number_of_doors(self):
         return self.doors.all().count()
 
+    def get_absolute_url(self):
+        return reverse('keys:key-detail', args=[str(self.id)])
+
+
     get_number_of_doors.short_description = "Anzahl Türen"
-
     get_locking_system_method.short_description = 'Typ'
-
-
-
-class StorageLocation(models.Model):
-    name = models.CharField("Name", max_length=32)
-    location = models.ForeignKey("room", verbose_name='Ort', on_delete=models.CASCADE)
-    created_at = models.DateTimeField('Erstellungszeitpunkt', auto_now_add=True)
-    updated_at = models.DateTimeField('Aktualisierungszeitpunkt', auto_now=True)
-
-    class Meta:
-        verbose_name = "Aufbewahrungsort"
-        verbose_name_plural = "Aufbewahrungsorte"
-        ordering = ['name']
-
-    def __str__(self):
-        return self.name
-
-    def get_number_of_keys(self):
-        return Key.objects.filter(storage_location__name=self.name).count()
-
-    get_number_of_keys.short_description = "Anzahl Schlüssel"
 
 
 
@@ -208,39 +223,60 @@ class LockingSystem(models.Model):
 
 
 
-class Person(models.Model): # Add a chron job ro delete after a 2 years of not renting?
-    first_name = models.CharField('Vorname', max_length=64)
-    family_name = models.CharField('Familienname', max_length=64)
-    university_email = models.EmailField('Uni-Mail', unique=True)
-    private_email = models.EmailField('Private Mail', unique=True)
-    phone_number = PhoneNumberField('Telefon', unique=True)
-    group = models.ForeignKey('Group', verbose_name='Gruppe', on_delete=models.PROTECT, blank=True, null=True)
-    deposit_paid = models.BooleanField('Kaution hinterlegt', default=False)
+class StorageLocation(models.Model):
+    name = models.CharField("Name", max_length=32)
+    location = models.ForeignKey("room", verbose_name='Ort', on_delete=models.CASCADE)
     created_at = models.DateTimeField('Erstellungszeitpunkt', auto_now_add=True)
     updated_at = models.DateTimeField('Aktualisierungszeitpunkt', auto_now=True)
 
+    class Meta:
+        verbose_name = "Aufbewahrungsort"
+        verbose_name_plural = "Aufbewahrungsorte"
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name
+
+    def get_number_of_keys(self):
+        return Key.objects.filter(storage_location__name=self.name).count()
+
+    get_number_of_keys.short_description = "Anzahl Schlüssel"
+
+
+
+class Person(models.Model): # Add a chron job ro delete after a 2 years of not renting?
+    first_name = models.CharField('Vorname', max_length=64)
+    last_name = models.CharField('Nachname', max_length=64)
+    university_email = models.EmailField('Uni-Mail', unique=True, validators=[validate_university_mail])
+    private_email = models.EmailField('Private Mail', unique=True)
+    phone_number = PhoneNumberField('Telefon', unique=True)
+    group = models.ForeignKey('Group', verbose_name='Gruppe', on_delete=models.SET_NULL, blank=True, null=True)
+    deposit_paid = models.BooleanField('Kaution hinterlegt', default=False)
+    issues = models.Manager()
+
+    created_at = models.DateTimeField('Erstellungszeitpunkt', auto_now_add=True)
+    updated_at = models.DateTimeField('Aktualisierungszeitpunkt', auto_now=True)
+
+    id = HashidAutoField(primary_key=True)
 
     class Meta:
         verbose_name = "Person"
         verbose_name_plural = "Personen"
-        ordering = ['family_name', 'first_name']
+        ordering = ['last_name', 'first_name']
 
         indexes = [
-            models.Index(fields=['family_name', 'first_name']),
+            models.Index(fields=['last_name', 'first_name']),
             models.Index(fields=['first_name'], name='first_name_idx'),
         ]
 
-        constraints = [
-            models.UniqueConstraint(fields=['first_name', 'family_name'], name='first_name+family_name_is_unique')
-        ]
-
     def __str__(self):
-        return "{} {}".format(self.first_name, self.family_name)
+        return self.get_full_name()
 
-    def deposit_display(self):
-        return "%s €" % self.deposit
+    def get_full_name(self):
+        return "{} {}".format(self.first_name, self.last_name)
 
-    deposit_display.short_description = "Kaution hinterlegt"
+    def get_absolute_url(self):
+        return reverse('keys:person-detail', args=[str(self.id)])
 
 
 
@@ -252,31 +288,37 @@ class Group(models.Model):
     class Meta:
         verbose_name = "Gruppe"
         verbose_name_plural = "Gruppen"
-        ordering = ['name']
+        ordering = ['id']
 
 
     def __str__(self):
         return "{}".format(self.name)
 
 
+
 class Issue(models.Model):
-    person = models.ForeignKey('Person', verbose_name='Person', on_delete=models.CASCADE)
-    key = models.ForeignKey('Key', verbose_name='Schlüssel', on_delete=models.CASCADE)
-    duration = models.DurationField('Erstellungszeitpunkt', default=datetime.timedelta(days=365))
-    out_date = models.DateField('Ausgabedatum', default=timezone.now())
-    in_date = models.DateField('Rückgabedatum', blank=True, null=True)
+    person = models.ForeignKey('Person', related_name="issue", verbose_name='Ausgaben', on_delete=models.PROTECT)
+    keys = models.ForeignKey('Key', verbose_name='Schlüssel', on_delete=models.PROTECT)
+    out_date = models.DateField('Ausgabedatum', default=timezone.now, validators=[present_or_past_date])
+    in_date = models.DateField('Rückgabedatum', blank=True, null=True, validators=[present_or_past_date])
     created_at = models.DateTimeField('Erstellungszeitpunkt', auto_now_add=True)
     updated_at = models.DateTimeField('Aktualisierungszeitpunkt', auto_now=True)
 
+    id = HashidAutoField(primary_key=True)
+
+
     class Meta:
-        verbose_name='Aus­hän­di­gung'
-        verbose_name_plural='Aus­hän­di­gungen'
+        verbose_name='Ausleihe'
+        verbose_name_plural='Ausleihen'
         ordering = ['-out_date']
 
         constraints = [
-            models.UniqueConstraint(fields=['person', 'key'], name='person+key_is_unique')
+            models.CheckConstraint(check=models.Q(in_date__gte=models.F('out_date')), name='give_out_before_take_in')
         ]
 
+    def __str__(self):
+        return "von {}".format(self.keys)
 
 
-
+    def get_absolute_url(self):
+        return reverse('keys:issue-detail', args=[str(self.id)])

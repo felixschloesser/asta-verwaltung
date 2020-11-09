@@ -16,8 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 
+from django.shortcuts import redirect
+
 urlpatterns = [
-    path('polls/', include('polls.urls')),
-    path('keys/', include('keys.urls')),
-    path('admin/', admin.site.urls),
+    path('', lambda r: redirect('/keys/')),
+    path('polls/', include('polls.urls'), name='polls'),
+    path('keys/', include('keys.urls'), name='keys'),
+    path('admin/', admin.site.urls, name='admin'),
 ]

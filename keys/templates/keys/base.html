@@ -3,50 +3,55 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-     <!-- Required meta tags -->
+    <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <meta name="description" content="A key management system for the AStA TUHH.">
+    <meta name="description" content="Ein Schlüsselverwaltungssystem für den AStA der TU-Hamburg.">
     <title>{% block title %}{% endblock %}</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type='image/png' href="{% static 'keys/images/favicon.png' %}">
 
     <!-- CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
 
     <!-- JS -->
-    {% load static %}
     <script src="http://code.jquery.com/jquery-3.5.1.slim.js"></script>
-    <script src="{% static "js/hamburger.js" %}"></script>
+    <script src="{% static 'js/hamburger.js' %}"></script>
 
 </head>
 <body>
     <!-- Navbar-->
     <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
-    <div class="navbar-brand">
-        <a class="navbar-item" href="http://127.0.0.1:8000/keys/">
-        <img src="{% static "keys/images/AStA_cloud_grau.png" %}" alt="AStA-Cloud Logo" width="48" height="28">
-        </a>
-    <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-    </a>
-    </div>
-
-    <div id="navbarBasicExample" class="navbar-menu">
-        <div class="navbar-start">
-            <a class="navbar-item">Schlüssel</a>
-            <a class="navbar-item">Personen</a>
-
-            </div>
-            <div class="navbar-end">
-                <div class="navbar-item">
-                    <div class="buttons">
-                        <a class="button is-light" href="http://127.0.0.1:8000/admin/">Log in</a>
+        <div class="navbar-brand">
+            <a class="navbar-item" href="{% url 'keys:index' %}">
+                <img src="{% static 'keys/images/logo_grey.png' %}" alt="logo" width="48" height="28">
+            </a>
+            <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasic">
+                <!--Hamburger Button-->
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </div>
+        <div id="navMenuColordark-example" class="navbar-menu">
+            <div class="navbar-start">
+                <a class="navbar-item" href="{% url 'keys:person-list' %}">Personen</a>
+                <a class="navbar-item" href="{% url 'keys:key-list' %}">Schlüssel</a>
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-link" href="{% url 'keys:issue-list' %}">Ausleihen</a>
+                    <div class="navbar-dropdown">
+                        <a class="navbar-item" href="{% url 'keys:issue-new' %}">Neue Ausgabe</a>
+                        <a class="navbar-item" href="{% url 'keys:issue-list' %}">Neue Rücknahme</a>
                     </div>
                 </div>
             </div>
+            <div class="navbar-end">
+                <div class="navbar-item">
+                    <a class="button is-light" href="{% url 'admin:index' %}">Anmelden</a>
+                </div>
+            </div>
         </div>
-    </div>
     </nav>
 
     <!--Content -->
@@ -61,6 +66,9 @@
             </p>
         </div>
     </footer>
+    <!--Additional JS-->
+    {% block additional_js %}
+    {% endblock %}
 </body>
 </html>
 

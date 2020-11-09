@@ -1,0 +1,42 @@
+{% extends "keys/base.html" %}
+
+{% block title %} Ausgabe {{ issue.keys }} | Schlüsselsystem{% endblock %}
+
+
+{% block content %}
+<section class="section">
+    <div class="container is-max-desktop">
+        <h1 class='title'>Ausgabe von {{ issue.keys }}</h1>
+        <div class="content">
+            <ul>
+                <li class='text'>
+                    <b>An:</b> {{ issue.person }}
+                </li>
+                <li class='text'><b>Ausgabedatum:</b> {{ issue.out_date }}</li>
+                {% if issue.in_date %}
+                <li class='text'><b>Rückgabedatum:</b> {{ issue.in_date }}</li>
+                {% endif %}
+            </ul>
+        </div>
+
+        <nav class="level is-max-desktop">
+            <div class="level-left">
+                <div class="level-item">
+                    <a class="button is-link" href="{% url 'keys:issue-list' %}">Zurück zur Liste</a>
+                </div>
+            </div>
+            <div class="level-right">
+                <div class="level-item">
+                    {% if issue.in_date %}
+                    <a class="button is-primary" disabled>Zurückgeben</a>
+                    {% else %}
+                    <a class="button is-primary" href="{% url 'keys:issue-return' object.id  %}" >Zurückgeben</a>
+                    {% endif %}
+                </div>
+            </div>
+        </nav>
+
+    </div>
+</section>
+
+{% endblock %}

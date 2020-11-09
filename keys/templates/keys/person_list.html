@@ -1,0 +1,59 @@
+{% extends "keys/base.html" %}
+
+{% block title %}Personenliste | Schlüsselsystem {% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container is-max-desktop">
+
+        <nav class="level is-mobile">
+        <!-- Left side -->
+        <div class="level-left">
+            <div class="level-item">
+                <h1 class='title'>Personen</h1>
+            </div>
+        </div>
+        <div class="level-right">
+            <div class="level-item">
+                <a class='button is-primary' href={% url 'keys:person-add' %}>Neue Person anlegen</a>
+            </div>
+        </div>
+        </nav>
+
+
+        {% if person_list %}
+        <table class="table">
+            <thead>
+                 <th>Name</th>
+                 <th>TU-Mail</th>
+                 <th>Gruppe</th>
+            </thead>
+
+            <tbody>
+            {% for person in person_list %}
+                <tr>
+                    <td>
+                        <a href="{{ person.get_absolute_url }}">{{ person }}</a>
+                    </td>
+                    <td>
+                        {{ person.university_email }}
+                    </td>
+                    <td>
+                        {{ person.group }}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <p>Keine Personen angelegt.</p>
+        {% endif %}
+
+        {% if is_paginated %}
+            {% include 'keys/pagination.html' %}
+        {% endif %}
+
+    </div>
+</section>
+
+{% endblock %}

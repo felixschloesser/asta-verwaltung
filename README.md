@@ -35,5 +35,5 @@ Access mariadb as root
 
 
 
-# Starting Django
+## Starting Django
 `python manage.py runserver

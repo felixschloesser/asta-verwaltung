@@ -1,17 +1,6 @@
 # key-management
 A key management system written in django
 
-## dev-env
-`brew update`
-`brew upgrade python3`
-
-`python3 -m pip install --upgrade pip`
-
-`python3 -m venv .django-env`
-`source .django-env/bin/activate`
-
-`pip install -r requirements.txt`
-
 ## Database Setup
 ### macOS
 `brew update`
@@ -32,3 +21,19 @@ Access mariadb as root
 `sudo mysql_secure_installation`
 
 `sudo apt install libmariadbclient-dev`
+
+## Virtualenv
+`brew update`
+`brew upgrade python3`
+
+`python3 -m pip install --upgrade pip`
+
+`python3 -m venv .django-env`
+`source .django-env/bin/activate`
+
+`pip install -r requirements.txt`
+
+
+
+## Starting Django
+`python manage.py runserver

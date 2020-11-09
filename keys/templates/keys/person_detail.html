@@ -6,16 +6,29 @@
 {% block content %}
 <section class="section">
     <div class="container is-max-desktop">
+
         <h1 class='title'>{{ person.get_full_name }}</h1>
         <div class="content">
-                <p class='text'><b>Gruppe: </b>{{ person.group }}</p>
-                <p class='text'><b>TU Mail: </b> {{ person.university_email }}</p>
-                <p class='text'><b>Private Mail: </b>{{ person.private_email }}</p>
-                <p class='text'><b>Telefon: </b>{{ person.phone_number }}</p>
-                <p class='text'><b>Kation: </b>{% if person.deposit_paid %} bezahlt. {% else %} nicht bezahlt.{% endif %}</p>
-        </div>
-        <div class="buttons is-left">
-            <a class="button is-link" href="{% url 'keys:person-list' %}">Zurück zur Liste</a>
+            <p class='text'><strong>Gruppe: </strong>{{ person.group }}</p>
+            <p class='text'><strong>Uni Mail: </strong> {{ person.university_email }}</p>
+            <p class='text'><strong>Private Mail: </strong>{{ person.private_email }}</p>
+            <p class='text'><strong>Telefon: </strong>{{ person.phone_number }}</p>
+            <p class='text'><strong>Kaution:</strong>
+            {% if person.deposit_paid %}
+                <span class="tag is-success"><b>bezahlt</b></span>
+            {% else %}
+                <span class="tag is-danger"><b>nicht bezahlt</b></span>
+            {% endif %}</p>
+
+            <h2 class="subtitle">Ausleihen:</h2>
+            <ul>
+            {% for issue in person.issues.all %}
+                <li>{{ issue.key }} am {{ issue.out_date }}</li>
+            {% endfor %}
+            </ul>
+            <div class="buttons is-left">
+                <a class="button is-link" href="{% url 'keys:person-list' %}">Zurück zur Liste</a>
+            </div>
         </div>
     </div>
 </section>

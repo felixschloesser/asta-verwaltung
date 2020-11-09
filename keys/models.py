@@ -19,13 +19,13 @@ def validate_university_mail(value):
 
 
 def present_or_future_date(value):
-    if value > datetime.date.today():
+    if value >= datetime.date.today():
         return value
     else:
         raise ValidationError("Das Datum darf nicht in der Verangenheit liegen.")
 
 def present_or_past_date(value):
-    if value < datetime.date.today():
+    if value <= datetime.date.today():
         return value
     else:
         raise ValidationError("Das Datum darf nicht in der Zukunft liegen.")
@@ -252,7 +252,6 @@ class Person(models.Model): # Add a chron job ro delete after a 2 years of not r
     phone_number = PhoneNumberField('Telefon', unique=True)
     group = models.ForeignKey('Group', verbose_name='Gruppe', on_delete=models.SET_NULL, blank=True, null=True)
     deposit_paid = models.BooleanField('Kaution hinterlegt', default=False)
-    issues = models.Manager()
 
     created_at = models.DateTimeField('Erstellungszeitpunkt', auto_now_add=True)
     updated_at = models.DateTimeField('Aktualisierungszeitpunkt', auto_now=True)
@@ -297,8 +296,8 @@ class Group(models.Model):
 
 
 class Issue(models.Model):
-    person = models.ForeignKey('Person', related_name="issue", verbose_name='Ausgaben', on_delete=models.PROTECT)
-    keys = models.ForeignKey('Key', verbose_name='Schlüssel', on_delete=models.PROTECT)
+    person = models.ForeignKey('Person', related_name="issues", verbose_name='Ausgaben', on_delete=models.PROTECT)
+    key = models.ForeignKey('Key', verbose_name='Schlüssel', on_delete=models.PROTECT)
     out_date = models.DateField('Ausgabedatum', default=timezone.now, validators=[present_or_past_date])
     in_date = models.DateField('Rückgabedatum', blank=True, null=True, validators=[present_or_past_date])
     created_at = models.DateTimeField('Erstellungszeitpunkt', auto_now_add=True)
@@ -317,7 +316,7 @@ class Issue(models.Model):
         ]
 
     def __str__(self):
-        return "von {}".format(self.keys)
+        return "von {} an {}".format(self.key, self.person)
 
 
     def get_absolute_url(self):

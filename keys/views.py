@@ -52,7 +52,8 @@ class IssueDetail(generic.DetailView):
 
 class IssueNew(generic.CreateView):
     model = Issue
-    fields = ['keys',
+    fields = ['person',
+              'keys',
               'out_date']
 
 class IssueReturnList(generic.ListView):

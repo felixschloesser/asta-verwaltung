@@ -20,6 +20,22 @@
                     </div>
                 </article>
             {% endif %}
+
+            <div class="field">
+                <label class="label" for="{{ form.person.id_for_label }}">{{ form.person.label_tag }}</label>
+                    <div class="control">
+                        {% if not form.person.errors %}
+                            {{ form.person|add_class:"input" }}
+                        {% else %}
+                            {{ form.person|add_class:"input is-danger"}}
+                        {% endif %}
+                    </div>
+                {% for error in form.person.errors %}
+                    <p class="help is-danger">{{ error }}</p>
+                {% endfor %}
+            </div>
+
+
             <div class="field">
                 <label class="label" for="{{ form.keys.id_for_label }}">{{ form.keys.label_tag }}</label>
                     <div class="control">

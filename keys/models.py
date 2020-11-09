@@ -298,7 +298,7 @@ class Group(models.Model):
 
 class Issue(models.Model):
     person = models.ForeignKey('Person', related_name="issue", verbose_name='Ausgaben', on_delete=models.PROTECT)
-    keys = models.ForeignKey('Key', verbose_name='Schlüssel', on_delete=models.PROTECT)
+    key = models.ForeignKey('Key', verbose_name='Schlüssel', on_delete=models.PROTECT)
     out_date = models.DateField('Ausgabedatum', default=timezone.now, validators=[present_or_past_date])
     in_date = models.DateField('Rückgabedatum', blank=True, null=True, validators=[present_or_past_date])
     created_at = models.DateTimeField('Erstellungszeitpunkt', auto_now_add=True)
@@ -317,7 +317,7 @@ class Issue(models.Model):
         ]
 
     def __str__(self):
-        return "von {}".format(self.keys)
+        return "von {}".format(self.key)
 
 
     def get_absolute_url(self):

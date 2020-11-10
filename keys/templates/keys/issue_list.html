@@ -5,7 +5,31 @@
 {% block content %}
     <section class="section">
     <div class="container is-max-desktop">
-        <h1 class='title'>Aktuelle Ausleihen</h1>
+        <nav class="level is-mobile">
+            <!-- Left side -->
+            <div class="level-left">
+                <div class="level-item">
+                    <h1 class='title'>{% if not request.GET.r %}Aktuelle {% endif %}Ausleihen</h1>
+                </div>
+            </div>
+            <!-- Right side -->
+            <div class="level-right">
+                <div class="level-item">
+                    <div class="field has-addons">
+                        <div class="control">
+                            <form action={% url 'keys:issue-search-results' %} method='get'>
+                                <input class="input" name='q' type="text" placeholder="Schlüsselnr./Person">
+                            </form>
+                        </div>
+                        <div class="control">
+                            <a class="button is-info">
+                                Suchen
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
 
         {% if issue_list %}
         <table class="table">
@@ -39,6 +63,12 @@
             {% include 'keys/pagination.html' %}
         {% endif %}
 
+        {% if not request.GET.r %}
+
+            <div class="control pt-3">
+                <a class="button", href="{% url 'keys:issue-list' %}?r=1">Bereits zurückgegebene anzeigen</a>
+            </div>
+        {% endif %}
     </div>
 </section>
 

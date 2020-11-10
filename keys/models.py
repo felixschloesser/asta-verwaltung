@@ -325,8 +325,5 @@ class Issue(models.Model):
     def __str__(self):
         return "{} an {}".format(self.key, self.person)
 
-    def get_unreturend_issues(self):
-        return Issue.objects.filter(out_date)
-
     def get_absolute_url(self):
         return reverse('keys:issue-detail', args=[str(self.id)])

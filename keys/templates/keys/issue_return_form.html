@@ -9,7 +9,14 @@
 <section class="section">
     <div class="container is-max-desktop">
 
-        <h1 class="title">Schlüssel Nr. {{ key }} Zurückgeben</h1>
+        <h1 class="title">Schlüssel zurückgeben</h1>
+
+        <article class="message is-dark">
+          <div class="message-body">
+            Bitte den Schlüssel {{ issue.key }} nach der Rückgabe zurück in den <strong>{{ issue.key.storage_location }}</strong> legen.
+          </div>
+        </article>
+        <p>
 
         <form method='post'>
             {% csrf_token %}

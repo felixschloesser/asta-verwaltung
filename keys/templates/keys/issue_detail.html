@@ -8,15 +8,12 @@
     <div class="container is-max-desktop">
         <h1 class='title'>Ausgabe von Schlüssel Nr. {{ issue.key }}</h1>
         <div class="content">
-            <ul>
-                <li class='text'>
-                    <b>An:</b> {{ issue.person }}
-                </li>
-                <li class='text'><b>Ausgabedatum:</b> {{ issue.out_date }}</li>
-                {% if issue.in_date %}
-                <li class='text'><b>Rückgabedatum:</b> {{ issue.in_date }}</li>
-                {% endif %}
-            </ul>
+            <p><strong>An:</strong> {{ issue.person }}</p>
+            <p><strong>Ausgabedatum:</strong> {{ issue.out_date }}</p>
+            {% if issue.in_date %}
+                <p><strong>Rückgabedatum:</strong> {{ issue.in_date }}</p>
+            {% endif %}
+
         </div>
 
         <nav class="level is-max-desktop">

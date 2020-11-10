@@ -1,16 +1,13 @@
 {% extends "keys/base.html" %}
 
-{% block title %}Personenliste | Schlüsselsystem {% endblock %}
-
 {% block content %}
-<section class="section">
+    <section class="section">
     <div class="container is-max-desktop">
-
         <nav class="level is-mobile">
             <!-- Left side -->
             <div class="level-left">
                 <div class="level-item">
-                    <h1 class='title'>Personensuche{% if request.GET.q %}: {{ request.GET.q }}{% endif %}</h1>
+                    <h1 class='title'>Schlüsselsuche{% if request.GET.q %}: {{ request.GET.q }}{% endif %}</h1>
                 </div>
             </div>
             <!-- Right side -->
@@ -18,8 +15,8 @@
                 <div class="level-item">
                     <div class="field has-addons">
                         <div class="control">
-                            <form action={% url 'keys:person-search-results' %} method='get'>
-                                <input class="input" name='q' type="text" placeholder="Vor-/Nachname">
+                            <form action={% url 'keys:key-search-results' %} method='get'>
+                                <input class="input" name='q' type="text" placeholder="Schlüsselnr./Modell">
                             </form>
                         </div>
                         <div class="control">
@@ -32,42 +29,39 @@
             </div>
         </nav>
 
-
-        {% if person_list %}
+        {% if key_list %}
         <table class="table">
             <thead>
-                 <th>Name</th>
-                 <th>TU-Mail</th>
-                 <th>Gruppe</th>
+                 <th>Nummer</th>
+                 <th>Schließsystem</th>
+                 <th>Türen</th>
             </thead>
 
             <tbody>
-            {% for person in person_list %}
+            {% for key in key_list %}
                 <tr>
                     <td>
-                        <a href="{{ person.get_absolute_url }}">{{ person }}</a>
+                        <a href="{{ key.get_absolute_url }}">{{ key }}</a>
                     </td>
                     <td>
-                        {{ person.university_email }}
+                        {{ key.locking_system }}
                     </td>
                     <td>
-                        {{ person.group }}
+                        {% for door in key.doors.all %}
+                            {{ door }}{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
                     </td>
                 </tr>
             {% endfor %}
             </tbody>
         </table>
         {% else %}
-            {% if request.GET.q %}<p>Keine Person mit dem Namen {{ request.GET.q }} gefunden.</p>{% endif %}
+            <p>Kein Schlüssel {% if request.GET.q %}mit Nummer oder Schließsystem {{ request.GET.q }}{% endif %}gefunden.</p>
         {% endif %}
 
         {% if is_paginated %}
             {% include 'keys/pagination.html' %}
         {% endif %}
-
-        <a class='button is-primary' href={% url 'keys:person-add' %}>Neue Person anlegen</a>
-
-
     </div>
 </section>
 

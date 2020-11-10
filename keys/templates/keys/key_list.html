@@ -3,7 +3,32 @@
 {% block content %}
     <section class="section">
     <div class="container is-max-desktop">
-        <h1 class='title'>Schlüssel</h1>
+
+        <nav class="level is-mobile">
+            <!-- Left side -->
+            <div class="level-left">
+                <div class="level-item">
+                    <h1 class='title'>Schlüsselsuche{% if request.GET.q %}: {{ request.GET.q }}{% endif %}</h1>
+                </div>
+            </div>
+            <!-- Right side -->
+            <div class="level-right">
+                <div class="level-item">
+                    <div class="field has-addons">
+                        <div class="control">
+                            <form action={% url 'keys:key-search-results' %} method='get'>
+                                <input class="input" name='q' type="text" placeholder="Schlüsselnr./Modell">
+                            </form>
+                        </div>
+                        <div class="control">
+                            <a class="button is-info">
+                                Suchen
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
 
         {% if key_list %}
         <table class="table">

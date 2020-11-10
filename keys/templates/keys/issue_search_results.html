@@ -1,16 +1,13 @@
 {% extends "keys/base.html" %}
 
-{% block title %}Personenliste | Schlüsselsystem {% endblock %}
-
 {% block content %}
-<section class="section">
+    <section class="section">
     <div class="container is-max-desktop">
-
         <nav class="level is-mobile">
             <!-- Left side -->
             <div class="level-left">
                 <div class="level-item">
-                    <h1 class='title'>Personen</h1>
+                    <h1 class='title'>Ausleihensuche{% if request.GET.q %}: {{ request.GET.q }}{% endif %}</h1>
                 </div>
             </div>
             <!-- Right side -->
@@ -18,8 +15,8 @@
                 <div class="level-item">
                     <div class="field has-addons">
                         <div class="control">
-                            <form action={% url 'keys:person-search-results' %} method='get'>
-                                <input class="input" name='q' type="text" placeholder="Vor-/Nachname">
+                            <form action={% url 'keys:issue-search-results' %} method='get'>
+                                <input class="input" name='q' type="text" placeholder="Person/Schlüsselnr.">
                             </form>
                         </div>
                         <div class="control">
@@ -32,39 +29,46 @@
             </div>
         </nav>
 
-        {% if person_list %}
+        {% if issue_list %}
             <table class="table">
                 <thead>
-                     <th>Name</th>
-                     <th>TU-Mail</th>
-                     <th>Gruppe</th>
+                     <th>Schlüssel</th>
+                     <th>Person</th>
+                     <th>Ausgabedatum</th>
                 </thead>
 
                 <tbody>
-                {% for person in person_list %}
+                {% for issue in issue_list %}
                     <tr>
                         <td>
-                            <a href="{{ person.get_absolute_url }}">{{ person }}</a>
+                            <a href="{{ issue.get_absolute_url }}"> {{ issue.key }}</a>
                         </td>
                         <td>
-                            {{ person.university_email }}
+                            {{ issue.person }}
                         </td>
                         <td>
-                            {{ person.group }}
+                            {{ issue.out_date }}
                         </td>
                     </tr>
                 {% endfor %}
                 </tbody>
             </table>
-            {% if is_paginated %}
-                {% include 'keys/pagination.html' %}
-            {% endif %}
         {% else %}
-            <p>Keine Personen angelegt.</p>
+            <p>Keine Ausleihen {% if request.GET.q %}mit Person oder Schlüsselnummer <em>{{ request.GET.q }}</em> gefunden.</p>{% endif %}
+        {% endif %}
+
+        {% if not request.GET.r %}
+            <div class="control pt-3">
+                <a class="button", href="{% url 'keys:issue-search-results' %}?{% if request.GET.q %}q={{ request.GET.q }}&r=1{% else %}r=1{% endif %}">Bereits zurückgegebene anzeigen</a>
+            </div>
+        {% endif %}
+
+        {% if is_paginated %}
+            {% include 'keys/pagination.html' %}
         {% endif %}
 
 
-        <a class='button is-primary' href={% url 'keys:person-add' %}>Neue Person anlegen</a>
+
     </div>
 </section>
 

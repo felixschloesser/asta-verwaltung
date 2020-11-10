@@ -130,6 +130,7 @@ dmypy.json
 
 # venv
 .django-env
+.djangoenv
 
 # sublime
 *.sublime-workspace

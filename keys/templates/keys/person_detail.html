@@ -20,10 +20,14 @@
                 <span class="tag is-danger"><b>nicht bezahlt</b></span>
             {% endif %}</p>
 
-            <h2 class="subtitle">Ausleihen:</h2>
+            <h2 class="subtitle is-4">Schlüssselausleihen:</h2>
             <ul>
             {% for issue in person.issues.all %}
-                <li>{{ issue.key }} am {{ issue.out_date }}</li>
+                <li><strong>Nr. {{ issue.key }}</strong> am {{ issue.out_date }}:
+                   [{% for door in issue.key.get_access_doors.distinct %}<em>{{ door.room }}</em>{% if not forloop.last %}, {% endif %}{% empty %}keine.{% endfor %}]
+                </li>
+            {% empty %}
+                keine.
             {% endfor %}
             </ul>
             <div class="buttons is-left">

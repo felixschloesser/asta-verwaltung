@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.views import View, generic
 from django.http import HttpResponseRedirect, JsonResponse
+from django.db import models
 
 from .models import Key, Person, Issue
 from .forms import IssueReturnForm
@@ -28,6 +29,18 @@ class PersonList(generic.ListView):
     paginate_by = 40
 
 
+class PersonSearchResults(generic.ListView):
+    model = Person
+    template_name_suffix = '_search_results'
+
+    def get_queryset(self):
+        query = self.request.GET.get('q')
+        person_list = Person.objects.filter(models.Q(first_name__icontains=query) |
+                                            models.Q(last_name__icontains=query)
+                                           )
+        return person_list
+
+
 class PersonDetail(generic.DetailView):
     model = Person
 
@@ -53,7 +66,7 @@ class IssueDetail(generic.DetailView):
 class IssueNew(generic.CreateView):
     model = Issue
     fields = ['person',
-              'keys',
+              'key',
               'out_date']
 
 class IssueReturnList(generic.ListView):

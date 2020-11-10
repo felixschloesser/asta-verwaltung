@@ -32,17 +32,16 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'keys.apps.KeysConfig',
-    'polls.apps.PollsConfig',
-    'widget_tweaks',
-    'phonenumber_field',
-    'django_extensions',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_extensions',
+    'widget_tweaks',
+    'phonenumber_field',
+    'keys.apps.KeysConfig'
 ]
 
 MIDDLEWARE = [
@@ -55,7 +54,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'mysite.urls'
+ROOT_URLCONF = 'asta-administration.urls'
 
 TEMPLATES = [
     {
@@ -73,7 +72,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'mysite.wsgi.application'
+WSGI_APPLICATION = 'asta-administration.wsgi.application'
 
 
 # Database

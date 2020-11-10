@@ -60,10 +60,14 @@ class Building(models.Model):
 
 
 class Room(models.Model):
-    building = models.ForeignKey('building', verbose_name='Gebäude',
+    building = models.ForeignKey('building',
+                                  related_name='rooms',
+                                  verbose_name='Gebäude',
                                   on_delete=models.CASCADE)
     number = models.CharField("Raumnummer", max_length=32)
-    group = models.ForeignKey('group', verbose_name='Gruppe',
+    group = models.ForeignKey('group',
+                               related_name='rooms',
+                               verbose_name='Gruppe',
                                on_delete=models.PROTECT)
     name = models.CharField('Raumname', max_length=32, unique=True, blank=True, null=True)
 
@@ -112,13 +116,14 @@ class Room(models.Model):
 
 class Door(models.Model):
     active = models.BooleanField("Aktiv", default=True)
-    room = models.ForeignKey("Room", verbose_name="führt in Raum",
+    room = models.ForeignKey("Room", related_name="doors", verbose_name="führt in Raum",
                              on_delete=models.CASCADE)
     kind_choices = [('access', 'Zugangstüre'),
                     ('connecting', 'Verbindungstür')]
     kind = models.CharField('Typ', max_length=32, choices=kind_choices,
                              default=('access', 'Zugangstüre'))
     locking_system = models.ForeignKey('LockingSystem',
+                                        related_name="doors",
                                         verbose_name='Schließsystem',
                                         on_delete = models.CASCADE)
     comment = models.CharField("Kommentar",max_length=64, blank=True)
@@ -128,7 +133,6 @@ class Door(models.Model):
     class Meta:
         verbose_name = "Tür"
         verbose_name_plural = "Türen"
-
 
     def __str__(self):
         if self.kind == 'access':
@@ -146,11 +150,13 @@ class Door(models.Model):
 
 class Key(models.Model):
     number = models.CharField("Schlüsselnummer", max_length=32)
-    doors = models.ManyToManyField("Door", verbose_name='Türen')
+    doors = models.ManyToManyField("Door", related_name='keys', verbose_name='Türen')
     locking_system = models.ForeignKey('LockingSystem',
+                                        related_name='keys',
                                         verbose_name='Schließsystem',
                                         on_delete = models.CASCADE)
     storage_location = models.ForeignKey('StorageLocation',
+                                          related_name='keys',
                                           verbose_name='Aufbewahrungsort',
                                           on_delete=models.PROTECT)
     stolen_or_lost = models.BooleanField('gestohlen oder verloren', default=False)
@@ -185,6 +191,9 @@ class Key(models.Model):
 
     def get_number_of_doors(self):
         return self.doors.all().count()
+
+    def get_access_doors(self):
+        return self.doors.filter(kind__exact='access')
 
     def get_absolute_url(self):
         return reverse('keys:key-detail', args=[str(self.id)])
@@ -225,7 +234,7 @@ class LockingSystem(models.Model):
 
 class StorageLocation(models.Model):
     name = models.CharField("Name", max_length=32)
-    location = models.ForeignKey("room", verbose_name='Ort', on_delete=models.CASCADE)
+    location = models.ForeignKey("room", related_name='storage_locations', verbose_name='Ort', on_delete=models.CASCADE)
     created_at = models.DateTimeField('Erstellungszeitpunkt', auto_now_add=True)
     updated_at = models.DateTimeField('Aktualisierungszeitpunkt', auto_now=True)
 
@@ -250,7 +259,7 @@ class Person(models.Model): # Add a chron job ro delete after a 2 years of not r
     university_email = models.EmailField('Uni-Mail', unique=True, validators=[validate_university_mail])
     private_email = models.EmailField('Private Mail', unique=True)
     phone_number = PhoneNumberField('Telefon', unique=True)
-    group = models.ForeignKey('Group', verbose_name='Gruppe', on_delete=models.SET_NULL, blank=True, null=True)
+    group = models.ForeignKey('Group', related_name='people' ,verbose_name='Gruppe', on_delete=models.SET_NULL, blank=True, null=True)
     deposit_paid = models.BooleanField('Kaution hinterlegt', default=False)
 
     created_at = models.DateTimeField('Erstellungszeitpunkt', auto_now_add=True)
@@ -289,7 +298,6 @@ class Group(models.Model):
         verbose_name_plural = "Gruppen"
         ordering = ['id']
 
-
     def __str__(self):
         return "{}".format(self.name)
 
@@ -297,14 +305,13 @@ class Group(models.Model):
 
 class Issue(models.Model):
     person = models.ForeignKey('Person', related_name="issues", verbose_name='Ausgaben', on_delete=models.PROTECT)
-    key = models.ForeignKey('Key', verbose_name='Schlüssel', on_delete=models.PROTECT)
+    key = models.ForeignKey('Key', related_name="issues", verbose_name='Schlüssel', on_delete=models.PROTECT)
     out_date = models.DateField('Ausgabedatum', default=timezone.now, validators=[present_or_past_date])
     in_date = models.DateField('Rückgabedatum', blank=True, null=True, validators=[present_or_past_date])
     created_at = models.DateTimeField('Erstellungszeitpunkt', auto_now_add=True)
     updated_at = models.DateTimeField('Aktualisierungszeitpunkt', auto_now=True)
 
     id = HashidAutoField(primary_key=True)
-
 
     class Meta:
         verbose_name='Ausleihe'
@@ -316,8 +323,10 @@ class Issue(models.Model):
         ]
 
     def __str__(self):
-        return "von {} an {}".format(self.key, self.person)
+        return "{} an {}".format(self.key, self.person)
 
+    def get_unreturend_issues(self):
+        return Issue.objects.filter(out_date)
 
     def get_absolute_url(self):
         return reverse('keys:issue-detail', args=[str(self.id)])

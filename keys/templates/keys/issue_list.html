@@ -1,5 +1,7 @@
 {% extends "keys/base.html" %}
 
+{% block title %} Ausleihen |Schlüsselsystem{% endblock %}
+
 {% block content %}
     <section class="section">
     <div class="container is-max-desktop">
@@ -17,7 +19,7 @@
             {% for issue in issue_list %}
                 <tr>
                     <td>
-                        <a href="{{ issue.get_absolute_url }}"> {{ issue.keys }}</a>
+                        <a href="{{ issue.get_absolute_url }}"> {{ issue.key }}</a>
                     </td>
                     <td>
                         {{ issue.person }}

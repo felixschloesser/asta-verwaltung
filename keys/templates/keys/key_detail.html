@@ -1,6 +1,6 @@
 {% extends "keys/base.html" %}
 
-{% block title %}{{ object.get_full_name }} | Schüssel | Schlüsselsystem{% endblock %}
+{% block title %}{{ key.get_full_name }} | Schüssel | Schlüsselsystem{% endblock %}
 
 
 {% block content %}
@@ -8,17 +8,18 @@
     <div class="container is-max-desktop">
         <h1 class='title'>Schüssel Nr. {{ key.number }}</h1>
         <div class="content">
-            <ul>
-                <li class='text'>
-                    <b>Türen:</b>
-                    {% for door in object.doors.all %}
-                        {{ door|join:" // " }}
+                <p><strong>Schließsystem:</strong> {{ key.locking_system }}</p>
+                <p><strong>Lagerort:</strong> {{ key.storage_location }}</p>
+                <p><strong>Türen:</strong></p>
+                    <ul>
+                    {% for door in key.doors.all %}
+                        <li>{{ door }}</li>
                     {% empty %}
                         keine
                     {% endfor %}
+                    </ul>
                 </li>
-                <li class='text'><b>Schließsystem:</b> {{ object.locking_system }}</li>
-                <li class='text'><b>Lagerort:</b> {{ object.storage_location }}</li>
+
             </ul>
         </div>
         <div class="buttons is-left">

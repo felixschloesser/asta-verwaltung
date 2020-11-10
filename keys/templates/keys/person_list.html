@@ -15,44 +15,46 @@
         </div>
         <div class="level-right">
             <div class="level-item">
-                <a class='button is-primary' href={% url 'keys:person-add' %}>Neue Person anlegen</a>
+                <form action={% url 'keys:person-search-results' %} method='get'>
+                    <input class="input" name='q' type='text' placeholder='Suche...'>
             </div>
         </div>
         </nav>
 
 
         {% if person_list %}
-        <table class="table">
-            <thead>
-                 <th>Name</th>
-                 <th>TU-Mail</th>
-                 <th>Gruppe</th>
-            </thead>
+            <table class="table">
+                <thead>
+                     <th>Name</th>
+                     <th>TU-Mail</th>
+                     <th>Gruppe</th>
+                </thead>
 
-            <tbody>
-            {% for person in person_list %}
-                <tr>
-                    <td>
-                        <a href="{{ person.get_absolute_url }}">{{ person }}</a>
-                    </td>
-                    <td>
-                        {{ person.university_email }}
-                    </td>
-                    <td>
-                        {{ person.group }}
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+                <tbody>
+                {% for person in person_list %}
+                    <tr>
+                        <td>
+                            <a href="{{ person.get_absolute_url }}">{{ person }}</a>
+                        </td>
+                        <td>
+                            {{ person.university_email }}
+                        </td>
+                        <td>
+                            {{ person.group }}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {% if is_paginated %}
+                {% include 'keys/pagination.html' %}
+            {% endif %}
         {% else %}
             <p>Keine Personen angelegt.</p>
         {% endif %}
 
-        {% if is_paginated %}
-            {% include 'keys/pagination.html' %}
-        {% endif %}
 
+        <a class='button is-primary' href={% url 'keys:person-add' %}>Neue Person anlegen</a>
     </div>
 </section>
 

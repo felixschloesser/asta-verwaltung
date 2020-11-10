@@ -37,15 +37,15 @@
 
 
             <div class="field">
-                <label class="label" for="{{ form.keys.id_for_label }}">{{ form.keys.label_tag }}</label>
+                <label class="label" for="{{ form.key.id_for_label }}">{{ form.key.label_tag }}</label>
                     <div class="control">
-                        {% if not form.keys.errors %}
-                            {{ form.keys|add_class:"input" }}
+                        {% if not form.key.errors %}
+                            {{ form.key|add_class:"input" }}
                         {% else %}
-                            {{ form.keys|add_class:"input is-danger"}}
+                            {{ form.key|add_class:"input is-danger"}}
                         {% endif %}
                     </div>
-                {% for error in form.keys.errors %}
+                {% for error in form.key.errors %}
                     <p class="help is-danger">{{ error }}</p>
                 {% endfor %}
             </div>

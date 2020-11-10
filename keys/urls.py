@@ -2,7 +2,6 @@ from django.urls import path
 
 from . import views
 
-
 app_name = 'keys' # Namespace: keys:detail, keys:index
 
 urlpatterns = [
@@ -11,6 +10,7 @@ urlpatterns = [
     path('key/<str:pk>', views.KeyDetail.as_view(), name='key-detail'),
 
     path('people/', views.PersonList.as_view(), name='person-list'),
+    path('people/search', views.PersonSearchResults.as_view(), name='person-search-results'),
     path('person/add', views.PersonCreate.as_view(), name='person-add'),
     path('person/<str:pk>',views.PersonDetail.as_view(), name='person-detail'),
 

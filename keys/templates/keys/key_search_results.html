@@ -30,31 +30,37 @@
         </nav>
 
         {% if key_list %}
-        <table class="table">
-            <thead>
-                 <th>Nummer</th>
-                 <th>Schließsystem</th>
-                 <th>Türen</th>
-            </thead>
+        <div class="container">
+            <div class="b-table">
+                <div class="table-wrapper has-mobile-cards">
+                    <table class="table is-fullwidth is-hoverable">
+                        <thead>
+                             <th>Nummer</th>
+                             <th>Schließsystem</th>
+                             <th>Türen</th>
+                        </thead>
 
-            <tbody>
-            {% for key in key_list %}
-                <tr>
-                    <td>
-                        <a href="{{ key.get_absolute_url }}">{{ key }}</a>
-                    </td>
-                    <td>
-                        {{ key.locking_system }}
-                    </td>
-                    <td>
-                        {% for door in key.doors.all %}
-                            {{ door }}{% if not forloop.last %}, {% endif %}
+                        <tbody>
+                        {% for key in key_list %}
+                            <tr>
+                                <td data-label="Nummer">
+                                    <a href="{{ key.get_absolute_url }}">{{ key }}</a>
+                                </td>
+                                <td data-label="Schließsystem">
+                                    {{ key.locking_system }}
+                                </td>
+                                <td data-label="Türen">
+                                    {% for door in key.doors.all %}
+                                        {{ door }}{% if not forloop.last %}, {% endif %}
+                                    {% endfor %}
+                                </td>
+                            </tr>
                         {% endfor %}
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
         {% else %}
             <p>Kein Schlüssel {% if request.GET.q %}mit Nummer oder Schließsystem <em>{{ request.GET.q }}</em> {% endif %}gefunden.</p>
         {% endif %}

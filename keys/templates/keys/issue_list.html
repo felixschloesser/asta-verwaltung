@@ -32,34 +32,40 @@
         </nav>
 
         {% if issue_list %}
-        <table class="table">
-            <thead>
-                 <th>Schlüssel</th>
-                 <th>Person</th>
-                 <th>Ausgabedatum</th>
-                 <th>Rückgabedatum</th>
+        <div class="container">
+            <div class="b-table">
+                <div class="table-wrapper has-mobile-cards">
+                    <table class="table is-fullwidth is-hoverable">
+                        <thead>
+                             <th>Schlüssel</th>
+                             <th>Person</th>
+                             <th>Ausgabedatum</th>
+                             <th>Rückgabedatum</th>
 
-            </thead>
+                        </thead>
 
-            <tbody>
-            {% for issue in issue_list %}
-                <tr>
-                    <td>
-                        <a href="{{ issue.get_absolute_url }}"> {{ issue.key }}</a>
-                    </td>
-                    <td>
-                        {{ issue.person }}
-                    </td>
-                    <td>
-                        {{ issue.out_date }}
-                    </td>
-                    <td>
-                        {{ issue.in_date }}
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+                        <tbody>
+                        {% for issue in issue_list %}
+                            <tr>
+                                <td data-label="Schlüssel">
+                                    <a href="{{ issue.get_absolute_url }}"> {{ issue.key }}</a>
+                                </td>
+                                <td data-label="Person">
+                                    {{ issue.person }}
+                                </td>
+                                <td data-label="Ausgabedatum">
+                                    {{ issue.out_date }}
+                                </td>
+                                <td data-label="Rückgabedatum">
+                                    {{ issue.in_date }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
         {% else %}
             <p>Keine Ausleihen gefunden.</p>
         {% endif %}

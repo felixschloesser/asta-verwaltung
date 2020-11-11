@@ -14,7 +14,7 @@ class RoomAdmin(admin.ModelAdmin):
     def get_locking_system(self, obj):
         return obj.room.locking_system
 
-    list_display = ('full_name', 'identifier')
+    list_display = ('__str__', 'get_identifier')
     list_filter = ('building', 'group', 'purpose' )
 
     inlines = [DoorInline]

@@ -98,19 +98,12 @@ class Room(models.Model):
         if self.name:
             return "{} ({})".format(self.name, self.number)
         else:
-            return "{}{}".format(self.building,self.number)
+            return "{}{}".format(self.building, self.number)
 
-    def identifier(self):
-        return "{}{}".format(self.building, self.number)
+    def get_identifier(self):
+        return "{}{}".format(self.building.identifier, self.number)
 
-    def full_name(self):
-        if self.name:
-            return "{} {}".format(self.group, self.name)
-        else:
-            return "{} {}".format(self.group, self.get_purpose_display())
-
-    identifier.short_description = "Raumnummer"
-    full_name.short_description = "Name"
+    get_identifier.short_description = "Raumnummer"
 
 
 
@@ -139,12 +132,12 @@ class Door(models.Model):
             if self.room.name:
                 return "Zugangstür zum {} ({})".format(self.room.name, self.room.number)
             else:
-                return "Zugangstür zu {}".format(self.room.identifier)
+                return "Zugangstür zu {}".format(self.room.get_identifier())
         else:
             if self.room.name:
                 return "Verbindungstür zum {} ({})".format(self.room.name, self.room.number)
             else:
-                return "Verbindungstür zu {}".format(self.room.identifier)
+                return "Verbindungstür zu {}".format(self.room.get_identifier())
 
 
 

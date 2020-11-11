@@ -58,15 +58,16 @@
             </tbody>
         </table>
         {% else %}
-            {% if request.GET.q %}<p>Keine Person mit dem Namen {{ request.GET.q }} gefunden.</p>{% endif %}
+            {% if request.GET.q %}<p>Keine Person mit dem Namen <em>{{ request.GET.q }}</em> gefunden.</p>{% endif %}
         {% endif %}
 
         {% if is_paginated %}
             {% include 'keys/pagination.html' %}
         {% endif %}
 
-        <a class='button is-primary' href={% url 'keys:person-add' %}>Neue Person anlegen</a>
-
+        <div class="control pt-3">
+            <a class='button is-primary' href={% url 'keys:person-add' %}>Neue Person anlegen</a>
+        </div>
 
     </div>
 </section>

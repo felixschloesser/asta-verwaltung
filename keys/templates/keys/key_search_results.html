@@ -56,7 +56,7 @@
             </tbody>
         </table>
         {% else %}
-            <p>Kein Schlüssel {% if request.GET.q %}mit Nummer oder Schließsystem {{ request.GET.q }}{% endif %}gefunden.</p>
+            <p>Kein Schlüssel {% if request.GET.q %}mit Nummer oder Schließsystem <em>{{ request.GET.q }}</em> {% endif %}gefunden.</p>
         {% endif %}
 
         {% if is_paginated %}

@@ -18,6 +18,10 @@ from django.urls import include, path
 
 from django.shortcuts import redirect
 
+from django.contrib import admin
+admin.site.enable_nav_sidebar = False
+
+
 urlpatterns = [
     path('', lambda r: redirect('/keys/')),
     path('keys/', include('keys.urls'), name='keys'),

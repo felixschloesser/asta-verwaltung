@@ -37,6 +37,8 @@
                  <th>Schlüssel</th>
                  <th>Person</th>
                  <th>Ausgabedatum</th>
+                 <th>Rückgabedatum</th>
+
             </thead>
 
             <tbody>
@@ -50,6 +52,9 @@
                     </td>
                     <td>
                         {{ issue.out_date }}
+                    </td>
+                    <td>
+                        {{ issue.in_date }}
                     </td>
                 </tr>
             {% endfor %}

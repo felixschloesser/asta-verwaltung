@@ -19,17 +19,45 @@ def validate_university_mail(value):
 
 
 def present_or_future_date(value):
-    if value >= datetime.date.today():
-        return value
+    date = value.date()
+
+    if date >= datetime.date.today():
+        # Date lies in the future
+        return date
     else:
         raise ValidationError("Das Datum darf nicht in der Verangenheit liegen.")
 
 def present_or_past_date(value):
-    if value <= datetime.date.today():
-        return value
+    date = value.date()
+
+    if date <= datetime.date.today():
+        # Date lies in the past
+        return date
     else:
         raise ValidationError("Das Datum darf nicht in der Zukunft liegen.")
 
+
+def present_or_max_10_days_ago(value):
+    date = value.date()
+
+    if date <= datetime.date.today():
+        if date > (datetime.date.today() - datetime.timedelta(days=10)):
+            date
+        else:
+            raise ValidationError("Das Datum darf nicht länger als 10 Tage in der Verangenheit liegen.")
+    else:
+        raise ValidationError("Das Datum darf nicht in der Zukunft liegen.")
+
+def present_or_max_3_days_ago(value):
+    date = value.date()
+
+    if date <= datetime.date.today():
+        if date > (datetime.date.today() - datetime.timedelta(days=3)):
+            date
+        else:
+            raise ValidationError("Das Datum darf nicht länger als 3 Tage in der Verangenheit liegen.")
+    else:
+        raise ValidationError("Das Datum darf nicht in der Zukunft liegen.")
 
 
 # Create your models here.
@@ -119,7 +147,7 @@ class Door(models.Model):
                                         related_name="doors",
                                         verbose_name='Schließsystem',
                                         on_delete = models.CASCADE)
-    comment = models.CharField("Kommentar",max_length=64, blank=True)
+    comment = models.CharField("Kommentar", max_length=64, blank=True, null=True)
     created_at = models.DateTimeField('Erstellungszeitpunkt', auto_now_add=True)
     updated_at = models.DateTimeField('Aktualisierungszeitpunkt', auto_now=True)
 
@@ -192,6 +220,8 @@ class Key(models.Model):
         return reverse('keys:key-detail', args=[str(self.id)])
 
 
+
+
     get_number_of_doors.short_description = "Anzahl Türen"
     get_locking_system_method.short_description = 'Typ'
 
@@ -252,8 +282,7 @@ class Person(models.Model): # Add a chron job ro delete after a 2 years of not r
     university_email = models.EmailField('Uni-Mail', unique=True, validators=[validate_university_mail])
     private_email = models.EmailField('Private Mail', unique=True)
     phone_number = PhoneNumberField('Telefon', unique=True)
-    group = models.ForeignKey('Group', related_name='people' ,verbose_name='Gruppe', on_delete=models.SET_NULL, blank=True, null=True)
-    deposit_paid = models.BooleanField('Kaution hinterlegt', default=False)
+    group = models.ForeignKey('Group', related_name='people' ,verbose_name='Gruppe', on_delete=models.SET_NULL, null=True)
 
     created_at = models.DateTimeField('Erstellungszeitpunkt', auto_now_add=True)
     updated_at = models.DateTimeField('Aktualisierungszeitpunkt', auto_now=True)
@@ -263,7 +292,7 @@ class Person(models.Model): # Add a chron job ro delete after a 2 years of not r
     class Meta:
         verbose_name = "Person"
         verbose_name_plural = "Personen"
-        ordering = ['last_name', 'first_name']
+        ordering = ['last_name', 'first_name', 'created_at']
 
         indexes = [
             models.Index(fields=['last_name', 'first_name']),
@@ -271,14 +300,62 @@ class Person(models.Model): # Add a chron job ro delete after a 2 years of not r
         ]
 
     def __str__(self):
-        return self.get_full_name()
-
-    def get_full_name(self):
-        return "{} {}".format(self.first_name, self.last_name)
+        full_name = "{} {}".format(self.first_name, self.last_name)
+        return full_name
 
     def get_absolute_url(self):
         return reverse('keys:person-detail', args=[str(self.id)])
 
+    def get_full_name(self):
+        return "{} {}".format(self.first_name, self.last_name)
+
+    def has_paid_deposit(self):
+        return hasattr(self, 'deposit')
+
+    def get_unreturned_issues(self):
+        return self.issues.filter(in_date__isnull=False)
+
+    has_paid_deposit.boolean = True
+    has_paid_deposit.short_description = "Kaution"
+
+
+
+
+class Deposit(models.Model):
+    currency_choices = [('EUR', '€')]
+
+    method_choices = [('cash', 'Bar'),
+                      ('bank transfer', 'Überweisung')]
+
+    person = models.OneToOneField('Person', verbose_name='Person', on_delete=models.PROTECT)
+    amount = models.DecimalField('Kautionsbetrag', max_digits=5, decimal_places=2, default=0)
+
+    currency = models.CharField('Währung', max_length=3, choices=currency_choices, default='EUR')
+
+
+    in_datetime = models.DateTimeField('Einzahlungszeitpunkt', validators=[present_or_max_3_days_ago])
+    in_method = models.CharField('Zahlungsmittel', max_length=64, choices=method_choices, default='cash')
+
+    out_datetime = models.DateTimeField('Rückzahlungszeitpunkt', null=True, validators=[present_or_max_3_days_ago])
+    out_method = models.CharField('Zahlungsmittel', max_length=64, choices=method_choices, null=True, default='cash')
+
+    created_at = models.DateTimeField('Erstellungszeitpunkt', auto_now_add=True)
+    updated_at = models.DateTimeField('Aktualisierungszeitpunkt', auto_now=True)
+
+    class Meta:
+        verbose_name = "Kaution"
+        verbose_name_plural = "Kautionen"
+        ordering = ["in_datetime", "amount"]
+
+    def __str__(self):
+        full_name = "{} von {}".format(self.amount, self.person.get_full_name())
+        return full_name
+
+    def has_been_returned(self):
+        if self.out_datetime and self.out_method:
+            return True
+        else:
+            return False
 
 
 class Group(models.Model):
@@ -299,8 +376,8 @@ class Group(models.Model):
 class Issue(models.Model):
     person = models.ForeignKey('Person', related_name="issues", verbose_name='Ausgaben', on_delete=models.PROTECT)
     key = models.ForeignKey('Key', related_name="issues", verbose_name='Schlüssel', on_delete=models.PROTECT)
-    out_date = models.DateField('Ausgabedatum', default=timezone.now, validators=[present_or_past_date])
-    in_date = models.DateField('Rückgabedatum', blank=True, null=True, validators=[present_or_past_date])
+    out_date = models.DateField('Ausgabedatum', default=timezone.now, validators=[present_or_max_10_days_ago])
+    in_date = models.DateField('Rückgabedatum', default=timezone.now, null=True, validators=[present_or_max_10_days_ago])
     created_at = models.DateTimeField('Erstellungszeitpunkt', auto_now_add=True)
     updated_at = models.DateTimeField('Aktualisierungszeitpunkt', auto_now=True)
 
@@ -312,7 +389,10 @@ class Issue(models.Model):
         ordering = ['-out_date']
 
         constraints = [
-            models.CheckConstraint(check=models.Q(in_date__gte=models.F('out_date')), name='give_out_before_take_in')
+            models.CheckConstraint(
+                check=models.Q(in_date__gte=models.F('out_date')),
+                name='give_out_before_take_in'
+            )
         ]
 
     def __str__(self):
@@ -320,3 +400,12 @@ class Issue(models.Model):
 
     def get_absolute_url(self):
         return reverse('keys:issue-detail', args=[str(self.id)])
+
+    def save(self, *args, **kwargs):
+        # check for issues of that key that have an overlapping out date
+        overlap = self.key.issues.filter(in_date__isnull=True).exists()
+
+        if overlap:
+            return ValidationError("Der Schlüssel wurde noch nicht zurückgegeben.")
+        else:
+            super(Issue, self).save(*args, **kwargs) # Call the "real" save() method.

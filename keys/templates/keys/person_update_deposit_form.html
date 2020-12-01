@@ -1,0 +1,85 @@
+{% extends "keys/base.html" %}
+
+{% block title %}Kaution | {{ person.get_full_name }} | Schlüsselsystem{% endblock %}
+
+{% load widget_tweaks %}
+{% load humanize %}
+
+{% block content %}
+<div class="container is-max-desktop">
+
+    <h1 class="title">Kaution von {{ deposit.person }} bearbeiten</h1>
+
+    <form method='post'>
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+        <article class="message is-danger">
+            <div class="message-body">
+                {{ form.non_field_errors }}
+            </div>
+        </article>
+        {% endif %}
+
+        <div class="field">
+            <label class="label" for="{{ field.id_for_label }}">{{ form.amount.label_tag }}</label>
+
+            <div class="field has-addons">
+                <p class="control">
+                    {% if not form.amount.errors %}
+                        {{ form.amount|add_class:"input has-addons has_addons-left" }}
+                    {% else %}
+                        {{ form.amount|add_class:"input has-addons has_addons-left is-danger"}}
+                    {% endif %}
+                </p>
+                <p class="control">
+                    <span class="select">
+                        {{ form.currency }}
+                    </span>
+                </p>
+            </div>
+            {% for error in form.amount.errors %}
+                <p class="help is-danger">{{ error }}</p>
+            {% endfor %}
+        </div>
+        <div class="field">
+            <label class="label" for="{{ field.id_for_label }}">{{ form.in_datetime.label_tag }}</label>
+            <div class="field has-addons">
+                <p class="control">
+                    {% if not form.in_datetime.errors %}
+                        {{ form.in_datetime|add_class:"input has-addons has_addons-left" }}
+                    {% else %}
+                        {{ form.in_datetime|add_class:"input has-addons has_addons-left is-danger"}}
+                    {% endif %}
+
+                    {% for error in form.in_datetime.errors %}
+                        <p class="help is-danger">{{ error }}</p>
+                    {% endfor %}
+                </p>
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label" for="{{ field.id_for_label }}">{{ form.in_method.label_tag }}</label>
+            <div class="field has-addons">
+                <div class="select">
+                    {% if not form.in_method.errors %}
+                        {{ form.in_method|add_class:"select" }}
+                    {% else %}
+                        {{ form.in_method|add_class:"select"}}
+                    {% endif %}
+
+                    {% for error in form.in_method.errors %}
+                        <p class="help is-danger">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <span class="buttons is-right">
+            <a class="button" href={% url 'keys:person-detail' pk=deposit.person.id %}>Abbrechen</a >
+            <input class="button is-primary" type="submit" value="Aktualisieren">
+        </span>
+    </form>
+</div>
+{% endblock %}

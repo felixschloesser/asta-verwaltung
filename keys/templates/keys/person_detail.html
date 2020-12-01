@@ -4,37 +4,96 @@
 
 
 {% block content %}
-<section class="section">
-    <div class="container is-max-desktop">
+<div class="container is-max-desktop">
+    <div class="block">
+    <div class="card">
+        <div class="card-header">
+            <div class="card-header-title">
+                <h1 class="title">{{ person.get_full_name }}</h1>
+            </div>
+        </div>
+        <div class="card-content">
+            <div class="columns is-mobile">
+                <div class="column is-one-fifth-mobile is-2-tablet is-1-widescreen" >
+                    <p class="text has-text-weight-bold has-text-right">Uni Mail</p>
+                </div>
+                <div class="column"><p class=text>{{ person.university_email }}</p></div>
+            </div>
+            <div class="columns is-mobile">
+                <div class="column is-one-fifth-mobile is-2-tablet is-1-widescreen"><p class="text has-text-weight-bold has-text-right">Private Mail</p></div>
+                <div class="column"><p class=text>{{ person.private_email }}</p></div>
+            </div>
+            <div class="columns is-mobile">
+                <div class="column is-one-fifth-mobile is-2-tablet is-1-widescreen"><p class="text has-text-weight-bold has-text-right">Telefon</p></div>
+                <div class="column"><p class=text>{{ person.phone_number }}</p></div>
+            </div>
+            <div class="columns is-mobile">
+                <div class="column is-one-fifth-mobile is-2-tablet is-1-widescreen"><p class="text has-text-weight-bold has-text-right">Kaution</p></div>
+                <div class="column">
+                    {% if person.has_paid_deposit %}
+                        <span class="tag is-success"><b>{{ person.deposit.amount }} {{ person.deposit.currency }}</b></span>
+                    {% else %}
+                       <span class="tag is-light"><b>nicht bezahlt</b></span>
+                     {% endif %}
 
-        <h1 class='title'>{{ person.get_full_name }}</h1>
-        <div class="content">
-            <p class='text'><strong>Gruppe: </strong>{{ person.group }}</p>
-            <p class='text'><strong>Uni Mail: </strong> {{ person.university_email }}</p>
-            <p class='text'><strong>Private Mail: </strong>{{ person.private_email }}</p>
-            <p class='text'><strong>Telefon: </strong>{{ person.phone_number }}</p>
-            <p class='text'><strong>Kaution:</strong>
-            {% if person.deposit_paid %}
-                <span class="tag is-success"><b>bezahlt</b></span>
-            {% else %}
-                <span class="tag is-light"><b>nicht bezahlt</b></span>
-            {% endif %}</p>
-
-            <h2 class="subtitle is-4">Aktuelle Schlüssselausleihen:</h2>
-            <ul>
-            {% for issue in person.issues.all %}
-                <li><strong>Nr. {{ issue.key }}</strong> am {{ issue.out_date }}:
-                   [{% for door in issue.key.get_access_doors.distinct %}<em>{{ door.room }}</em>{% if not forloop.last %}, {% endif %}{% empty %}keine.{% endfor %}]
-                </li>
-            {% empty %}
-                keine.
-            {% endfor %}
-            </ul>
-            <div class="buttons is-left">
-                <a class="button is-link" href="{% url 'keys:person-list' %}">Zurück zur Liste</a>
+                </div>
             </div>
         </div>
     </div>
-</section>
+    </div>
 
+    <div class="block">
+    <div class="content">
+    <h2 class="subtitle is-4">Schlüssselausleihen:</h2>
+
+        <ul>
+        {% for issue in person.get_unreturned_issues %}
+            <li><strong>Nr. {{ issue.key }}</strong> am {{ issue.out_date }}:
+               [{% for door in issue.key.get_access_doors.distinct %}<em>{{ door.room }}</em>{% if not forloop.last %}, {% endif %}{% empty %}keine.{% endfor %}]
+            </li>
+        {% empty %}
+            Aktuell keine.
+        {% endfor %}
+        </ul>
+
+    </div>
+
+    </div>
+
+        <nav class="level">
+            <div class="level-lelft">
+                <div class="level-item py-1">
+                    <div class="field is-grouped is-grouped-left
+                    ">
+                        <p class="control">
+                            <a class="button is-link" href="{% url 'keys:person-list' %}">Zurück zur Liste</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="level-right">
+                <div class="level-item py-1">
+                    <div class="field is-grouped is-grouped-right">
+                        <p class="control">
+                            <a class="button" href="{% url 'keys:person-update' pk=person.id  %}">Bearbeiten</a>
+                        </p>
+                        {% if person.has_paid_deposit and not person.get_unreturned_issues %}
+                        <p class="control">
+                            <a class="button is-dark" href="{% url 'keys:person-return-deposit' pk=person.id %}">Kaution zurückgeben</a>
+                        </p>
+                        {% elif person.has_paid_deposit %}
+                        <p class="control">
+                            <a class="button is-dark" href="{% url 'keys:person-update-deposit' pk=person.id %}">Kaution bearbeiten</a>
+                        </p>
+                        {% else %}
+                        <p class="control">
+                            <a class="button is-primary" href="{% url 'keys:person-create-deposit' pk=person.id %}">Kaution hinzufügen</a>
+                        </p>
+                        {% endif%}
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+</div>
 {% endblock %}

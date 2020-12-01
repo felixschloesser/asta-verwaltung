@@ -1,10 +1,12 @@
 from django.shortcuts import render, get_object_or_404
 from django.views import View, generic
-from django.http import HttpResponseRedirect, JsonResponse
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import models
+from django.urls import reverse_lazy
+from django.http import Http404
 
-from .models import Key, Person, Issue
-from .forms import IssueReturnForm
+from .models import Key, Person, Issue, Deposit
+from .forms import IssueReturnForm, DepositCreateForm
 # Create your views here:
 
 
@@ -13,12 +15,12 @@ def index_view(request):
 
 
 # Keys
-class KeyList(generic.ListView):
+class KeyList(LoginRequiredMixin, generic.ListView):
     model = Key
     paginate_by = 20
 
 
-class KeySearchResults(generic.ListView):
+class KeySearchResults(LoginRequiredMixin, generic.ListView):
     model = Key
     template_name_suffix = '_search_results'
 
@@ -32,18 +34,18 @@ class KeySearchResults(generic.ListView):
                                      )
         return key_list
 
-class KeyDetail(generic.DetailView):
+class KeyDetail(LoginRequiredMixin, generic.DetailView):
     model = Key
 
 
 
 # People
-class PersonList(generic.ListView):
+class PersonList(LoginRequiredMixin, generic.ListView):
     model = Person
     paginate_by = 30
 
 
-class PersonSearchResults(generic.ListView):
+class PersonSearchResults(LoginRequiredMixin, generic.ListView):
     model = Person
     paginate_by = 30
     template_name_suffix = '_search_results'
@@ -59,11 +61,7 @@ class PersonSearchResults(generic.ListView):
         return person_list
 
 
-class PersonDetail(generic.DetailView):
-    model = Person
-
-
-class PersonCreate(generic.CreateView):
+class PersonCreate(LoginRequiredMixin, generic.CreateView):
     model = Person
     fields = ['first_name',
               'last_name',
@@ -73,8 +71,101 @@ class PersonCreate(generic.CreateView):
               'group']
 
 
+class PersonDetail(LoginRequiredMixin, generic.DetailView):
+    model = Person
+
+
+class PersonUpdate(LoginRequiredMixin, generic.UpdateView):
+    model = Person
+    fields = ['first_name',
+              'last_name',
+              'university_email',
+              'private_email',
+              'phone_number',
+              'group']
+    template_name_suffix = '_update_form'
+
+
+class PersonCreateDeposit(LoginRequiredMixin, generic.CreateView):
+    model = Deposit
+    form_class = DepositCreateForm
+    template_name = 'keys/person_create_deposit_form.html'
+
+    def get_object(self, queryset=None):
+        """
+        Get the deposit from the person-pk in the urlpattern.
+        """
+        queryset = self.get_queryset()
+        pk = self.kwargs.get(self.pk_url_kwarg)
+        obj = queryset.filter(person__id=pk).get()
+        return obj
+
+
+    def get_context_data(self, **kwargs):
+        """
+        Get the current person from the request and add it to the context so that the tempalte can access it.
+        """
+        context = super().get_context_data(**kwargs)
+        person = Person.objects.filter(pk=self.kwargs.get('pk')).get()
+        context["person"] = person
+        return context
+
+    def form_valid(self, form):
+        """
+        Before validating the form, populate the person field using the request primary key as a lookup for
+        """
+        self.object = form.save(commit=False)
+        self.object.person = Person.objects.filter(pk=self.kwargs.get('pk')).get()
+        self.object.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('keys:person-detail', args = [self.object.person.id])
+
+
+class PersonUpdateDeposit(LoginRequiredMixin, generic.UpdateView):
+    model = Deposit
+    fields = ['amount',
+              'currency',
+              'in_datetime',
+              'in_method']
+
+    template_name = 'keys/person_update_deposit_form.html'
+
+    def get_success_url(self):
+        return reverse_lazy('keys:person-detail', args = [self.object.person.id])
+
+    def get_object(self, queryset=None):
+        """
+        Get the deposit from the person-pk in the urlpattern.
+        """
+        queryset = self.get_queryset()
+        pk = self.kwargs.get(self.pk_url_kwarg)
+        obj = queryset.filter(person__id=pk).get()
+        return obj
+
+
+class PersonReturnDeposit(LoginRequiredMixin, generic.UpdateView):
+    model = Deposit
+    fields = ['out_datetime',
+              'out_method']
+
+    template_name = 'keys/person_return_deposit_form.html'
+
+    def get_success_url(self):
+        return reverse_lazy('keys:person-detail', args = [self.object.person.id])
+
+    def get_object(self, queryset=None):
+        """
+        Get the deposit from the person-pk in the urlpattern.
+        """
+        queryset = self.get_queryset()
+        pk = self.kwargs.get(self.pk_url_kwarg)
+        obj = queryset.filter(person__id=pk).get()
+        return obj
+
 # Issues
-class IssueList(generic.ListView):
+class IssueList(LoginRequiredMixin, generic.ListView):
     model = Issue
     paginate_by = 20
 
@@ -90,7 +181,7 @@ class IssueList(generic.ListView):
         return issue_list
 
 
-class IssueSearchResults(generic.ListView):
+class IssueSearchResults(LoginRequiredMixin, generic.ListView):
     model = Issue
     paginate_by = 20
     template_name_suffix = '_search_results'
@@ -107,7 +198,7 @@ class IssueSearchResults(generic.ListView):
                                               models.Q(key__number__startswith=query)
                                              )
         else:
-          issue_list = Issue.objects.filter(models.Q(person__first_name__icontains=query) |
+            issue_list = Issue.objects.filter(models.Q(person__first_name__icontains=query) |
                                             models.Q(person__last_name__icontains=query) |
                                             models.Q(key__number__startswith=query),
                                             in_date__isnull=True
@@ -115,58 +206,23 @@ class IssueSearchResults(generic.ListView):
         return issue_list
 
 
-class IssueDetail(generic.DetailView):
+class IssueDetail(LoginRequiredMixin, generic.DetailView):
     model = Issue
 
 
-class IssueNew(generic.CreateView):
+class IssueNew(LoginRequiredMixin, generic.CreateView):
     model = Issue
     fields = ['person',
               'key',
               'out_date']
 
-class IssueReturnList(generic.ListView):
+
+class IssueReturnList(LoginRequiredMixin, generic.ListView):
     model = Issue
     paginate_by = 20
 
 
-class IssueReturn(generic.UpdateView):
+class IssueReturn(LoginRequiredMixin, generic.UpdateView):
     model = Issue
     form_class = IssueReturnForm
     template_name_suffix ='_return_form'
-
-
-
-# class IssueCreate(View):
-#     form_class = IssueForm
-#     initial = {'key': 'value'}
-#     template_name = 'keys/issue_form.html'
-
-#     def get(self, request):
-#         self.form = self.form_class(request.POST)
-
-#         # Name autocompletion /?name='Felix'
-#         if 'term' in request.GET:
-#             qs = Person.objects.filter(first_name__istartswith=request.GET.get('term'))
-#             autocomplete_names = [person.first_name + ' ' +
-#                                   person.last_name for person in qs]
-#             return JsonResponse(autocomplete_names, safe=False)
-#             # safe=false allows also lists not only dicts to be serialized
-
-#         # Regular GET
-#         else:
-#             return render(request, self.template_name, {'form': self.form})
-
-#     def post(self, request):
-#         self.form = self.form_class(request.POST)
-#         if self.form.is_valid():
-#             self.form.save()
-#             return HttpResponseRedirect('/keys/issues')
-
-#         return render(request, self.template_name, {'form': self.form})
-
-
-# Schlüssel zurückgeben:
-    #termin vereinbaren
-
-# Meine Schlüssel

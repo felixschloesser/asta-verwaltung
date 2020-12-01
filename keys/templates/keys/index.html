@@ -1,11 +1,14 @@
 {% extends "keys/base.html" %}
 
 {% block content %}
-<section class="section">
-    <div class="container is-max-desktop">
-            <h1 class="title">Wilkommen!</h1>
-            <p class="content">Das hier ist das neue Schlüsselsystem des AStAs. Toll oder?</p>
-    </div>
-</section>
+<div class="container is-max-desktop">
+        {% if user.is_authenticated %}
+        <h1 class="title">Wilkommen, {{ user.username }}!</h1>
+        {% else %}
+        <h1 class="title">Wilkommen!</h1>
+        <p>Bitte melden Sie sich an.</p>
+        {% endif %}
+        <p class="content">Das hier ist das neue Schlüsselsystem des AStAs. Toll oder?</p>
+</div>
 
 {% endblock %}

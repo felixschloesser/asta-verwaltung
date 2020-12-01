@@ -38,10 +38,17 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
+
+    # 3rd party
     'django_extensions',
     'widget_tweaks',
     'phonenumber_field',
-    'keys.apps.KeysConfig'
+    'rest_framework',
+
+    # Local
+    'keys',
+    'api',
 ]
 
 MIDDLEWARE = [

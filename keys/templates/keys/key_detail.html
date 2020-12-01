@@ -4,36 +4,29 @@
 
 
 {% block content %}
-<section class="section">
-    <div class="container is-max-desktop">
-        <h1 class='title'>Schüssel Nr. {{ key.number }}</h1>
-        {% if key.stolen_or_lost %}
-            <article class="message is-danger">
-                <div class="message-body">
-                Schlüssel wurde verloren oder gestohlen!
-                </div>
-            </article>
-        {% endif %}
-        <div class="content">
-                <p><strong>Schließsystem:</strong> {{ key.locking_system }}</p>
-                <p><strong>Lagerort:</strong> {{ key.storage_location }}</p>
-                <p><strong>Öffnet folgende Türen:</strong></p>
-                    <ul>
-                    {% for door in key.doors.all %}
-                        <li>{{ door }}</li>
-                    {% empty %}
-                        keine
-                    {% endfor %}
-                    </ul>
-
-
-
-
-        </div>
-        <div class="buttons is-left">
-            <a class="button is-link" href="{% url 'keys:key-list' %}">Zurück zur Liste</a>
-        </div>
+<div class="container is-max-desktop">
+    <h1 class='title'>Schüssel Nr. {{ key.number }}</h1>
+    {% if key.stolen_or_lost %}
+        <article class="message is-danger">
+            <div class="message-body">
+            Schlüssel wurde verloren oder gestohlen!
+            </div>
+        </article>
+    {% endif %}
+    <div class="content">
+            <p><strong>Schließsystem:</strong> {{ key.locking_system }}</p>
+            <p><strong>Lagerort:</strong> {{ key.storage_location }}</p>
+            <p><strong>Öffnet folgende Türen:</strong></p>
+                <ul>
+                {% for door in key.doors.all %}
+                    <li>{{ door }}</li>
+                {% empty %}
+                    keine
+                {% endfor %}
+                </ul>
     </div>
-</section>
-
+    <div class="buttons is-left">
+        <a class="button is-link" href="{% url 'keys:key-list' %}">Zurück zur Liste</a>
+    </div>
+</div>
 {% endblock %}

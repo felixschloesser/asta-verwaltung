@@ -5,75 +5,73 @@
 {% load widget_tweaks %}
 
 {% block content %}
-<section class="section">
-    <div class="container is-max-desktop">
+<div class="container is-max-desktop">
 
-        <h1 class="title">Neue Ausgabe</h1>
+    <h1 class="title">Neue Ausgabe</h1>
 
-        <form method='post'>
-            {% csrf_token %}
+    <form method='post'>
+        {% csrf_token %}
 
-            {% if form.non_field_errors %}
-                <article class="message is-danger">
-                    <div class="message-body">
-                        {{ form.non_field_errors }}
-                    </div>
-                </article>
-            {% endif %}
+        {% if form.non_field_errors %}
+            <article class="message is-danger">
+                <div class="message-body">
+                    {{ form.non_field_errors }}
+                </div>
+            </article>
+        {% endif %}
 
-            <div class="field">
-                <label class="label" for="{{ form.person.id_for_label }}">{{ form.person.label_tag }}</label>
-                    <div class="control">
-                        {% if not form.person.errors %}
-                            {{ form.person|add_class:"input" }}
-                        {% else %}
-                            {{ form.person|add_class:"input is-danger"}}
-                        {% endif %}
-                    </div>
-                {% for error in form.person.errors %}
-                    <p class="help is-danger">{{ error }}</p>
-                {% endfor %}
-            </div>
-
-
-            <div class="field">
-                <label class="label" for="{{ form.key.id_for_label }}">{{ form.key.label_tag }}</label>
-                    <div class="control">
-                        {% if not form.key.errors %}
-                            {{ form.key|add_class:"input" }}
-                        {% else %}
-                            {{ form.key|add_class:"input is-danger"}}
-                        {% endif %}
-                    </div>
-                {% for error in form.key.errors %}
-                    <p class="help is-danger">{{ error }}</p>
-                {% endfor %}
-            </div>
-
-            <div class="field">
-                <label class="label" for="{{ form.out_date.id_for_label }}">{{ form.out_date.label_tag }}</label>
-                    <div class="control">
-                        {% if not form.out_date.errors %}
-                            {{ form.out_date|add_class:"input" }}
-                        {% else %}
-                            {{ form.out_date|add_class:"input is-danger"}}
-                        {% endif %}
-                    </div>
-                {% for error in form.out_date.errors %}
-                    <p class="help is-danger">{{ error }}</p>
-                {% endfor %}
-            </div>
-
-            <div class="buttons is-right">
-                <p class="control">
-                    <input class="button is-primary" type="submit" value="Anlegen">
-                </p>
-            </div>
-        </form>
+        <div class="field">
+            <label class="label" for="{{ form.person.id_for_label }}">{{ form.person.label_tag }}</label>
+                <div class="control">
+                    {% if not form.person.errors %}
+                        {{ form.person|add_class:"input" }}
+                    {% else %}
+                        {{ form.person|add_class:"input is-danger"}}
+                    {% endif %}
+                </div>
+            {% for error in form.person.errors %}
+                <p class="help is-danger">{{ error }}</p>
+            {% endfor %}
+        </div>
 
 
-    </div>
-</section>
+        <div class="field">
+            <label class="label" for="{{ form.key.id_for_label }}">{{ form.key.label_tag }}</label>
+                <div class="control">
+                    {% if not form.key.errors %}
+                        {{ form.key|add_class:"input" }}
+                    {% else %}
+                        {{ form.key|add_class:"input is-danger"}}
+                    {% endif %}
+                </div>
+            {% for error in form.key.errors %}
+                <p class="help is-danger">{{ error }}</p>
+            {% endfor %}
+        </div>
+
+        <div class="field">
+            <label class="label" for="{{ form.out_date.id_for_label }}">{{ form.out_date.label_tag }}</label>
+                <div class="control">
+                    {% if not form.out_date.errors %}
+                        {{ form.out_date|add_class:"input" }}
+                    {% else %}
+                        {{ form.out_date|add_class:"input is-danger"}}
+                    {% endif %}
+                </div>
+            {% for error in form.out_date.errors %}
+                <p class="help is-danger">{{ error }}</p>
+            {% endfor %}
+        </div>
+
+        <div class="buttons is-right">
+            <p class="control">
+                <input class="button is-primary" type="submit" value="Anlegen">
+            </p>
+        </div>
+    </form>
+
+
+</div>
 
 {% endblock %}
 

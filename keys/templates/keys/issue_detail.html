@@ -4,36 +4,34 @@
 
 
 {% block content %}
-<section class="section">
-    <div class="container is-max-desktop">
-        <h1 class='title'>Ausgabe von Schlüssel Nr. {{ issue.key }}</h1>
-        <div class="content">
-            <p><strong>An:</strong> {{ issue.person }}</p>
-            <p><strong>Ausgabedatum:</strong> {{ issue.out_date }}</p>
-            {% if issue.in_date %}
-                <p><strong>Rückgabedatum:</strong> {{ issue.in_date }}</p>
-            {% endif %}
-
-        </div>
-
-        <nav class="level is-max-desktop">
-            <div class="level-left">
-                <div class="level-item">
-                    <a class="button is-link" href="{% url 'keys:issue-list' %}">Zurück zur Liste</a>
-                </div>
-            </div>
-            <div class="level-right">
-                <div class="level-item">
-                    {% if issue.in_date %}
-                    <a class="button is-primary" disabled>Zurückgeben</a>
-                    {% else %}
-                    <a class="button is-primary" href="{% url 'keys:issue-return' object.id  %}" >Zurückgeben</a>
-                    {% endif %}
-                </div>
-            </div>
-        </nav>
+<div class="container is-max-desktop">
+    <h1 class='title'>Ausgabe von Schlüssel Nr. {{ issue.key }}</h1>
+    <div class="content">
+        <p><strong>An:</strong> {{ issue.person }}</p>
+        <p><strong>Ausgabedatum:</strong> {{ issue.out_date }}</p>
+        {% if issue.in_date %}
+            <p><strong>Rückgabedatum:</strong> {{ issue.in_date }}</p>
+        {% endif %}
 
     </div>
-</section>
+
+    <nav class="level is-max-desktop">
+        <div class="level-left">
+            <div class="level-item">
+                <a class="button is-link" href="{% url 'keys:issue-list' %}">Zurück zur Liste</a>
+            </div>
+        </div>
+        <div class="level-right">
+            <div class="level-item">
+                {% if issue.in_date %}
+                <a class="button is-primary" disabled>Zurückgeben</a>
+                {% else %}
+                <a class="button is-primary" href="{% url 'keys:issue-return' object.id  %}" >Zurückgeben</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+</div>
 
 {% endblock %}

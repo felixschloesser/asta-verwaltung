@@ -3,7 +3,20 @@ from django.core.exceptions import ValidationError
 from django import forms
 from django.utils import formats
 
-from .models import Issue
+from .models import Issue, Deposit
+
+import datetime
+
+class DepositCreateForm(forms.ModelForm):
+    class Meta:
+        model = Deposit
+        fields = ['amount',
+                  'currency',
+                  'in_datetime',
+                  'in_method']
+
+    initial= {'amount': 50.0,
+              'in_datetime': datetime.datetime.now()}
 
 # Custom Forms
 class IssueReturnForm(forms.ModelForm):

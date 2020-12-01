@@ -6,53 +6,51 @@
 
 
 {% block content %}
-<section class="section">
-    <div class="container is-max-desktop">
+<div class="container is-max-desktop">
 
-        <h1 class="title">Schlüssel zurückgeben</h1>
+    <h1 class="title">Schlüssel zurückgeben</h1>
 
-        <article class="message is-dark">
-          <div class="message-body">
-            Bitte den Schlüssel {{ issue.key }} nach der Rückgabe zurück in den <strong>{{ issue.key.storage_location }}</strong> legen.
-          </div>
+    <article class="message is-dark">
+      <div class="message-body">
+        Bitte den Schlüssel {{ issue.key }} nach der Rückgabe zurück in den <strong>{{ issue.key.storage_location }}</strong> legen.
+      </div>
+    </article>
+    <p>
+
+    <form method='post'>
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+        <article class="message is-danger">
+            <div class="message-body">
+                {{ form.non_field_errors }}
+            </div>
         </article>
-        <p>
+        {% endif %}
 
-        <form method='post'>
-            {% csrf_token %}
-
-            {% if form.non_field_errors %}
-            <article class="message is-danger">
-                <div class="message-body">
-                    {{ form.non_field_errors }}
-                </div>
-            </article>
-            {% endif %}
-
-            {% for field in form %}
-            <div class="field">
-                <label class="label" for="{{ field.id_for_label }}">{{ field.label_tag }}</label>
-                    <div class="control">
-                        {% if not field.errors %}
-                            {{ field|add_class:"input" }}
-                        {% else %}
-                            {{ field|add_class:"input is-danger"}}
-                        {% endif %}
-                    </div>
-                {% for error in field.errors %}
-                    <p class="help is-danger">{{ error }}</p>
-                {% endfor %}
-            </div>
-            {% endfor %}
-
-            <div class="buttons">
+        {% for field in form %}
+        <div class="field">
+            <label class="label" for="{{ field.id_for_label }}">{{ field.label_tag }}</label>
                 <div class="control">
-                    <input class="button is-primary" type="submit" value="Zurückgeben">
+                    {% if not field.errors %}
+                        {{ field|add_class:"input" }}
+                    {% else %}
+                        {{ field|add_class:"input is-danger"}}
+                    {% endif %}
                 </div>
+            {% for error in field.errors %}
+                <p class="help is-danger">{{ error }}</p>
+            {% endfor %}
+        </div>
+        {% endfor %}
+
+        <div class="buttons">
+            <div class="control">
+                <input class="button is-primary" type="submit" value="Zurückgeben">
             </div>
-        </form>
-    </div>
-</section>
+        </div>
+    </form>
+</div>
 
 {% endblock %}
 

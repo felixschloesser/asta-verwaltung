@@ -1,6 +1,7 @@
+
 {% extends "keys/base.html" %}
 
-{% block title %}Neue Person | Schlüsselsystem{% endblock %}
+{% block title %} {{ person.get_full_name }} bearbeiten | Schlüsselsystem{% endblock %}
 
 
 {% load widget_tweaks %}
@@ -8,7 +9,7 @@
 {% block content %}
 <div class="container is-max-desktop">
 
-    <h1 class="title">Neue Person anlegen</h1>
+    <h1 class="title">Personendaten bearbeiten</h1>
 
     <form method='post'>
         {% csrf_token %}
@@ -50,18 +51,10 @@
         {% endfor %}
         </div>
 
-        <nav class=level>
-            <div class=level-left>
-                <div class=level-item>
-                    <a class="button is-link" href={% url 'keys:person-list' %}>Zurück zur Liste</a >
-                </div>
-            </div>
-             <div class=level-right>
-                <div class=level-item>
-                    <input class="button is-primary" type="submit" value="Anlegen">
-                </div>
-            </div>
-        </nav>
+        <span class="buttons is-right">
+            <a class="button" href={% url 'keys:person-detail' pk=person.id %}>Abbrechen</a >
+            <input class="button is-primary" type="submit" value="Aktualisieren">
+        </span>
     </form>
 </div>
 {% endblock %}

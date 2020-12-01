@@ -1,8 +1,7 @@
 from django.contrib import admin
 
 from .models import *
-
-admin.site.site_header = "Schlüsselverwaltungssystem"
+admin.site.site_header = "Administration"
 
 class DoorInline(admin.TabularInline):
     model = Door
@@ -60,7 +59,6 @@ class LockingSystemAdmin(admin.ModelAdmin):
 
 
 
-
 @admin.register(StorageLocation)
 class StorageLocationAdmin(admin.ModelAdmin):
 
@@ -76,9 +74,15 @@ class StorageLocationAdmin(admin.ModelAdmin):
 
 @admin.register(Person)
 class PersonAdmin(admin.ModelAdmin):
-    list_display = ('__str__', 'university_email', 'private_email', 'phone_number')
-    list_filter = ('group', 'deposit_paid', 'updated_at')
+    list_display = ('__str__', 'university_email', 'private_email', 'phone_number', 'has_paid_deposit')
+    list_filter = ('group', 'deposit__amount', 'updated_at')
     search_fields = ['first_name', 'last_name']
+
+
+@admin.register(Deposit)
+class DepositAdmin(admin.ModelAdmin):
+    list_display = ('person', 'amount', 'in_datetime', 'out_datetime')
+    list_filter = ('amount', 'in_method', 'out_datetime')
 
 
 @admin.register(Group)

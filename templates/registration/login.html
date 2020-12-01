@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Login | Schlüsselsystem{% endblock %}
+
+{% load widget_tweaks %}
+{% block content %}
+    <div class="container is-max-desktop">
+
+        <h1 class="title">Anmelden</h1>
+
+        {% if form.errors %}
+        <article class="message is-danger">
+                <div class="message-body">
+                    <p>Benutznername und Passwort stimmen nicht überein, bitte versuch es nochmal.</p>
+                </div>
+        </article>
+
+        {% endif %}
+
+        {% if next %}
+            {% if user.is_authenticated %}
+                <p>Ihr Konto hat keinen Zugang zu dieser Seite. Um fortzufahren,
+            bitte melden Sie sich mit einem Konto an, das Zugang hat.</p>
+            {% else %}
+                <p>Bitte melden Sie sich an um diese Seite zu sehen.</p>
+            {% endif %}
+        {% endif %}
+
+        <form method="post" action="{% url 'login' %}">
+        {% csrf_token %}
+        <div class="field">
+            <label class="label">{{ form.username.label_tag }}</label>
+            <div class="control">
+                {{ form.username|add_class:"input" }}
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label">{{ form.password.label_tag }}</label>
+            <div class="control">
+                {{ form.password|add_class:"input" }}
+            </div>
+                <p class="help"><a href="{% url 'password_reset' %}">Passwort vergesssen?</a></p>
+
+        </div>
+        <div class="field">
+            <input class="button is-primary" type="submit" value="Anmelden">
+            <input type="hidden" name="next" value="{{ next }}">
+        </div>
+
+
+        </form>
+    </div>
+
+{% endblock %}

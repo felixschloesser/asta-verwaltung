@@ -1,74 +1,72 @@
 {% extends "keys/base.html" %}
 
 {% block content %}
-    <section class="section">
-    <div class="container is-max-desktop">
-        <nav class="level">
-            <!-- Left side -->
-            <div class="level-left">
-                <div class="level-item">
-                    <h1 class='title'>Schlüsselsuche{% if request.GET.q %}: {{ request.GET.q }}{% endif %}</h1>
-                </div>
+<div class="container is-max-desktop">
+    <nav class="level">
+        <!-- Left side -->
+        <div class="level-left">
+            <div class="level-item">
+                <h1 class='title'>Schlüsselsuche{% if request.GET.q %}: {{ request.GET.q }}{% endif %}</h1>
             </div>
-            <!-- Right side -->
-            <div class="level-right">
-                <div class="level-item">
-                    <div class="field has-addons">
-                        <div class="control">
-                            <form action={% url 'keys:key-search-results' %} method='get'>
-                                <input class="input" name='q' type="text" placeholder="Schlüsselnr./Modell">
-                            </form>
-                        </div>
-                        <div class="control">
-                            <a class="button is-info">
-                                Suchen
-                            </a>
-                        </div>
+        </div>
+        <!-- Right side -->
+        <div class="level-right">
+            <div class="level-item">
+                <div class="field has-addons">
+                    <div class="control">
+                        <form action={% url 'keys:key-search-results' %} method='get'>
+                            <input class="input" name='q' type="text" placeholder="Schlüsselnr./Modell">
+                        </form>
+                    </div>
+                    <div class="control">
+                        <a class="button is-info">
+                            Suchen
+                        </a>
                     </div>
                 </div>
             </div>
-        </nav>
+        </div>
+    </nav>
 
-        {% if key_list %}
-        <div class="container">
-            <div class="b-table">
-                <div class="table-wrapper has-mobile-cards">
-                    <table class="table is-fullwidth is-hoverable">
-                        <thead>
-                             <th>Nummer</th>
-                             <th>Schließsystem</th>
-                             <th>Türen</th>
-                        </thead>
+    {% if key_list %}
+    <div class="container">
+        <div class="b-table">
+            <div class="table-wrapper has-mobile-cards">
+                <table class="table is-fullwidth is-hoverable">
+                    <thead>
+                         <th>Nummer</th>
+                         <th>Schließsystem</th>
+                         <th>Türen</th>
+                    </thead>
 
-                        <tbody>
-                        {% for key in key_list %}
-                            <tr>
-                                <td data-label="Nummer">
-                                    <a href="{{ key.get_absolute_url }}">{{ key }}</a>
-                                </td>
-                                <td data-label="Schließsystem">
-                                    {{ key.locking_system }}
-                                </td>
-                                <td data-label="Türen">
-                                    {% for door in key.doors.all %}
-                                        {{ door }}{% if not forloop.last %}, {% endif %}
-                                    {% endfor %}
-                                </td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
+                    <tbody>
+                    {% for key in key_list %}
+                        <tr>
+                            <td data-label="Nummer">
+                                <a href="{{ key.get_absolute_url }}">{{ key }}</a>
+                            </td>
+                            <td data-label="Schließsystem">
+                                {{ key.locking_system }}
+                            </td>
+                            <td data-label="Türen">
+                                {% for door in key.doors.all %}
+                                    {{ door }}{% if not forloop.last %}, {% endif %}
+                                {% endfor %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
-        {% else %}
-            <p>Kein Schlüssel {% if request.GET.q %}mit Nummer oder Schließsystem <em>{{ request.GET.q }}</em> {% endif %}gefunden.</p>
-        {% endif %}
-
-        {% if is_paginated %}
-            {% include 'keys/pagination.html' %}
-        {% endif %}
     </div>
-</section>
+    {% else %}
+        <p>Kein Schlüssel {% if request.GET.q %}mit Nummer oder Schließsystem <em>{{ request.GET.q }}</em> {% endif %}gefunden.</p>
+    {% endif %}
+
+    {% if is_paginated %}
+        {% include 'keys/pagination.html' %}
+    {% endif %}
+</div>
 
 {% endblock %}

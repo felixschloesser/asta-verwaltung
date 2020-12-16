@@ -87,14 +87,16 @@ WSGI_APPLICATION = 'asta-administration.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'keyManagement',
-        'USER':'django',
-        'PASSWORD':'Payphone0-Observer-Livestock',
-        'HOST':'localhost',
-        'PORT':'',
-        }
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'astadb',
+        'USER': 'django',
+        'PASSWORD': 'Payphone0-Observer-Livestock',
+        'HOST': 'localhost',
+        'PORT': '',
+    }
 }
+
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators

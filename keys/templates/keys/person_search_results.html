@@ -17,13 +17,13 @@
                 <div class="field has-addons">
                     <div class="control">
                         <form action={% url 'keys:person-search-results' %} method='get'>
-                            <input class="input" name='q' type="text" placeholder="Vor-/Nachname">
-                        </form>
+                            <input class="input" name='q' type="text" placeholder="Vor-/Nachname" required>
                     </div>
                     <div class="control">
-                        <a class="button is-info">
+                        <button type='submit' class="button is-info">
                             Suchen
-                        </a>
+                        </button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -38,21 +38,25 @@
                     <table class="table is-fullwidth is-hoverable">
                         <thead>
                              <th>Name</th>
-                             <th>TU-Mail</th>
+                             <th>Uni-Mail</th>
                              <th>Gruppe</th>
+                             <th>Kaution bezahlt</th>
                         </thead>
 
                         <tbody>
                         {% for person in person_list %}
-                            <tr>
+                            <tr style="cursor:pointer;" onclick="location.href='{{ person.get_absolute_url }}'">
                                 <td data-label="Name">
-                                    <a href="{{ person.get_absolute_url }}">{{ person }}</a>
+                                    {{ person }}
                                 </td>
-                                <td data-label="TU-Mail">
+                                <td data-label="Uni-Mail">
                                     {{ person.university_email }}
                                 </td>
                                 <td data-label="Gruppe">
                                     {{ person.group }}
+                                </td>
+                                <td data-label="Kaution bezahlt">
+                                    {{ person.deposit.in_datetime|date:"SHORT_DATE_FORMAT"|default:'-' }}
                                 </td>
                             </tr>
                         {% endfor %}

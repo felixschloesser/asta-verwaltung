@@ -1,6 +1,6 @@
 {% extends "keys/base.html" %}
 
-{% block title %} Ausleihen |Schlüsselsystem{% endblock %}
+{% block title %} Ausleihen | Schlüsselsystem{% endblock %}
 
 {% block content %}
 <div class="container is-max-desktop">
@@ -17,15 +17,18 @@
                 <div class="field has-addons">
                     <div class="control">
                         <form action={% url 'keys:issue-search-results' %} method='get'>
-                            <input class="input" name='q' type="text" placeholder="Schlüsselnr./Person">
-                        </form>
+                            <input class="input" name='q' type="text" placeholder="Schlüsselnr./Person" required>
                     </div>
                     <div class="control">
-                        <a class="button is-info">
+                        <button type='submit' class="button is-info">
                             Suchen
-                        </a>
+                        </button>
+                        </form>
                     </div>
                 </div>
+            </div>
+            <div class="level-item">
+
             </div>
         </div>
     </nav>
@@ -76,7 +79,7 @@
     {% if not request.GET.r %}
 
         <div class="control pt-3">
-            <a class="button", href="{% url 'keys:issue-list' %}?r=1">Bereits zurückgegebene anzeigen</a>
+            <a class="button", href="{% url 'keys:issue-list' %}?r=1">Vergangene anzeigen</a>
         </div>
     {% endif %}
 </div>

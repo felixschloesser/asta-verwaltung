@@ -1,4 +1,6 @@
-from django.urls import path
+import debug_toolbar
+
+from django.urls import path, include
 
 from . import views
 
@@ -19,7 +21,6 @@ urlpatterns = [
     path('person/<str:pk>/create-deposit', views.PersonCreateDeposit.as_view(), name='person-create-deposit'),
     path('person/<str:pk>/update-deposit', views.PersonUpdateDeposit.as_view(), name='person-update-deposit'),
     path('person/<str:pk>/return-deposit', views.PersonReturnDeposit.as_view(), name='person-return-deposit'),
-
 
     path('issues', views.IssueList.as_view(), name='issue-list'),
     path('issues/search', views.IssueSearchResults.as_view(), name='issue-search-results'),

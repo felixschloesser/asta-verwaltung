@@ -28,30 +28,7 @@
             <a class="navbar-item" href="{% url 'keys:index' %}">
                 <img src="{% static 'keys/images/logo_grey.png' %}" alt="logo" width="48" height="28">
             </a>
-            <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasic">
-                <!--Hamburger Button-->
-                <span aria-hidden="true"></span>
-                <span aria-hidden="true"></span>
-                <span aria-hidden="true"></span>
-            </a>
-        </div>
-        <div id="navMenuColordark-example" class="navbar-menu">
-            <div class="navbar-start">
-                <a class="navbar-item" href="{% url 'keys:person-list' %}">Personen</a>
-                <a class="navbar-item" href="{% url 'keys:key-list' %}">Schlüssel</a>
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <a class="navbar-link" href="{% url 'keys:issue-list' %}">Ausleihen</a>
-                    <div class="navbar-dropdown">
-                        <a class="navbar-item" href="{% url 'keys:issue-new' %}">Neue Ausgabe</a>
-                        <a class="navbar-item" href="{% url 'keys:issue-return-list' %}">Neue Rücknahme</a>
-                    </div>
-                </div>
-            </div>
-            <div class="navbar-end">
-                <div class="navbar-item">
-                    <a class="button is-light" href="{% url 'admin:index' %}">Anmelden</a>
-                </div>
-            </div>
+
         </div>
     </nav>
 

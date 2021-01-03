@@ -1,0 +1,4 @@
+@media print{
+    body{font-size:10px !important;}
+    .noprint{display:none !important;}
+}

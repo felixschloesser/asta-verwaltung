@@ -5,9 +5,15 @@
 
 {% block content %}
 <div class="container is-max-desktop">
-    <h1 class='title'>Ausgabe von Schlüssel Nr. {{ issue.key }}</h1>
+    {% if not issue.active %}
+    <div class="notification is-success">
+      Schlüssel erfolgreich zurückgegeben.
+    </div>
+    {% endif %}
+
+    <h1 class='title'>Ausgabe von Schlüssel Nr. {{ issue.key }}</a></h1>
     <div class="content">
-        <p><strong>An:</strong> {{ issue.person }}</p>
+        <p><strong>An:</strong> <a href="{% url 'keys:person-detail' pk=issue.person.id %}">{{ issue.person }}</a></p>
         <p><strong>Ausgabedatum:</strong> {{ issue.out_date }}</p>
         {% if issue.in_date %}
             <p><strong>Rückgabedatum:</strong> {{ issue.in_date }}</p>
@@ -23,10 +29,8 @@
         </div>
         <div class="level-right">
             <div class="level-item">
-                {% if issue.in_date %}
-                <a class="button is-primary" disabled>Zurückgeben</a>
-                {% else %}
-                <a class="button is-primary" href="{% url 'keys:issue-return' object.id  %}" >Zurückgeben</a>
+                {% if issue.is_active %}
+                    <a class="button is-primary" href="{% url 'keys:issue-return' object.id  %}" >Zurückgeben</a>
                 {% endif %}
             </div>
         </div>

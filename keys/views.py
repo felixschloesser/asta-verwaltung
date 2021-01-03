@@ -5,13 +5,20 @@ from django.db import models
 from django.urls import reverse_lazy
 from django.http import Http404
 
+from django.core.exceptions import ValidationError
+
 from .models import Key, Person, Issue, Deposit
-from .forms import IssueReturnForm, DepositCreateForm
-# Create your views here:
+from .forms import DepositCreateForm, IssueForm, IssueReturnForm
+
+import datetime
 
 
 def index_view(request):
     return render(request, 'keys/index.html')
+
+
+class Home(generic.ListView):
+    model = Key
 
 
 # Keys
@@ -28,20 +35,24 @@ class KeySearchResults(LoginRequiredMixin, generic.ListView):
         # Alter the queryset of the list view, so that it only contains the entries
         # of the keys where matching the search query in the get request
         query = self.request.GET.get('q')
-        key_list = Key.objects.filter(models.Q(number__startswith=query) |
-                                      models.Q(locking_system__name__icontains=query) |
-                                      models.Q(locking_system__company__icontains=query)
-                                     )
+        if query:
+            key_list = Key.objects.filter(models.Q(number__startswith=query) |
+                                          models.Q(locking_system__name__icontains=query) |
+                                          models.Q(locking_system__company__icontains=query)
+                                         )
+        else:
+            key_list = Key.objects.all()
         return key_list
+
 
 class KeyDetail(LoginRequiredMixin, generic.DetailView):
     model = Key
 
 
-
 # People
 class PersonList(LoginRequiredMixin, generic.ListView):
-    model = Person
+    context_object_name = 'people'
+    queryset = Person.all_people.order_by('created_at').reverse()
     paginate_by = 30
 
 
@@ -55,9 +66,14 @@ class PersonSearchResults(LoginRequiredMixin, generic.ListView):
         # of the people where first or last name of a person match the search query
         # in the get request
         query = self.request.GET.get('q')
-        person_list = Person.objects.filter(models.Q(first_name__startswith=query) |
-                                            models.Q(last_name__startswith=query)
-                                           )
+        if query:
+            person_list = Person.all_people.filter(models.Q(first_name__istartswith=query) |
+                                                models.Q(last_name__istartswith=query) |
+                                                models.Q(university_email__icontains=query)
+                                               )
+        else:
+            person_list = Person.all_people
+
         return person_list
 
 
@@ -106,7 +122,7 @@ class PersonCreateDeposit(LoginRequiredMixin, generic.CreateView):
         Get the current person from the request and add it to the context so that the tempalte can access it.
         """
         context = super().get_context_data(**kwargs)
-        person = Person.objects.filter(pk=self.kwargs.get('pk')).get()
+        person = Person.all_people.filter(pk=self.kwargs.get('pk')).get()
         context["person"] = person
         return context
 
@@ -115,7 +131,7 @@ class PersonCreateDeposit(LoginRequiredMixin, generic.CreateView):
         Before validating the form, populate the person field using the request primary key as a lookup for
         """
         self.object = form.save(commit=False)
-        self.object.person = Person.objects.filter(pk=self.kwargs.get('pk')).get()
+        self.object.person = Person.all_people.filter(pk=self.kwargs.get('pk')).get()
         self.object.save()
         return super().form_valid(form)
 
@@ -131,6 +147,7 @@ class PersonUpdateDeposit(LoginRequiredMixin, generic.UpdateView):
               'in_method']
 
     template_name = 'keys/person_update_deposit_form.html'
+
 
     def get_success_url(self):
         return reverse_lazy('keys:person-detail', args = [self.object.person.id])
@@ -151,9 +168,10 @@ class PersonReturnDeposit(LoginRequiredMixin, generic.UpdateView):
               'out_method']
 
     template_name = 'keys/person_return_deposit_form.html'
+    initial= {'out_datetime': datetime.datetime.now()}
 
     def get_success_url(self):
-        return reverse_lazy('keys:person-detail', args = [self.object.person.id])
+        return reverse_lazy('keys:person-detail', args =[self.object.person.id])
 
     def get_object(self, queryset=None):
         """
@@ -163,6 +181,7 @@ class PersonReturnDeposit(LoginRequiredMixin, generic.UpdateView):
         pk = self.kwargs.get(self.pk_url_kwarg)
         obj = queryset.filter(person__id=pk).get()
         return obj
+
 
 # Issues
 class IssueList(LoginRequiredMixin, generic.ListView):
@@ -174,9 +193,9 @@ class IssueList(LoginRequiredMixin, generic.ListView):
         # that have not yet been returend
         show_returned = self.request.GET.get('r')
         if show_returned:
-            issue_list = Issue.objects.filter()
+            issue_list = Issue.all_issues.all()
         else:
-            issue_list = Issue.objects.filter(in_date__isnull=True)
+            issue_list = Issue.all_issues.is_active()
 
         return issue_list
 
@@ -193,15 +212,14 @@ class IssueSearchResults(LoginRequiredMixin, generic.ListView):
         show_returned = self.request.GET.get('r','')
 
         if show_returned:
-            issue_list = Issue.objects.filter(models.Q(person__first_name__icontains=query) |
+            issue_list = Issue.all_issues.filter(models.Q(person__first_name__icontains=query) |
                                               models.Q(person__last_name__icontains=query) |
                                               models.Q(key__number__startswith=query)
                                              )
         else:
-            issue_list = Issue.objects.filter(models.Q(person__first_name__icontains=query) |
+            issue_list = Issue.all_issues.is_active.filter(models.Q(person__first_name__icontains=query) |
                                             models.Q(person__last_name__icontains=query) |
                                             models.Q(key__number__startswith=query),
-                                            in_date__isnull=True
                                            )
         return issue_list
 
@@ -212,9 +230,32 @@ class IssueDetail(LoginRequiredMixin, generic.DetailView):
 
 class IssueNew(LoginRequiredMixin, generic.CreateView):
     model = Issue
-    fields = ['person',
-              'key',
-              'out_date']
+    form_class = IssueForm
+    success_message = "%(name)s was created successfully"
+
+    def get_context_data(self, **kwargs):
+        """
+        Get the person from the request and add it to the context
+        so that the tempalte can access it.
+        """
+        context = super().get_context_data(**kwargs)
+        person_id = self.request.GET.get('person','')
+        if person_id:
+            person = Person.all_people.get_person(person_id)
+            context['person'] = person
+        return context
+
+    def form_valid(self, form):
+        """
+        Before validating the form, set active to True and populate the person field using
+        the request primary key as a lookup for
+        """
+        person_id = self.request.GET.get('person','')
+        self.object = form.save(commit=False)
+        self.object.person = Person.all_people.get_person(person_id)
+        self.object.active = True
+        self.object.save()
+        return super().form_valid(form)
 
 
 class IssueReturnList(LoginRequiredMixin, generic.ListView):
@@ -222,7 +263,23 @@ class IssueReturnList(LoginRequiredMixin, generic.ListView):
     paginate_by = 20
 
 
+
 class IssueReturn(LoginRequiredMixin, generic.UpdateView):
     model = Issue
     form_class = IssueReturnForm
+    initial= {'in_date': datetime.datetime.now()}
+
     template_name_suffix ='_return_form'
+
+    def get_success_url(self):
+        return reverse_lazy('keys:issue-detail',  args=[self.object.id])
+
+    def form_valid(self, form):
+        """
+        Before validating the form, set active to False
+        """
+        self.object = form.save(commit=False)
+        self.object.active = False
+        self.object.save()
+        return super().form_valid(form)
+

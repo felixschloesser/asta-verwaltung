@@ -1,8 +1,7 @@
-{% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% load static %}
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
@@ -15,6 +14,7 @@
     <!-- CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
     <link rel="stylesheet" href="{% static 'css/bulma-responsive-tables.css' %}">
+    <link rel="stylesheet" href="{% static 'css/keys.css' %}">
 
     <!-- JS -->
     <script src="http://code.jquery.com/jquery-3.5.1.slim.js"></script>
@@ -23,10 +23,10 @@
 </head>
 <body>
     <!-- Navbar-->
-    <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
+    <nav class="navbar is-dark noprint" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
             <a class="navbar-item" href="{% url 'keys:index' %}">
-                <img src="{% static 'keys/images/logo_grey.png' %}" alt="logo" width="48" height="28">
+                {% include 'keys/logo.svg' %}
             </a>
             <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasic">
                 <!--Hamburger Button-->
@@ -39,17 +39,11 @@
             <div class="navbar-start">
                 <a class="navbar-item" href="{% url 'keys:person-list' %}">Personen</a>
                 <a class="navbar-item" href="{% url 'keys:key-list' %}">Schlüssel</a>
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <a class="navbar-link" href="{% url 'keys:issue-list' %}">Ausleihen</a>
-                    <div class="navbar-dropdown">
-                        <a class="navbar-item" href="{% url 'keys:issue-new' %}">Neue Ausgabe</a>
-                        <a class="navbar-item" href="{% url 'keys:issue-return-list' %}">Neue Rücknahme</a>
-                    </div>
-                </div>
+                <a class="navbar-item" href="{% url 'keys:issue-list' %}">Ausleihen</a>
             </div>
             <div class="navbar-end">
                 <div class="navbar-item">
-                    <a class="button is-light" href="{% url 'admin:index' %}">Anmelden</a>
+                    <a class="button is-dark is-inverted is-outlined is-outlined" href="{% url 'admin:index' %}">Administration</a>
                 </div>
             </div>
         </div>
@@ -60,7 +54,7 @@
     {% block content %} {% endblock %}
     </section>
     <!-- Footer -->
-    <footer class="footer">
+    <footer class="footer noprint">
         <div class="content has-text-centered">
             <p>
                 <a href="https://asta-tuhh.de/euer_asta/it/">TinTin's </a><strong>Schlüsselverwaltungssystem</strong>. Quelltext unter der

@@ -5,7 +5,12 @@
 
 {% block content %}
 <div class="container is-max-desktop">
-    <h1 class='title'>Schüssel Nr. {{ key.number }}</h1>
+    <h1 class='title'>
+        {% if key.locking_system.method == 'transponder' %}
+            Transponder
+        {% else %}
+            Schüssel
+        {% endif %}Nr. {{ key.number }}</h1>
     {% if key.stolen_or_lost %}
         <article class="message is-danger">
             <div class="message-body">
@@ -13,7 +18,15 @@
             </div>
         </article>
     {% endif %}
+    {% if key.get_current_issue %}
+        <article class="message is-info">
+            <div class="message-body">
+            Aktuell verliehen an {{ key.get_current_issue.person }}
+            </div>
+        </article>
+    {% endif %}
     <div class="content">
+
             <p><strong>Schließsystem:</strong> {{ key.locking_system }}</p>
             <p><strong>Lagerort:</strong> {{ key.storage_location }}</p>
             <p><strong>Öffnet folgende Türen:</strong></p>

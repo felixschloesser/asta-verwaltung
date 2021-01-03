@@ -15,12 +15,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from django.conf import settings
 
 from django.shortcuts import redirect
 
-from django.contrib import admin
 admin.site.enable_nav_sidebar = False
-
 
 urlpatterns = [
     #path('', lambda r: redirect('/keys/')),
@@ -31,3 +30,11 @@ urlpatterns = [
     path('api/', include('api.urls'), name='api'),
     path('', include('keys.urls'), name='keys'),
 ]
+
+
+if settings.DEBUG:
+    import debug_toolbar
+
+    urlpatterns += [
+        path('__debug__/', include(debug_toolbar.urls)),
+    ]

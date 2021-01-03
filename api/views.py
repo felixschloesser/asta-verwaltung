@@ -6,5 +6,5 @@ from keys.models import Person
 from .serializers import PersonSerializer
 
 class PersonAPIView(generics.ListAPIView):
-    queryset = Person.objects.all()
+    queryset = Person.all_people.all()
     serializer_class = PersonSerializer

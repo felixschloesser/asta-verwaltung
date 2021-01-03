@@ -23,11 +23,18 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = "6ey7y$78$t&-)f7z(o44(^z%_mw#)d21_33wr5rw3qy0bfcr^f"
 
 HASHID_FIELD_SALT = "+9-@)z1&t4mh5@ggez!0gf)5i4zk-7ikxa=+)puqy4d4bu!441"
+
+SIMPLE_HISTORY_REVERT_DISABLED=True
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
 
+ALLOWED_HOSTS = ['10.0.2.216', 'localhost']
+
+INTERNAL_IPS = [
+    '127.0.0.1',
+]
 
 # Application definition
 
@@ -38,13 +45,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.humanize',
+    'django.contrib.humanize'
+    ,
 
     # 3rd party
     'django_extensions',
     'widget_tweaks',
     'phonenumber_field',
     'rest_framework',
+    'simple_history',
+    'debug_toolbar',
 
     # Local
     'keys',
@@ -59,6 +69,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'simple_history.middleware.HistoryRequestMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'asta-administration.urls'

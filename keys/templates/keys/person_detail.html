@@ -15,6 +15,12 @@
         <div class="card-content">
             <div class="columns is-mobile">
                 <div class="column is-one-fifth-mobile is-2-tablet is-1-widescreen" >
+                    <p class="text has-text-weight-bold has-text-right">Gruppe</p>
+                </div>
+                <div class="column"><p class=text>{{ person.group }}</p></div>
+            </div>
+            <div class="columns is-mobile">
+                <div class="column is-one-fifth-mobile is-2-tablet is-1-widescreen" >
                     <p class="text has-text-weight-bold has-text-right">Uni Mail</p>
                 </div>
                 <div class="column"><p class=text>{{ person.university_email }}</p></div>
@@ -31,7 +37,7 @@
                 <div class="column is-one-fifth-mobile is-2-tablet is-1-widescreen"><p class="text has-text-weight-bold has-text-right">Kaution</p></div>
                 <div class="column">
                     {% if person.has_paid_deposit %}
-                        <span class="tag is-success"><b>{{ person.deposit.amount }} {{ person.deposit.currency }}</b></span>
+                        <span class="tag is-success"><b>{{ person.deposit.amount }} {{ person.deposit.currency }}</b></span> am {{ person.deposit.in_datetime}}
                     {% else %}
                        <span class="tag is-light"><b>nicht bezahlt</b></span>
                      {% endif %}
@@ -44,29 +50,34 @@
 
     <div class="block">
     <div class="content">
-    <h2 class="subtitle is-4">Schlüssselausleihen:</h2>
+    <h2 class="subtitle is-4">Aktuelle ausgeliehene Schlüssel:</h2>
 
         <ul>
         {% for issue in person.get_unreturned_issues %}
-            <li><strong>Nr. {{ issue.key }}</strong> am {{ issue.out_date }}:
-               [{% for door in issue.key.get_access_doors.distinct %}<em>{{ door.room }}</em>{% if not forloop.last %}, {% endif %}{% empty %}keine.{% endfor %}]
+            <li>
+                <a href="{% url 'keys:issue-detail' pk=issue.id %}"><strong>Nr. {{ issue.key }}</strong> am {{ issue.out_date }}</a>:
+                   [{% for door in issue.key.get_access_doors.distinct %}
+                    <em>{{ door.room }}</em>
+                        {% if not forloop.last %}, {% endif %}
+                    {% empty %}
+                        keine.
+                    {% endfor %}]
             </li>
         {% empty %}
-            Aktuell keine.
+            keine.
         {% endfor %}
         </ul>
 
     </div>
 
     </div>
-
         <nav class="level">
             <div class="level-lelft">
                 <div class="level-item py-1">
                     <div class="field is-grouped is-grouped-left
                     ">
                         <p class="control">
-                            <a class="button is-link" href="{% url 'keys:person-list' %}">Zurück zur Liste</a>
+                            <a class="button is-light" href="{% url 'keys:person-list' %}">Zurück zur Liste</a>
                         </p>
                     </div>
                 </div>
@@ -75,7 +86,10 @@
                 <div class="level-item py-1">
                     <div class="field is-grouped is-grouped-right">
                         <p class="control">
-                            <a class="button" href="{% url 'keys:person-update' pk=person.id  %}">Bearbeiten</a>
+                            <a class="button is-link" href="{% url 'keys:issue-new'  %}?person={{person.id}}">Neue Ausgabe</a>
+                        </p>
+                        <p class="control">
+                            <a class="button is-link" href="{% url 'keys:person-update' pk=person.id  %}">Bearbeiten</a>
                         </p>
                         {% if person.has_paid_deposit and not person.get_unreturned_issues %}
                         <p class="control">

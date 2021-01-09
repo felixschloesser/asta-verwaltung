@@ -4,16 +4,19 @@ A key management system written in django
 ## Database Setup
 ### macOS
 `brew update`
-`brew install mariadb`
-`brew services start mariadb`
+`brew install postgres`
+`brew services start postgres`
 
-Access mariadb as root
+Access the postgres command line as root
 `sudo mysql -u root`
 
-`CREATE DATABASE keyManagement`
-`CREATE USER 'django'@'localhost' IDENTIFIED BY '<password>';`
-`GRANT ALL PRIVILEGES ON keyManagement.* TO 'django'@'localhost'`
-`FLUSH PRIVILEGES;`
+`CREATE DATABASE astadb`
+`CREATE USER django WITH PASSWORD 'changeme'`
+`GRANT ALL PRIVILEGES ON astadb TO django'`
+
+`ALTER ROLE django SET client_encoding TO 'utf8';`
+`ALTER ROLE django SET default_transaction_isolation TO 'read committed';`
+`ALTER ROLE django SET timezone TO 'Europe/Berlin';`:
 
 ### ubuntu
 `sudo apt update`

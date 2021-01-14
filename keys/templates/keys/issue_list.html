@@ -4,6 +4,22 @@
 
 {% block content %}
 <div class="container is-max-desktop">
+
+    {% if messages %}
+        {% for message in messages %}
+        <article class="message is-level_tag">
+            <div class="message-header">
+                <p>{{ message.tags }}</p>
+                 <button class="delete" aria-label="delete"></button>
+            </div>
+            <div class="message-body">
+                {{ message }}
+            </div>
+        </article>
+        {% endfor %}
+    {% endif %}
+
+
     <nav class="level">
         <!-- Left side -->
         <div class="level-left">
@@ -48,7 +64,7 @@
 
                     <tbody>
                     {% for issue in issue_list %}
-                        <tr>
+                        <tr style="cursor:pointer;" onclick="location.href='{{ issue.get_absolute_url }}'">
                             <td data-label="Schlüssel">
                                 <a href="{{ issue.get_absolute_url }}"> {{ issue.key }}</a>
                             </td>
@@ -77,8 +93,7 @@
     {% endif %}
 
     {% if not request.GET.r %}
-
-        <div class="control pt-3">
+        <div class="control py-5">
             <a class="button", href="{% url 'keys:issue-list' %}?r=1">Vergangene anzeigen</a>
         </div>
     {% endif %}

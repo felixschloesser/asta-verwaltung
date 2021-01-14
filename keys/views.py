@@ -1,11 +1,13 @@
 from django.shortcuts import render, get_object_or_404
 from django.views import View, generic
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import models
 from django.urls import reverse_lazy
 from django.http import Http404
 
 from django.core.exceptions import ValidationError
+
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.messages.views import SuccessMessageMixin
 
 from .models import Key, Person, Issue, Deposit
 from .forms import DepositCreateForm, IssueForm, IssueReturnForm
@@ -77,7 +79,7 @@ class PersonSearchResults(LoginRequiredMixin, generic.ListView):
         return person_list
 
 
-class PersonCreate(LoginRequiredMixin, generic.CreateView):
+class PersonCreate(SuccessMessageMixin, LoginRequiredMixin, generic.CreateView):
     model = Person
     fields = ['first_name',
               'last_name',
@@ -85,6 +87,7 @@ class PersonCreate(LoginRequiredMixin, generic.CreateView):
               'private_email',
               'phone_number',
               'group']
+    success_message = "%(first_name)s %(last_name)s erfolgreich hinzugefügt."
 
 
 class PersonDetail(LoginRequiredMixin, generic.DetailView):
@@ -100,12 +103,16 @@ class PersonUpdate(LoginRequiredMixin, generic.UpdateView):
               'phone_number',
               'group']
     template_name_suffix = '_update_form'
+    success_message = "%(name)s was successfully updated."
+
 
 
 class PersonCreateDeposit(LoginRequiredMixin, generic.CreateView):
     model = Deposit
     form_class = DepositCreateForm
     template_name = 'keys/person_create_deposit_form.html'
+    success_message = "%(name)s was successfully added."
+
 
     def get_object(self, queryset=None):
         """
@@ -147,6 +154,7 @@ class PersonUpdateDeposit(LoginRequiredMixin, generic.UpdateView):
               'in_method']
 
     template_name = 'keys/person_update_deposit_form.html'
+    success_message = "%(name)s was successfully updated."
 
 
     def get_success_url(self):
@@ -169,6 +177,7 @@ class PersonReturnDeposit(LoginRequiredMixin, generic.UpdateView):
 
     template_name = 'keys/person_return_deposit_form.html'
     initial= {'out_datetime': datetime.datetime.now()}
+    success_message = "%(name)s was successfully returend"
 
     def get_success_url(self):
         return reverse_lazy('keys:person-detail', args =[self.object.person.id])
@@ -181,6 +190,11 @@ class PersonReturnDeposit(LoginRequiredMixin, generic.UpdateView):
         pk = self.kwargs.get(self.pk_url_kwarg)
         obj = queryset.filter(person__id=pk).get()
         return obj
+
+class PersonReturnDepositSuccess(LoginRequiredMixin, generic.DetailView):
+    modelel = Deposit
+    template_name_suffix = 'return_success'
+
 
 
 # Issues
@@ -195,7 +209,7 @@ class IssueList(LoginRequiredMixin, generic.ListView):
         if show_returned:
             issue_list = Issue.all_issues.all()
         else:
-            issue_list = Issue.all_issues.is_active()
+            issue_list = Issue.all_issues.active()
 
         return issue_list
 
@@ -217,7 +231,7 @@ class IssueSearchResults(LoginRequiredMixin, generic.ListView):
                                               models.Q(key__number__startswith=query)
                                              )
         else:
-            issue_list = Issue.all_issues.is_active.filter(models.Q(person__first_name__icontains=query) |
+            issue_list = Issue.all_issues.active.filter(models.Q(person__first_name__icontains=query) |
                                             models.Q(person__last_name__icontains=query) |
                                             models.Q(key__number__startswith=query),
                                            )
@@ -268,8 +282,10 @@ class IssueReturn(LoginRequiredMixin, generic.UpdateView):
     model = Issue
     form_class = IssueReturnForm
     initial= {'in_date': datetime.datetime.now()}
-
     template_name_suffix ='_return_form'
+
+    get_success_url = 'keys:issue-return-success'
+    success_message = "%(key)s erfolgreich zurückgegeben."
 
     def get_success_url(self):
         return reverse_lazy('keys:issue-detail',  args=[self.object.id])
@@ -283,3 +299,7 @@ class IssueReturn(LoginRequiredMixin, generic.UpdateView):
         self.object.save()
         return super().form_valid(form)
 
+
+class IssueReturnSuccess(LoginRequiredMixin, generic.DetailView):
+    model = Issue
+    template_name_suffix = 'return_success'

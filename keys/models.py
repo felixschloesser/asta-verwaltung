@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone, text
 from django.core.exceptions import ValidationError
+from django.core.exceptions import ObjectDoesNotExist
 from django.urls import reverse
 
 from django.contrib.postgres.constraints import ExclusionConstraint
@@ -17,21 +18,12 @@ from hashid_field import HashidAutoField
 from .validators import *
 from .managers import *
 
-# Funcions
-class TsTzRange(models.Func):
-    function = 'TSTZRANGE'
-    output_field = DateTimeRangeField()
-
-
-
-
 # Create your models here.
 class Building(models.Model):
-    identifier = models.CharField('Gebäude', max_length=8, unique=True) # not NULL
+    identifier = models.CharField('Gebäude', max_length=8, unique=True)
     name = models.CharField('Name', max_length=32, unique=True, blank=True, null=True)
     created_at = models.DateTimeField('Erstellungszeitpunkt', auto_now_add=True)
     updated_at = models.DateTimeField('Aktualisierungszeitpunkt', auto_now=True)
-    history = HistoricalRecords()
 
     class Meta:
         verbose_name = "Gebäude"
@@ -56,7 +48,6 @@ class Purpose(models.Model):
     name = models.CharField('Zweck', max_length=32)
     created_at = models.DateTimeField('Erstellungszeitpunkt', auto_now_add=True)
     updated_at = models.DateTimeField('Aktualisierungszeitpunkt', auto_now=True)
-    history = HistoricalRecords()
 
     class Meta:
         verbose_name = "Zweck"
@@ -88,7 +79,6 @@ class Room(models.Model):
                                  on_delete=models.PROTECT)
     created_at = models.DateTimeField('Erstellungszeitpunkt', auto_now_add=True)
     updated_at = models.DateTimeField('Aktualisierungszeitpunkt', auto_now=True)
-    history = HistoricalRecords()
 
     class Meta:
         verbose_name = "Raum"
@@ -128,7 +118,6 @@ class Door(models.Model):
     comment = models.CharField("Kommentar", max_length=64, blank=True, null=True)
     created_at = models.DateTimeField('Erstellungszeitpunkt', auto_now_add=True)
     updated_at = models.DateTimeField('Aktualisierungszeitpunkt', auto_now=True)
-    history = HistoricalRecords()
 
     class Meta:
         verbose_name = "Tür"
@@ -163,7 +152,6 @@ class Key(models.Model):
 
     created_at = models.DateTimeField('Erstellungszeitpunkt', auto_now_add=True)
     updated_at = models.DateTimeField('Aktualisierungszeitpunkt', auto_now=True)
-    history = HistoricalRecords()
 
     all_keys = KeyManager() # Custom manager to make methods accessible
 
@@ -182,8 +170,6 @@ class Key(models.Model):
                                     name='key_number_in_locking_system_are_unique')
     ]
 
-
-    # if not rented -> require location, key-safe?
     def __str__(self):
         return self.number
 
@@ -191,12 +177,26 @@ class Key(models.Model):
         return reverse('keys:key-detail', args=[str(self.id)])
 
     def get_current_issue(self):
-        issue_set  = self.issues.is_active()
+        issue_set  = self.issues.active()
         try:
             issue = issue_set.get()
             return issue
-        except IndexError:
+        except ObjectDoesNotExist:
             return None
+
+    def get_number_of_doors(self):
+        return self.doors.all().count()
+
+    def get_rooms(self):
+        doors = self.doors.filter(kind__exact='access').distinct()
+        rooms = [door.room for door in doors]
+        return rooms
+
+    def get_locking_system_method(self):
+        return self.locking_system.method
+
+        get_locking_system_method.short_description = 'Typ'
+        get_number_of_doors.short_description = "Anzahl Türen"
 
 
 
@@ -212,7 +212,6 @@ class LockingSystem(models.Model):
     comment = models.CharField('Kommentar', max_length=64, blank=True, null=True)
     created_at = models.DateTimeField('Erstellungszeitpunkt', auto_now_add=True)
     updated_at = models.DateTimeField('Aktualisierungszeitpunkt', auto_now=True)
-    history = HistoricalRecords()
 
     class Meta:
         verbose_name = "Schließsystem"
@@ -233,7 +232,6 @@ class StorageLocation(models.Model):
     location = models.ForeignKey("room", related_name='storage_locations', verbose_name='Ort', on_delete=models.CASCADE)
     created_at = models.DateTimeField('Erstellungszeitpunkt', auto_now_add=True)
     updated_at = models.DateTimeField('Aktualisierungszeitpunkt', auto_now=True)
-    history = HistoricalRecords()
 
     class Meta:
         verbose_name = "Aufbewahrungsort"
@@ -262,7 +260,6 @@ class Person(models.Model): # Add a chron job ro delete after a 2 years of not r
 
     created_at = models.DateTimeField('Erstellungszeitpunkt', auto_now_add=True)
     updated_at = models.DateTimeField('Aktualisierungszeitpunkt', auto_now=True)
-    history = HistoricalRecords()
 
     all_people = PersonManager()
 
@@ -288,6 +285,9 @@ class Person(models.Model): # Add a chron job ro delete after a 2 years of not r
 
     def has_paid_deposit(self):
         return hasattr(self, 'deposit')
+
+    def get_active_issues(self):
+        return self.issues.active()
 
     # Tell django-admin to display this as an Boolian
     has_paid_deposit.boolean = True
@@ -315,7 +315,6 @@ class Deposit(models.Model):
 
     created_at = models.DateTimeField('Erstellungszeitpunkt', auto_now_add=True)
     updated_at = models.DateTimeField('Aktualisierungszeitpunkt', auto_now=True)
-    history = HistoricalRecords()
 
     class Meta:
         verbose_name = "Kaution"
@@ -340,7 +339,6 @@ class Group(models.Model):
     name = models.CharField('Name', max_length=64, unique=True)
     created_at = models.DateTimeField('Erstellungszeitpunkt', auto_now_add=True)
     updated_at = models.DateTimeField('Aktualisierungszeitpunkt', auto_now=True)
-    history = HistoricalRecords()
 
     class Meta:
         verbose_name = "Gruppe"
@@ -353,7 +351,7 @@ class Group(models.Model):
 
 
 class Issue(models.Model):
-    active = models.BooleanField(verbose_name='aktiv', default=False)
+    active = models.BooleanField(verbose_name='Aktiv', default=True)
     person = models.ForeignKey('Person',
                                related_name="issues",
                                verbose_name='Ausgaben',
@@ -373,7 +371,6 @@ class Issue(models.Model):
                                 validators=[present_or_max_10_days_ago])
     created_at = models.DateTimeField('Erstellungszeitpunkt', auto_now_add=True)
     updated_at = models.DateTimeField('Aktualisierungszeitpunkt', auto_now=True)
-    history = HistoricalRecords()
 
     all_issues = IssueManager()
 
@@ -391,24 +388,13 @@ class Issue(models.Model):
                 condition=models.Q(active=True),
             ),
             models.CheckConstraint(
-                name='active_dont_have_in_date',
-                check=models.Q(active=True, in_date__isnull=True)
-            ),
-            models.CheckConstraint(
-                name='inactive_has_in_date',
-                check=models.Q(active=False, in_date__isnull=False)
+                name='only_inacrive_have_in_date',
+                check=models.Q(active=True, in_date__isnull=True) | \
+                      models.Q(active=False, in_date__isnull=False)
             ),
             models.CheckConstraint(
                 name='give_out_before_take_in',
                 check=models.Q(in_date__gte=models.F('out_date')),
-            ),
-            ExclusionConstraint(
-                name='exclude_overlapping_issues',
-                expressions= (
-                    (TsTzRange('out_date', 'in_date', RangeBoundary()),
-                     RangeOperators.OVERLAPS),
-                    ('key', RangeOperators.EQUAL),
-                )
             ),
         ]
 
@@ -417,7 +403,6 @@ class Issue(models.Model):
 
     def get_absolute_url(self):
         return reverse('keys:issue-detail', args=[str(self.id)])
-
 
 
 

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <meta name="description" content="Ein Schlüsselverwaltungssystem für den AStA der TU-Hamburg.">
+    <title>{% block title %}{% endblock %}</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type='image/png' href="{% static 'keys/images/favicon.png' %}">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bulma-responsive-tables.css' %}">
+    <link rel="stylesheet" href="{% static 'css/keys.css' %}">
+
+    <!-- JS -->
+    <script src="http://code.jquery.com/jquery-3.5.1.slim.js"></script>
+    <script src="{% static 'js/hamburger.js' %}"></script>
+
+</head>
+<body class="is-flex is-flex-direction-column" style="min-height: 100vh;min-height: -webkit-fill-available;">
+    <!-- Navbar-->
+    <nav class="navbar is-dark noprint" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+            <div class="navbar-item">
+                {% include 'keys/logo.svg' %}
+            </div>
+        </div>
+        <div id="navMenuColordark-example" class="navbar-menu">
+        </div>
+    </nav>
+
+    <!--Content -->
+    <section class="section is-flex-grow-1">
+    {% block content %} {% endblock %}
+    </section>
+    <!-- Footer -->
+    <footer class="footer noprint">
+        <div class="content has-text-centered">
+            <p>
+                <a href="https://asta-tuhh.de/euer_asta/it/">TinTin's </a><strong>Schlüsselverwaltungssystem</strong>. Quelltext unter der
+                <a href="https://eur-lex.europa.eu/legal-content/DE/TXT/?uri=CELEX:32017D0863">EUPL 1.2</a>.
+            </p>
+        </div>
+    </footer>
+    <!--Additional JS-->
+    {% block additional_js %}
+    {% endblock %}
+</body>
+</html>
+
+
+

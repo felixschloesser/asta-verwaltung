@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base_minimal.html" %}
 
 {% block title %}Login | Schlüsselsystem{% endblock %}
 
@@ -6,6 +6,7 @@
 {% block content %}
     <div class="container is-max-desktop">
 
+        <div class="block">
         <h1 class="title">Anmelden</h1>
 
         {% if form.errors %}
@@ -19,12 +20,13 @@
 
         {% if next %}
             {% if user.is_authenticated %}
-                <p>Ihr Konto hat keinen Zugang zu dieser Seite. Um fortzufahren,
-            bitte melden Sie sich mit einem Konto an, das Zugang hat.</p>
+                <p>Leider hat Ihr Konto keinen Zugang zu dieser Seite. Um fortzufahren,
+             melden Sie sich mit einem Konto an, das Zugang hat.</p>
             {% else %}
                 <p>Bitte melden Sie sich an um diese Seite zu sehen.</p>
             {% endif %}
         {% endif %}
+        </div>
 
         <form method="post" action="{% url 'login' %}">
         {% csrf_token %}

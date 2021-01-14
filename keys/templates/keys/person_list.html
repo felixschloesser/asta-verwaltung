@@ -4,6 +4,19 @@
 
 {% block content %}
 <div class="container is-max-desktop">
+
+    {% if messages %}
+        {% for message in messages %}
+        <article class="message is-success">
+            <div class="message-body">
+                {{ message }}
+            </div>
+        </article>
+        {% endfor %}
+    {% endif %}
+
+
+
     <nav class="level">
         <!-- Left side -->
         <div class="level-left">

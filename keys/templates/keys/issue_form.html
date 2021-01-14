@@ -1,4 +1,4 @@
-{% extends "keys/base.html" %}
+{% extends "keys/base_minimal.html" %}
 
 {% block title %}Neue Ausgabe | Schlüsselsystem{% endblock %}
 
@@ -8,8 +8,16 @@
 <div class="container is-max-desktop">
     <h1 class="title">Neue Ausgabe{% if person %} an {{ person }}{% endif%}</h1>
 
-    <form method='post'>
+    <form method='post' autocomplete="off">
         {% csrf_token %}
+
+        {% if not person.has_paid_deposit %}
+            <article class="message is-danger">
+                <div class="message-body">
+                    {{ person }} hat keine Kaution bezahlt!
+                </div>
+            </article>
+        {% endif %}
 
         {% if form.non_field_errors %}
             <article class="message is-danger">
@@ -37,9 +45,9 @@
             <label class="label" for="{{ form.out_date.id_for_label }}">{{ form.out_date.label_tag }}</label>
                 <div class="control">
                     {% if not form.out_date.errors %}
-                        {{ form.out_date|add_class:"input" }}
+                        {{ form.out_date |add_class:"input" }}
                     {% else %}
-                        {{ form.out_date|add_class:"input is-danger"}}
+                        {{ form.out_date |add_class:"input is-danger" }}
                     {% endif %}
                 </div>
             {% for error in form.out_date.errors %}
@@ -49,6 +57,7 @@
 
         <div class="buttons is-right">
             <p class="control">
+                <a class="button is-light" href={% url 'keys:person-detail' pk=person.id %}>Abbrechen</a>
                 <input class="button is-primary" type="submit" value="Anlegen">
             </p>
         </div>

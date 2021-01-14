@@ -41,16 +41,16 @@
 
                     <tbody>
                     {% for key in key_list %}
-                        <tr>
+                        <tr style="cursor:pointer;" onclick="location.href='{{ key.get_absolute_url }}'">
                             <td data-label="Nummer">
                                 <a href="{{ key.get_absolute_url }}">{{ key }}</a>
                             </td>
                             <td data-label="Schließsystem">
                                 {{ key.locking_system }}
                             </td>
-                            <td data-label="Räume">
-                                {% for door in key.get_access_doors.distinct %}
-                                    {{ door.room }}{% if not forloop.last %}, {% endif %}
+                            <td data-label="Türen">
+                                {% for room in key.get_rooms %}
+                                    {{ room }}{% if not forloop.last %}, {% endif %}
                                 {% endfor %}
                             </td>
                         </tr>

@@ -22,7 +22,8 @@ class IssueForm(forms.ModelForm):
     class Meta:
         model= Issue
         fields = ['key',
-                  'out_date']
+                  'out_date',
+                  'active']
 
     def clean(self):
         cleaned_data = super().clean()
@@ -38,7 +39,8 @@ class IssueForm(forms.ModelForm):
 class IssueReturnForm(forms.ModelForm):
     class Meta:
         model = Issue
-        fields = ['in_date']
+        fields = ['in_date',
+                  'active']
 
     def clean(self):
         cleaned_data = super().clean()

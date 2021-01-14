@@ -1,4 +1,4 @@
-{% extends "keys/base.html" %}
+{% extends "keys/base_minimal.html" %}
 
 {% block title %}Neue Person | Schlüsselsystem{% endblock %}
 
@@ -10,7 +10,7 @@
 
     <h1 class="title">Neue Person anlegen</h1>
 
-    <form method='post'>
+    <form method='post' autocomplete="off">
         {% csrf_token %}
 
         {% if form.non_field_errors %}
@@ -50,18 +50,14 @@
         {% endfor %}
         </div>
 
-        <nav class=level>
-            <div class=level-left>
-                <div class=level-item>
-                    <a class="button is-link" href={% url 'keys:person-list' %}>Zurück zur Liste</a >
-                </div>
-            </div>
-             <div class=level-right>
-                <div class=level-item>
-                    <input class="button is-primary" type="submit" value="Anlegen">
-                </div>
-            </div>
-        </nav>
+        <div class="buttons is-right">
+            <p class="control">
+                <a class="button is-light" href={% url 'keys:person-list'%}>Abbrechen</a>
+
+                <input class="button is-primary" type="submit" value="Anlegen">
+            </p>
+        </div>
+
     </form>
 </div>
 {% endblock %}

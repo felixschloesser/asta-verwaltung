@@ -1,6 +1,6 @@
-{% extends "keys/base.html" %}
+{% extends "keys/base_minimal.html" %}
 
-{% block title %}Kaution zurück | {{ person.get_full_name }} | Schlüsselsystem{% endblock %}
+{% block title %}Kaution zurück | {{ deposit.person }} | Schlüsselsystem{% endblock %}
 
 {% load widget_tweaks %}
 {% load humanize %}
@@ -10,7 +10,7 @@
 
     <h1 class="title">Kaution von {{ deposit.person }} zurückgeben</h1>
 
-    <form method='post'>
+    <form method='post' autocomplete="off">
         {% csrf_token %}
 
         {% if form.non_field_errors %}

@@ -5,15 +5,21 @@
 
 {% block content %}
 <div class="container is-max-desktop">
-    {% if not issue.active %}
-    <div class="notification is-success">
-      Schlüssel erfolgreich zurückgegeben.
-    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+        <article class="message is-success">
+            <div class="message-body">
+                {{ message }}
+            </div>
+        </article>
+        {% endfor %}
     {% endif %}
 
     <h1 class='title'>Ausgabe von Schlüssel Nr. {{ issue.key }}</a></h1>
     <div class="content">
-        <p><strong>An:</strong> <a href="{% url 'keys:person-detail' pk=issue.person.id %}">{{ issue.person }}</a></p>
+        <p><strong>An:</strong> <a href="{% url 'keys:person-detail' pk=issue.person.id %}">{{ issue.person }}, {{ issue.person.group }}</a></p>
+        <p><strong>Zugang zu:</strong> {% for room in issue.key.get_rooms %}{{room}}{% if not forloop.last %}, {% endif %}{% endfor %}</a></p>
         <p><strong>Ausgabedatum:</strong> {{ issue.out_date }}</p>
         {% if issue.in_date %}
             <p><strong>Rückgabedatum:</strong> {{ issue.in_date }}</p>
@@ -24,12 +30,12 @@
     <nav class="level is-max-desktop">
         <div class="level-left">
             <div class="level-item">
-                <a class="button is-link" href="{% url 'keys:issue-list' %}">Zurück zur Liste</a>
+                <a class="button is-link is-outlined" href="{% url 'keys:issue-list' %}">Zurück zur Liste</a>
             </div>
         </div>
         <div class="level-right">
             <div class="level-item">
-                {% if issue.is_active %}
+                {% if issue.active %}
                     <a class="button is-primary" href="{% url 'keys:issue-return' object.id  %}" >Zurückgeben</a>
                 {% endif %}
             </div>

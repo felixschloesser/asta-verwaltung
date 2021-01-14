@@ -1,0 +1,26 @@
+@charset "utf-8";
+
+// Import things we want to change
+@import "../node_modules/bulma/sass/utilities/initial-variables.sass";
+
+// Set your brand colors
+$yellow-pantone: #FFE033;
+$green-lime: #37D10C;
+$red-pigment: #F92929;
+$red-rufous: #9E0505;
+$blue-jeans: #5BAFEC;
+$blue-tufts: #1A8FE3;
+$blue-saphire: #255F85;
+
+// Update Bulma's global variables
+$primary: $blue-saphire;
+$info: $blue-jeans;
+$link: $blue-tufts;
+$success: $green-lime;
+
+// Update some of Bulma's component variables
+$navbar-breakpoint: $tablet;
+
+
+// Import all of Bulma
+@import "../node_modules/bulma/bulma.sass";

@@ -1,0 +1,25 @@
+{
+  "name": "asta-administration",
+  "version": "1.0.0",
+  "description": "A key management system written in django",
+  "main": "sass/my-bulma.scss",
+  "scripts": {
+    "css-build": "node-sass --omit-source-map-url sass/my-bulma.scss keys/static/css/style.css",
+    "css-watch": "npm run css-build -- --watch",
+    "start": "npm run css-watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/felixschloesser/key-management.git"
+  },
+  "author": "Felix Schlösser",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/felixschloesser/key-management/issues"
+  },
+  "homepage": "https://github.com/felixschloesser/key-management#readme",
+  "devDependencies": {
+    "bulma": "^0.9.1",
+    "node-sass": "^5.0.0"
+  }
+}

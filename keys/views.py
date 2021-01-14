@@ -108,13 +108,13 @@ class PersonUpdate(LoginRequiredMixin, generic.UpdateView):
 
 
 
-class PersonCreateDeposit(SuccessMessageMixin, LoginRequiredMixin, generic.CreateView):
+class CreateDeposit(SuccessMessageMixin, LoginRequiredMixin, generic.CreateView):
     model = Deposit
     fields = ['amount',
               'currency',
               'in_datetime',
               'in_method']
-    template_name = 'keys/person_create_deposit_form.html'
+    template_name = 'keys/deposit_form.html'
     success_message = "Kaution von %(amount)s %(currency)s erfolgreich hinzugefügt."
 
 
@@ -150,15 +150,19 @@ class PersonCreateDeposit(SuccessMessageMixin, LoginRequiredMixin, generic.Creat
         return reverse_lazy('keys:person-detail', args = [self.object.person.id])
 
 
-class PersonUpdateDeposit(LoginRequiredMixin, generic.UpdateView):
-    model = Deposit
-    fields = ['amount',
-              'currency',
-              'in_datetime',
-              'in_method']
 
-    template_name = 'keys/person_create_deposit_form.html'
-    success_message = "%(name)s was successfully updated."
+class DeleteDeposit(SuccessMessageMixin, LoginRequiredMixin,generic.DeleteView):
+    model = Deposit
+    template_name = 'keys/deposit_delete.html'
+
+    def get_object(self, queryset=None):
+        """
+        Get the deposit from the person-pk in the urlpattern.
+        """
+        queryset = self.get_queryset()
+        pk = self.kwargs.get(self.pk_url_kwarg)
+        obj = queryset.filter(person__id=pk).get()
+        return obj
 
     def get_context_data(self, **kwargs):
         """
@@ -170,22 +174,14 @@ class PersonUpdateDeposit(LoginRequiredMixin, generic.UpdateView):
         return context
 
     def get_success_url(self):
-        return reverse_lazy('keys:person-detail', args = [self.object.person.id])
-
-    def get_object(self, queryset=None):
-        """
-        Get the deposit from the person-pk in the urlpattern.
-        """
-        queryset = self.get_queryset()
-        pk = self.kwargs.get(self.pk_url_kwarg)
-        obj = queryset.filter(person__id=pk).get()
-        return obj
+        return reverse_lazy('keys:deposit-create', args = [self.object.person.id])
 
 
-class PersonReturnDeposit(LoginRequiredMixin, generic.UpdateView):
+
+class ReturnDeposit(LoginRequiredMixin, generic.UpdateView):
     model = Deposit
     form_class = DepositReturnForm
-    template_name = 'keys/person_return_deposit_form.html'
+    template_name = 'keys/deposit_return_form.html'
     initial= {'out_datetime': datetime.datetime.now()}
     success_message = "%(name)s was successfully returend"
 
@@ -198,16 +194,6 @@ class PersonReturnDeposit(LoginRequiredMixin, generic.UpdateView):
         pk = self.kwargs.get(self.pk_url_kwarg)
         obj = queryset.filter(person__id=pk).get()
         return obj
-
-    def form_valid(self, form):
-        """
-        Before validating the form, set the amount to 0
-        """
-        self.object = form.save(commit=False)
-        self.object.amount = 0
-        self.object.save()
-        return super().form_valid(form)
-
 
     def get_success_url(self):
         return reverse_lazy('keys:person-detail', args =[self.object.person.id])
@@ -262,7 +248,6 @@ class IssueNew(SuccessMessageMixin, LoginRequiredMixin, generic.CreateView):
     model = Issue
     form_class = IssueForm
 
-    success_url = reverse_lazy("keys:issue-list")
     success_message = "Ausgabe von %(key)s erfolgreich angelegt."
 
     def get_context_data(self, **kwargs):
@@ -288,6 +273,9 @@ class IssueNew(SuccessMessageMixin, LoginRequiredMixin, generic.CreateView):
         self.object.active = True
         self.object.save()
         return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('keys:person-detail',  args=[self.object.person.id])
 
 
 class IssueReturnList(LoginRequiredMixin, generic.ListView):

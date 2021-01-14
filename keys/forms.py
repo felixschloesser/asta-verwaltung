@@ -7,16 +7,6 @@ from .models import Issue, Deposit, Key
 
 import datetime
 
-class DepositUpdateForm(forms.ModelForm):
-    class Meta:
-        model = Deposit
-        fields = ['amount',
-                  'currency',
-                  'in_datetime',
-                  'in_method']
-        initial = {'amount': 123}
-
-
 
 class DepositReturnForm(forms.ModelForm):
     class Meta:

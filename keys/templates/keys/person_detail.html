@@ -101,7 +101,7 @@
                 <div class="level-item">
                     {% if person.has_paid_deposit and not person.get_active_issues %}
                         <p class="control">
-                            <a class="button is-warning" href="{% url 'keys:person-return-deposit' pk=person.id %}">Kaution zurück</a>
+                            <a class="button is-warning" href="{% url 'keys:deposit-return' pk=person.id %}">Kaution zurück</a>
                         </p>
                     {% elif person.has_paid_deposit %}
                         <p class="control">
@@ -109,11 +109,11 @@
                         </p>
                     {% elif person.deposit.in_datetime %} {% comment %} There alreaedy exists a deposit{% endcomment %}
                         <p class="control">
-                            <a class="button is-info" href="{% url 'keys:person-update-deposit' pk=person.id %}">Kaution hinzufügen</a>
+                            <a class="button is-info" href="{% url 'keys:deposit-delete' pk=person.id %}">Neue Kaution hinzufügen</a>
                         </p>
                     {% else %}
                         <p class="control">
-                            <a class="button is-info" href="{% url 'keys:person-create-deposit' pk=person.id %}">Kaution hinzufügen</a>
+                            <a class="button is-info" href="{% url 'keys:deposit-create' pk=person.id %}">Kaution hinzufügen</a>
                         </p>
                     {% endif%}
                 </div>

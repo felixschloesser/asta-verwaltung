@@ -1,0 +1,60 @@
+
+{% extends "keys/base_minimal.html" %}
+
+{% block title %} {{ person.get_full_name }} bearbeiten | Schlüsselsystem{% endblock %}
+
+
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="container is-max-desktop">
+
+    <h1 class="title">Personendaten bearbeiten</h1>
+
+    <form method='post'>
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+        <article class="message is-danger">
+            <div class="message-body">
+                {{ form.non_field_errors }}
+            </div>
+        </article>
+        {% endif %}
+
+        <div class="columns is-deskop">
+        {% for field in form %}
+            {% if forloop.counter|divisibleby:2 %}
+            {% else %}
+                <div class="column">
+            {% endif %}
+
+            <div class="field">
+                <label class="label" for="{{ field.id_for_label }}">{{ field.label_tag }}</label>
+                    <div class="control">
+                        {% if not field.errors %}
+                            {{ field|add_class:"input" }}
+                        {% else %}
+                            {{ field|add_class:"input is-danger"}}
+                        {% endif %}
+                    </div>
+                {% for error in field.errors %}
+                    <p class="help is-danger">{{ error }}</p>
+                {% endfor %}
+            </div>
+
+            {% if forloop.counter|divisibleby:2 %}
+                </div>
+            {% else %}
+
+            {% endif %}
+        {% endfor %}
+        </div>
+
+        <span class="buttons is-right">
+            <a class="button" href={% url 'keys:person-detail' pk=person.id %}>Abbrechen</a >
+            <input class="button is-primary" type="submit" value="Aktualisieren">
+        </span>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "keys/base_minimal.html" %}
+
+{% block title %}Kaution löschen | Schlüsselsystem{% endblock %}
+
+
+{% block content %}
+<div class="container is-max-desktop">
+
+    <div class="content">
+        <h1 class="title">Neue Kaution</h1>
+
+        <p>Am {{deposit.out_datetime}} wurden {{ deposit.amount }} an {{ deposit.person }} zurückgezahlt. Eintrag löschen und neue Kaution erstellen?</p>
+
+        <form method="post">{% csrf_token %}
+            <div class="control">
+            </div>
+        <span class="buttons is-right">
+            <a class="button" href={% url 'keys:person-detail' pk=person.id %}>Abbrechen</a >
+            <input class="button is-danger" type="submit" value="Löschen und neu erstellen">
+        </span>
+        </form>
+    </div>
+</div>
+{% endblock %}

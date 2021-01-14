@@ -18,7 +18,7 @@ from hashid_field import HashidAutoField
 from .validators import *
 from .managers import *
 
-# Create your models here.
+# Create models here.
 class Building(models.Model):
     identifier = models.CharField('Gebäude', max_length=8, unique=True)
     name = models.CharField('Name', max_length=32, unique=True, blank=True, null=True)
@@ -284,7 +284,11 @@ class Person(models.Model): # Add a chron job ro delete after a 2 years of not r
         return "{} {}".format(self.first_name, self.last_name)
 
     def has_paid_deposit(self):
-        return hasattr(self, 'deposit')
+        if self.deposit.amount > 0:
+            return True
+        else:
+            return False
+
 
     def get_active_issues(self):
         return self.issues.active()
@@ -356,12 +360,14 @@ class Issue(models.Model):
                                related_name="issues",
                                verbose_name='Ausgaben',
                                on_delete=models.PROTECT)
-    limit_key_choices = models.Q(stolen_or_lost=False, issues__active=False)
+    #limit_key_choices = models.Q(issues__active=False, stolen_or_lost=False)
+    #!BUG duplication https://code.djangoproject.com/ticket/11707
+    # still not fixed in 3.1.5?
 
     key = models.ForeignKey('Key', related_name="issues",
                             verbose_name='Schlüssel',
-                            on_delete=models.PROTECT,
-                            limit_choices_to=limit_key_choices)
+                            on_delete=models.PROTECT)
+                            #limit_choices_to=limit_key_choices)
 
     out_date = models.DateField('Ausgabedatum',
                                 default=timezone.now,

@@ -3,20 +3,30 @@ from django.core.exceptions import ValidationError
 from django import forms
 from django.utils import formats
 
-from .models import Issue, Deposit
+from .models import Issue, Deposit, Key
 
 import datetime
 
-
-class DepositCreateForm(forms.ModelForm):
+class DepositUpdateForm(forms.ModelForm):
     class Meta:
         model = Deposit
         fields = ['amount',
                   'currency',
                   'in_datetime',
                   'in_method']
+        initial = {'amount': 123}
 
-# Custom Forms
+
+
+class DepositReturnForm(forms.ModelForm):
+    class Meta:
+        model = Deposit
+        fields = ['amount',
+                  'out_datetime',
+                  'out_method']
+        widgets = {'amount': forms.HiddenInput()}
+
+
 
 class IssueForm(forms.ModelForm):
     class Meta:
@@ -24,6 +34,10 @@ class IssueForm(forms.ModelForm):
         fields = ['key',
                   'out_date',
                   'active']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['key'].queryset = Key.all_keys.availible()
 
     def clean(self):
         cleaned_data = super().clean()
@@ -34,6 +48,7 @@ class IssueForm(forms.ModelForm):
                 raise ValidationError(("Schlüssel ist momentan \
                                         an {} verliehen".format(current_issue.person)),
                                         code='key-not-returned')
+
 
 
 class IssueReturnForm(forms.ModelForm):
@@ -54,9 +69,3 @@ class IssueReturnForm(forms.ModelForm):
             formated_date = formats.date_format(out_date)
             msg = 'Rückgabedatum muss nach dem {} (Ausgabedatum) liegen.'.format(formated_date)
             self.add_error('in_date', msg)
-
-
-
-
-
-

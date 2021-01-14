@@ -5,6 +5,16 @@
 
 {% block content %}
 <div class="container is-max-desktop">
+    {% if messages %}
+        {% for message in messages %}
+        <article class="message is-success">
+            <div class="message-body">
+                {{ message }}
+            </div>
+        </article>
+        {% endfor %}
+    {% endif %}
+
     <div class="block">
     <div class="card">
         <div class="card-header">
@@ -38,9 +48,11 @@
                 <div class="column">
                     {% if person.has_paid_deposit %}
                         <span class="tag is-success"><b>{{ person.deposit.amount }} {{ person.deposit.currency }}</b></span> am {{ person.deposit.in_datetime}}
+                    {% elif person.deposit.in_datetime %}
+                        <span class="tag is-info"><b>Zurückerhalten</b></span> am {{ person.deposit.out_datetime }}
                     {% else %}
                        <span class="tag is-light"><b>nicht bezahlt</b></span>
-                     {% endif %}
+                    {% endif %}
 
                 </div>
             </div>
@@ -69,8 +81,6 @@
         </ul>
 
     </div>
-
-    </div>
         <nav class="level">
             <div class="level-lelft">
                 <div class="level-item py-3">
@@ -85,22 +95,26 @@
             <div class="level-right">
                 <div class="level-item">
                     <p class="control">
-                        <a class="button is-li" href="{% url 'keys:person-update' pk=person.id  %}">Bearbeiten</a>
+                        <a class="button is-light has-tooltip-bottom" href="{% url 'keys:person-update' pk=person.id  %}">Bearbeiten</a>
                     </p>
                 </div>
                 <div class="level-item">
-                    {% if person.has_paid_deposit and not person.get_unreturned_issues %}
-                    <p class="control">
-                        <a class="button is-dark" href="{% url 'keys:person-return-deposit' pk=person.id %}">Kaution zurück</a>
-                    </p>
+                    {% if person.has_paid_deposit and not person.get_active_issues %}
+                        <p class="control">
+                            <a class="button is-warning" href="{% url 'keys:person-return-deposit' pk=person.id %}">Kaution zurück</a>
+                        </p>
                     {% elif person.has_paid_deposit %}
-                    <p class="control">
-                        <a class="button is-dark" href="{% url 'keys:person-update-deposit' pk=person.id %}">Kaution bearbeiten</a>
-                    </p>
+                        <p class="control">
+                            <a class="button is-warning has-tooltip-bottom has-tooltip-arrow" data-tooltip="noch offene ausleihen" disabled>Kaution zurück</a>
+                        </p>
+                    {% elif person.deposit.in_datetime %} {% comment %} There alreaedy exists a deposit{% endcomment %}
+                        <p class="control">
+                            <a class="button is-info" href="{% url 'keys:person-update-deposit' pk=person.id %}">Kaution hinzufügen</a>
+                        </p>
                     {% else %}
-                    <p class="control">
-                        <a class="button is-dark" href="{% url 'keys:person-create-deposit' pk=person.id %}">Kaution hinzufügen</a>
-                    </p>
+                        <p class="control">
+                            <a class="button is-info" href="{% url 'keys:person-create-deposit' pk=person.id %}">Kaution hinzufügen</a>
+                        </p>
                     {% endif%}
                 </div>
                 <div class="level-item">

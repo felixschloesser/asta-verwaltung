@@ -1,6 +1,6 @@
 {% extends "keys/base_minimal.html" %}
 
-{% block title %}Kaution | {{ deposit.person }} | Schlüsselsystem{% endblock %}
+{% block title %}Kaution für {{ person }} hinzufügen | Schlüsselsystem{% endblock %}
 
 {% load widget_tweaks %}
 {% load humanize %}
@@ -8,9 +8,9 @@
 {% block content %}
 <div class="container is-max-desktop">
 
-    <h1 class="title">Kaution von {{ deposit.person }} bearbeiten</h1>
+    <h1 class="title">Kaution von {{ person }}</h1>
 
-    <form method='post' autocomplete="off">
+    <form method='post'>
         {% csrf_token %}
 
         {% if form.non_field_errors %}
@@ -58,7 +58,6 @@
                 </p>
             </div>
         </div>
-
         <div class="field">
             <label class="label" for="{{ field.id_for_label }}">{{ form.in_method.label_tag }}</label>
             <div class="field has-addons">
@@ -76,9 +75,10 @@
             </div>
         </div>
 
+
         <span class="buttons is-right">
-            <a class="button" href={% url 'keys:person-detail' pk=deposit.person.id %}>Abbrechen</a >
-            <input class="button is-primary" type="submit" value="Aktualisieren">
+            <a class="button" href={% url 'keys:person-detail' pk=person.id %}>Abbrechen</a >
+            <input class="button is-primary" type="submit" value="Hinzufügen">
         </span>
     </form>
 </div>

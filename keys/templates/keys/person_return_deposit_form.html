@@ -3,7 +3,6 @@
 {% block title %}Kaution zurück | {{ deposit.person }} | Schlüsselsystem{% endblock %}
 
 {% load widget_tweaks %}
-{% load humanize %}
 
 {% block content %}
 <div class="container is-max-desktop">
@@ -54,6 +53,10 @@
                 </div>
             </div>
         </div>
+
+        <!-- invisible amount-->
+        {{ form.amount }}
+
 
         <span class="buttons is-right">
             <a class="button" href={% url 'keys:person-detail' pk=deposit.person.id %}>Abbrechen</a >

@@ -21,7 +21,7 @@
     {% if key.get_current_issue %}
         <article class="message is-info">
             <div class="message-body">
-            Aktuell verliehen an {{ key.get_current_issue.person }}
+            Aktuell verliehen an <a href="{% url 'keys:person-detail' pk=key.get_current_issue.person.id %}">{{ key.get_current_issue.person }}</a>
             </div>
         </article>
     {% endif %}

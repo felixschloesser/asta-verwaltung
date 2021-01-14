@@ -10,7 +10,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 
 from .models import Key, Person, Issue, Deposit
-from .forms import DepositCreateForm, IssueForm, IssueReturnForm
+from .forms import DepositReturnForm, IssueForm, IssueReturnForm
 
 import datetime
 
@@ -71,7 +71,8 @@ class PersonSearchResults(LoginRequiredMixin, generic.ListView):
         if query:
             person_list = Person.all_people.filter(models.Q(first_name__istartswith=query) |
                                                 models.Q(last_name__istartswith=query) |
-                                                models.Q(university_email__icontains=query)
+                                                models.Q(university_email__icontains=query) |
+                                                models.Q(group__name__istartswith=query)
                                                )
         else:
             person_list = Person.all_people
@@ -107,11 +108,14 @@ class PersonUpdate(LoginRequiredMixin, generic.UpdateView):
 
 
 
-class PersonCreateDeposit(LoginRequiredMixin, generic.CreateView):
+class PersonCreateDeposit(SuccessMessageMixin, LoginRequiredMixin, generic.CreateView):
     model = Deposit
-    form_class = DepositCreateForm
+    fields = ['amount',
+              'currency',
+              'in_datetime',
+              'in_method']
     template_name = 'keys/person_create_deposit_form.html'
-    success_message = "%(name)s was successfully added."
+    success_message = "Kaution von %(amount)s %(currency)s erfolgreich hinzugefügt."
 
 
     def get_object(self, queryset=None):
@@ -153,9 +157,17 @@ class PersonUpdateDeposit(LoginRequiredMixin, generic.UpdateView):
               'in_datetime',
               'in_method']
 
-    template_name = 'keys/person_update_deposit_form.html'
+    template_name = 'keys/person_create_deposit_form.html'
     success_message = "%(name)s was successfully updated."
 
+    def get_context_data(self, **kwargs):
+        """
+        Get the current person from the request and add it to the context so that the tempalte can access it.
+        """
+        context = super().get_context_data(**kwargs)
+        person = Person.all_people.filter(pk=self.kwargs.get('pk')).get()
+        context["person"] = person
+        return context
 
     def get_success_url(self):
         return reverse_lazy('keys:person-detail', args = [self.object.person.id])
@@ -172,15 +184,11 @@ class PersonUpdateDeposit(LoginRequiredMixin, generic.UpdateView):
 
 class PersonReturnDeposit(LoginRequiredMixin, generic.UpdateView):
     model = Deposit
-    fields = ['out_datetime',
-              'out_method']
-
+    form_class = DepositReturnForm
     template_name = 'keys/person_return_deposit_form.html'
     initial= {'out_datetime': datetime.datetime.now()}
     success_message = "%(name)s was successfully returend"
 
-    def get_success_url(self):
-        return reverse_lazy('keys:person-detail', args =[self.object.person.id])
 
     def get_object(self, queryset=None):
         """
@@ -191,10 +199,18 @@ class PersonReturnDeposit(LoginRequiredMixin, generic.UpdateView):
         obj = queryset.filter(person__id=pk).get()
         return obj
 
-class PersonReturnDepositSuccess(LoginRequiredMixin, generic.DetailView):
-    modelel = Deposit
-    template_name_suffix = 'return_success'
+    def form_valid(self, form):
+        """
+        Before validating the form, set the amount to 0
+        """
+        self.object = form.save(commit=False)
+        self.object.amount = 0
+        self.object.save()
+        return super().form_valid(form)
 
+
+    def get_success_url(self):
+        return reverse_lazy('keys:person-detail', args =[self.object.person.id])
 
 
 # Issues
@@ -242,10 +258,12 @@ class IssueDetail(LoginRequiredMixin, generic.DetailView):
     model = Issue
 
 
-class IssueNew(LoginRequiredMixin, generic.CreateView):
+class IssueNew(SuccessMessageMixin, LoginRequiredMixin, generic.CreateView):
     model = Issue
     form_class = IssueForm
-    success_message = "%(name)s was created successfully"
+
+    success_url = reverse_lazy("keys:issue-list")
+    success_message = "Ausgabe von %(key)s erfolgreich angelegt."
 
     def get_context_data(self, **kwargs):
         """
@@ -284,7 +302,6 @@ class IssueReturn(LoginRequiredMixin, generic.UpdateView):
     initial= {'in_date': datetime.datetime.now()}
     template_name_suffix ='_return_form'
 
-    get_success_url = 'keys:issue-return-success'
     success_message = "%(key)s erfolgreich zurückgegeben."
 
     def get_success_url(self):

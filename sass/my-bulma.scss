@@ -5,7 +5,7 @@
 
 // Set your brand colors
 $yellow-pantone: #FFE033;
-$green-lime: #37D10C;
+$green-kelly: #33C10B;
 $red-pigment: #F92929;
 $red-rufous: #9E0505;
 $blue-jeans: #5BAFEC;
@@ -16,11 +16,15 @@ $blue-saphire: #255F85;
 $primary: $blue-saphire;
 $info: $blue-jeans;
 $link: $blue-tufts;
-$success: $green-lime;
+$success: $green-kelly;
+$warning: $yellow-pantone;
 
 // Update some of Bulma's component variables
 $navbar-breakpoint: $tablet;
 
-
 // Import all of Bulma
 @import "../node_modules/bulma/bulma.sass";
+
+
+// Import Bulma Extensions
+@import "../node_modules/@creativebulma/bulma-tooltip/src/sass/index.sass";

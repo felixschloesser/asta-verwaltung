@@ -5,13 +5,9 @@
 {% block content %}
 <div class="container is-max-desktop">
 
-    {% if messages %}
+     {% if messages %}
         {% for message in messages %}
-        <article class="message is-level_tag">
-            <div class="message-header">
-                <p>{{ message.tags }}</p>
-                 <button class="delete" aria-label="delete"></button>
-            </div>
+        <article class="message is-success">
             <div class="message-body">
                 {{ message }}
             </div>

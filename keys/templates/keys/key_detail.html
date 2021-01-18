@@ -5,12 +5,23 @@
 
 {% block content %}
 <div class="container is-max-desktop">
+    {% if messages %}
+        {% for message in messages %}
+        <article class="message is-{{ message.tags }}">
+            <div class="message-body">
+                {{ message }}
+            </div>
+        </article>
+        {% endfor %}
+    {% endif %}
+
     <h1 class='title'>
         {% if key.locking_system.method == 'transponder' %}
             Transponder
         {% else %}
             Schüssel
         {% endif %}Nr. {{ key.number }}</h1>
+
     {% if key.stolen_or_lost %}
         <article class="message is-danger">
             <div class="message-body">
@@ -18,15 +29,10 @@
             </div>
         </article>
     {% endif %}
-    {% if key.get_current_issue %}
-        <article class="message is-info">
-            <div class="message-body">
-            Aktuell verliehen an <a href="{% url 'keys:person-detail' pk=key.get_current_issue.person.id %}">{{ key.get_current_issue.person }}</a>
-            </div>
-        </article>
-    {% endif %}
     <div class="content">
-
+            {% if key.get_current_issue %}
+                <p><strong>Aktuell verliehen an:</strong> <a href="{% url 'keys:person-detail' pk=key.get_current_issue.person.id %}">{{ key.get_current_issue.person }}</a></p>
+            {% endif %}
             <p><strong>Schließsystem:</strong> {{ key.locking_system }}</p>
             <p><strong>Lagerort:</strong> {{ key.storage_location }}</p>
             <p><strong>Öffnet folgende Türen:</strong></p>
@@ -39,7 +45,23 @@
                 </ul>
     </div>
     <div class="buttons is-left">
-        <a class="button is-link" href="{% url 'keys:key-list' %}">Zurück zur Liste</a>
+
     </div>
+    <nav class="level is-max-desktop">
+        <div class="level-left">
+            <div class="level-item">
+                <a class="button is-link is-outlined" href="{% url 'keys:key-list' %}">Zurück zur Liste</a>
+            </div>
+        </div>
+        <div class="level-right">
+             <div class="level-item">
+                {% if not key.stolen_or_lost %}
+                    <a class="button is-warning" href="{% url 'keys:key-lost' key.id  %}" >Verloren/Gestohlen</a>
+                {% else %}
+                    <a class="button is-warning" href="{% url 'keys:key-found' key.id  %}" >Gefunden</a>
+
+                {% endif %}            </div>
+        </div>
+    </nav>
 </div>
 {% endblock %}

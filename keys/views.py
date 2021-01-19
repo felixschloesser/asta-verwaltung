@@ -3,6 +3,7 @@ from django.views import View, generic
 from django.db import models
 from django.urls import reverse_lazy
 from django.http import Http404
+from django.utils import timezone
 
 from django.core.exceptions import ValidationError
 
@@ -13,6 +14,7 @@ from .models import Key, Person, Issue, Deposit
 from .forms import DepositReturnForm, IssueForm, IssueReturnForm
 
 import datetime
+import logging
 
 
 def index_view(request):
@@ -159,7 +161,7 @@ class DepositMixin:
         return context
 
     def get_success_url(self):
-        return reverse_lazy('keys:deposit-create', args = [self.object.person.id])
+        return reverse_lazy('keys:deposit-detail', args = [self.object.person.id])
 
 
 class DepositDetail(DepositMixin, LoginRequiredMixin, generic.DetailView):
@@ -182,6 +184,7 @@ class DepositCreate(DepositMixin, SuccessMessageMixin, LoginRequiredMixin, gener
         self.object = form.save(commit=False)
         self.object.person = Person.all_people.filter(pk=self.kwargs.get('pk')).get()
         self.object.save()
+        logging.log("DepositCreate form is valid")
         return super().form_valid(form)
 
 
@@ -193,8 +196,23 @@ class DepositReturn(DepositMixin, SuccessMessageMixin, LoginRequiredMixin, gener
     model = Deposit
     form_class = DepositReturnForm
     template_name = 'keys/deposit_return_form.html'
+    initial = {'out_datetime': timezone.now(),
+               'out_method': 'cash'}
     success_message = "Kaution von %(amount)s %(currency)s erfolgreich zurückgegeben."
 
+    def get_success_url(self):
+        return reverse_lazy('keys:person-list')
+
+    def form_valid(self, form):
+        """
+        Before validating the form, set active to False
+        """
+        self.object = form.save(commit=False)
+        self.object.active = False
+        self.object.amount = 0
+        self.object.currency = 'EUR'
+        self.object.save()
+        return super().form_valid(form)
 
 
 # Issues
@@ -270,7 +288,6 @@ class IssueNew(SuccessMessageMixin, LoginRequiredMixin, generic.CreateView):
         person_id = self.request.GET.get('person','')
         self.object = form.save(commit=False)
         self.object.person = Person.all_people.get_person(person_id)
-        self.object.active = True
         self.object.save()
         return super().form_valid(form)
 

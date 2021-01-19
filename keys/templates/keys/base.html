@@ -17,8 +17,8 @@
     <link rel="stylesheet" href="{% static 'css/keys.css' %}">
 
     <!-- JS -->
-    <script src="http://code.jquery.com/jquery-3.5.1.slim.js"></script>
-    <script src="{% static 'js/hamburger.js' %}"></script>
+    <script src="http://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src={% static 'js/hamburger.js' %}></script>
 
 </head>
 <body class="is-flex is-flex-direction-column" style="min-height: 100vh;min-height: -webkit-fill-available;">
@@ -62,8 +62,9 @@
             </p>
         </div>
     </footer>
-    <!--Additional JS-->
+
     {% block additional_js %}
+    <!--Additional JS-->
     {% endblock %}
 </body>
 </html>

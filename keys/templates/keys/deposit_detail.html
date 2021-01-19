@@ -1,0 +1,57 @@
+{% extends "keys/base.html" %}
+
+{% block title %}Ausgabe | Schlüsselsystem{% endblock %}
+
+
+{% block content %}
+<div class="container is-max-desktop">
+
+    {% if messages %}
+        {% for message in messages %}
+        <article class="message is-success">
+            <div class="message-body">
+                {{ message }}
+            </div>
+        </article>
+        {% endfor %}
+    {% endif %}
+
+    <h1 class='title'>Kaution von <a href={% url 'keys:person-detail' pk=deposit.person.id %}>{{ deposit.person }}</a></h1>
+
+    <div class="content">
+        <p><strong>Eingezahlt:</strong> {{ deposit.amount }} {{ deposit.currency }} {{ deposit.get_in_method }}</p>
+        <p><strong>Am:</strong> {{ deposit.in_datetime|date:"l, d. F Y"}} um {{ deposit.in_datetime |date:"G:i"}}</p>
+
+        {% if deposit.get_out_method %}
+        <p><strong>Ausgezahlt:</strong> {{ deposit.amount }} {{ deposit.currency }} {{ deposit.get_out_method }}</p>
+        <p><strong>Am:</strong> {{ deposit.out_datetime|date:"l, d. F Y"}} um {{ deposit.out_datetime |date:"G:i"}}</p>
+        {% endif %}
+
+        {% if desosit.comment %}
+            <p><strong>Kommentar:</strong> {{ desosit.comment }}</p>
+        {% endif %}
+    </div>
+
+    <nav class="level is-max-desktop noprint">
+        <div class="level-left">
+            <div class="level-item">
+                <a class="button is-link is-outlined" href="{% url 'keys:person-detail' pk=deposit.person.id %}">Zurück zur Person</a>
+            </div>
+        </div>
+        <div class="level-right">
+            <div class="level-item">
+                <button class="button is-info" onclick="window.print()">Drucken</button>
+            </div>
+
+        </div>
+    </nav>
+</div>
+<!-- Print -->
+    <div class="content print" >
+        <p class="text print" style="display: none">Datum, unterschrift</p>
+    </div>
+
+{% endblock %}
+
+
+

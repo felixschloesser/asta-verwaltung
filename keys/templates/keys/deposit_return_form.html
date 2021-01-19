@@ -3,6 +3,7 @@
 {% block title %}Kaution zurück | {{ deposit.person }} | Schlüsselsystem{% endblock %}
 
 {% load widget_tweaks %}
+{% load static %}
 
 {% block content %}
 <div class="container is-max-desktop">
@@ -42,7 +43,7 @@
             <div class="field has-addons">
                 <div class="select">
                     {% if not form.out_method.errors %}
-                        {{ form.out_method|add_class:"select" }}
+                        {{ form.out_method|add_class:"select"}}
                     {% else %}
                         {{ form.out_method|add_class:"select"}}
                     {% endif %}
@@ -57,6 +58,8 @@
         <!-- invisible amount-->
         {{ form.amount }}
         {{ form.currency }}
+        {{ form.active }}
+
 
 
         <span class="buttons is-right">
@@ -66,3 +69,11 @@
     </form>
 </div>
 {% endblock %}
+<!--
+{% block additional_js %}
+<script src={% static 'js/date_format.js' %} type="text/javascript"></script>
+<script type="text/javascript">
+    document.getElementById('id_out_datetime').value = (new Date()).format("dd.mm.yyyy HH:MM");
+</script>
+{% endblock %}
+-->

@@ -47,7 +47,7 @@
                 <div class="column is-one-fifth-mobile is-2-tablet is-1-widescreen"><p class="text has-text-weight-bold has-text-right">Kaution</p></div>
                 <div class="column">
                     {% if person.has_paid_deposit %}
-                        <span class="tag is-success"><b>{{ person.deposit.amount }} {{ person.deposit.currency }}</b></span> am {{ person.deposit.in_datetime|date:"l, d. F Y"}} um {{ person.deposit.in_datetime |date:"G:i"}}
+                        <a href={% url 'keys:deposit-detail' pk=person.id %}><span class="tag is-success"><b>{{ person.deposit.amount }} {{ person.deposit.currency }}</b></span></a>
                     {% elif person.deposit.in_datetime %}
                         <span class="tag is-info"><b>Zurückerhalten</b></span> am {{ person.deposit.out_datetime |date:"l, d. F Y"}} um {{ person.deposit.out_datetime |date:"G:i"}}
                     {% else %}

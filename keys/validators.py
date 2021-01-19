@@ -1,6 +1,18 @@
+from django.core.exceptions import ValidationError
+
 import datetime
 
 # Create your validators here.
+def validate_deposit_mail(value):
+    if value < 0:
+        raise ValidationError("Kaution darf nicht negativ sein.")
+    elif value == 0:
+        raise ValidationError("Kaution darf nicht Null sein.")
+    elif value >= 500:
+        raise ValidationError("Kaution zu hoch!")
+
+
+
 def validate_university_mail(value):
     if "@tuhh.de" in value:
         return value

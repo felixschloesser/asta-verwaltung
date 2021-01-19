@@ -1,6 +1,5 @@
 from django.db import models
 from django.utils import timezone, text
-from django.core.exceptions import ValidationError
 from django.core.exceptions import ObjectDoesNotExist
 from django.urls import reverse
 
@@ -305,13 +304,15 @@ class Person(models.Model): # Add a chron job ro delete after a 2 years of not r
 
 
 class Deposit(models.Model):
+    active = models.BooleanField(verbose_name='Aktiv', default=True)
+
     currency_choices = [('EUR', '€')]
 
     method_choices = [('cash', 'Bar'),
                       ('bank transfer', 'Überweisung')]
 
     person = models.OneToOneField('Person', verbose_name='Person', on_delete=models.PROTECT)
-    amount = models.DecimalField('Kautionsbetrag', max_digits=5, decimal_places=2, default=50)
+    amount = models.DecimalField('Kautionsbetrag', max_digits=5, decimal_places=2, default=50, validators=[validate_deposit_mail])
 
     currency = models.CharField('Währung', max_length=3, choices=currency_choices, default='EUR')
 
@@ -320,7 +321,7 @@ class Deposit(models.Model):
     in_method = models.CharField('Zahlungsmittel', max_length=64, choices=method_choices, default='cash')
 
     out_datetime = models.DateTimeField('Rückzahlungszeitpunkt', null=True, validators=[present_or_max_3_days_ago])
-    out_method = models.CharField('Zahlungsmittel', max_length=64, choices=method_choices, null=True, default='cash')
+    out_method = models.CharField('Zahlungsmittel', max_length=64, choices=method_choices, null=True)
 
     created_at = models.DateTimeField('Erstellungszeitpunkt', auto_now_add=True)
     updated_at = models.DateTimeField('Aktualisierungszeitpunkt', auto_now=True)
@@ -330,15 +331,47 @@ class Deposit(models.Model):
         verbose_name_plural = "Kautionen"
         ordering = ["in_datetime", "amount"]
 
+        constraints = [
+            models.CheckConstraint(
+                name='active_deposit_no_out_datetime_out_method',
+                check=models.Q(active=True, out_datetime__isnull=True, out_method__isnull=True) | \
+                      models.Q(active=False, out_datetime__isnull=False, out_method__isnull=False)
+            ),
+            models.CheckConstraint(
+                name='take_in_deposit_before_give_out',
+                check=models.Q(in_datetime__lte=models.F('out_datetime')),
+            ),
+            models.CheckConstraint(
+                name='deposit_not_negative',
+                check=models.Q(amount__gte=0),
+            )
+        ]
+
     def __str__(self):
         full_name = "{} {} von {}".format(self.amount, self.currency, self.person.get_full_name())
         return full_name
+
+    def get_in_method(self):
+        if self.in_method == 'cash':
+            return 'in Bar'
+        elif self.in_method == 'bank transfer':
+            return 'durch Überweisung'
+
+    def get_out_method(self):
+        if self.out_method == 'cash':
+            return 'in Bar'
+        elif self.out_method == 'bank transfer':
+            return 'durch Überweisung'
 
     def has_been_returned(self):
         if self.out_datetime and self.out_method:
             return True
         else:
             return False
+
+    def get_absolute_url(self):
+        return reverse('keys:deposit-detail', args=[str(self.person.id)])
+
 
     has_been_returned.boolean = True
     has_been_returned.short_description = "Zurückgegeben"
@@ -378,7 +411,7 @@ class Issue(models.Model):
                                 default=timezone.now,
                                 validators=[present_or_max_10_days_ago])
     in_date = models.DateField('Rückgabedatum',
-                                null=True, blank=True,
+                                null=True,
                                 validators=[present_or_max_10_days_ago])
     comment = models.CharField('Kommentar', max_length=500, null=True, blank=True)
 
@@ -401,13 +434,13 @@ class Issue(models.Model):
                 condition=models.Q(active=True),
             ),
             models.CheckConstraint(
-                name='only_inacrive_have_in_date',
+                name='active_issue_no_in_date',
                 check=models.Q(active=True, in_date__isnull=True) | \
                       models.Q(active=False, in_date__isnull=False)
             ),
             models.CheckConstraint(
-                name='give_out_before_take_in',
-                check=models.Q(in_date__gte=models.F('out_date')),
+                name='give_out_key_before_take_in',
+                check=models.Q(out_date__lte=models.F('in_date')),
             ),
         ]
 

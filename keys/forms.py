@@ -13,13 +13,18 @@ class DepositReturnForm(forms.ModelForm):
         fields = ['amount',
                   'currency',
                   'out_datetime',
-                  'out_method']
+                  'out_method',
+                  'active']
         widgets = {'amount': forms.HiddenInput(),
-                   'currency': forms.HiddenInput()}
+                   'currency': forms.HiddenInput(),
+                   'active': forms.HiddenInput()}
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['out_datetime'] = forms.DateTimeField(initial=timezone.now())
+
+    def __init__(self, data={}, **kwargs):
+        # get initial even though the form is already bound
+        initial = kwargs.get('initial', {})
+        data = initial
+        super().__init__(data, **kwargs)
 
 
 class IssueForm(forms.ModelForm):

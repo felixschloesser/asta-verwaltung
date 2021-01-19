@@ -137,53 +137,8 @@ class PersonUpdate(LoginRequiredMixin, generic.UpdateView):
     success_message = "%(name)s was successfully updated."
 
 
-
-class CreateDeposit(SuccessMessageMixin, LoginRequiredMixin, generic.CreateView):
-    model = Deposit
-    fields = ['amount',
-              'currency',
-              'in_datetime',
-              'in_method']
-    template_name = 'keys/deposit_form.html'
-    success_message = "Kaution von %(amount)s %(currency)s erfolgreich hinzugefügt."
-
-
-    def get_object(self, queryset=None):
-        """
-        Get the deposit from the person-pk in the urlpattern.
-        """
-        queryset = self.get_queryset()
-        pk = self.kwargs.get(self.pk_url_kwarg)
-        obj = queryset.filter(person__id=pk).get()
-        return obj
-
-
-    def get_context_data(self, **kwargs):
-        """
-        Get the current person from the request and add it to the context so that the tempalte can access it.
-        """
-        context = super().get_context_data(**kwargs)
-        person = Person.all_people.filter(pk=self.kwargs.get('pk')).get()
-        context["person"] = person
-        return context
-
-    def form_valid(self, form):
-        """
-        Before validating the form, populate the person field using the request primary key as a lookup for
-        """
-        self.object = form.save(commit=False)
-        self.object.person = Person.all_people.filter(pk=self.kwargs.get('pk')).get()
-        self.object.save()
-        return super().form_valid(form)
-
-    def get_success_url(self):
-        return reverse_lazy('keys:person-detail', args = [self.object.person.id])
-
-
-
-class DeleteDeposit(LoginRequiredMixin,generic.DeleteView):
-    model = Deposit
-    template_name = 'keys/deposit_delete.html'
+#  Deposit
+class DepositMixin:
 
     def get_object(self, queryset=None):
         """
@@ -207,25 +162,40 @@ class DeleteDeposit(LoginRequiredMixin,generic.DeleteView):
         return reverse_lazy('keys:deposit-create', args = [self.object.person.id])
 
 
+class DepositDetail(DepositMixin, LoginRequiredMixin, generic.DetailView):
+    model = Deposit
 
-class ReturnDeposit(SuccessMessageMixin, LoginRequiredMixin, generic.UpdateView):
+
+class DepositCreate(DepositMixin, SuccessMessageMixin, LoginRequiredMixin, generic.CreateView):
+    model = Deposit
+    fields = ['amount',
+              'currency',
+              'in_datetime',
+              'in_method']
+    success_message = "Kaution von %(amount)s %(currency)s erfolgreich hinzugefügt."
+
+
+    def form_valid(self, form):
+        """
+        Before validating the form, populate the person field using the request primary key as a lookup for
+        """
+        self.object = form.save(commit=False)
+        self.object.person = Person.all_people.filter(pk=self.kwargs.get('pk')).get()
+        self.object.save()
+        return super().form_valid(form)
+
+
+class DepositDelete(DepositMixin, LoginRequiredMixin, generic.DeleteView):
+    model = Deposit
+
+
+class DepositReturn(DepositMixin, SuccessMessageMixin, LoginRequiredMixin, generic.UpdateView):
     model = Deposit
     form_class = DepositReturnForm
     template_name = 'keys/deposit_return_form.html'
     initial= {'out_datetime': datetime.datetime.now()}
     success_message = "Kaution von %(amount)s %(currency)s erfolgreich zurückgegeben."
 
-    def get_object(self, queryset=None):
-        """
-        Get the deposit from the person-pk in the urlpattern.
-        """
-        queryset = self.get_queryset()
-        pk = self.kwargs.get(self.pk_url_kwarg)
-        obj = queryset.filter(person__id=pk).get()
-        return obj
-
-    def get_success_url(self):
-        return reverse_lazy('keys:person-detail', args =[self.object.person.id])
 
 
 # Issues
@@ -321,9 +291,6 @@ class IssueReturn(LoginRequiredMixin, generic.UpdateView):
     template_name_suffix ='_return_form'
 
     success_message = "%(key)s erfolgreich zurückgegeben."
-
-    def get_success_url(self):
-        return reverse_lazy('keys:issue-detail',  args=[self.object.id])
 
     def form_valid(self, form):
         """

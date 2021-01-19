@@ -6,8 +6,11 @@ class KeyManager(models.Manager):
         return qs.select_related('locking_system')
 
     def availible(self, **kwargs):
-        # Is either never issued, not lost or not currently rented
-        availible =  self.filter(is_avalible=True)
+        # Is either never issued, not lost and not currently rented
+        availible =  self.filter(
+                        models.Q(stolen_or_lost=False, issues__active=False) |
+                        models.Q(stolen_or_lost=False, issues__isnull=True),
+                            **kwargs).distinct()
 
         return availible
 

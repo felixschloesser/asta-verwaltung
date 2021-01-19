@@ -28,37 +28,49 @@
     <div class="content">
         <p><strong>An:</strong> <a href="{% url 'keys:person-detail' pk=issue.person.id %}">{{ issue.person }}, {{ issue.person.group }}</a></p>
         <p><strong>Zugang zu:</strong> {% for room in issue.key.get_rooms %}{{room}}{% if not forloop.last %}, {% endif %}{% endfor %}</a></p>
-        <p><strong>Ausgabedatum:</strong> {{ issue.out_date }}</p>
+        <p><strong>Ausgabedatum:</strong> {{ issue.out_date |date:"l, d. F Y" }}</p>
         {% if issue.in_date %}
-            <p><strong>Rückgabedatum:</strong> {{ issue.in_date }}</p>
+            <p><strong>Rückgabedatum:</strong> {{ issue.in_date |date:"l, d. F Y"}}</p>
         {% endif %}
-
+        {% if issue.comment %}
+            <p><strong>Kommentar:</strong> {{ issue.comment }}</p>
+        {% endif %}
     </div>
 
-    <nav class="level is-max-desktop">
+    <nav class="level is-max-desktop noprint">
         <div class="level-left">
             <div class="level-item">
                 <a class="button is-link is-outlined" href="{% url 'keys:issue-list' %}">Zurück zur Liste</a>
             </div>
         </div>
         <div class="level-right">
+            <div class="level-item">
+                <button class="button is-info" onclick="window.print()">Drucken</button>
+            </div>
+
+            {% if not issue.key.stolen_or_lost %}
              <div class="level-item">
-                {% if not issue.key.stolen_or_lost %}
                     <a class="button is-warning" href="{% url 'keys:key-lost' object.key.id  %}" >Verloren/Gestohlen</a>
-
-                {% else %}
-                    <a class="button is-warning" href="{% url 'keys:key-found' object.key.id  %}" >Gefunden</a>
-
-                {% endif %}
             </div>
             <div class="level-item">
                 {% if issue.active %}
                     <a class="button is-primary" href="{% url 'keys:issue-return' object.id  %}" >Zurückgeben</a>
                 {% endif %}
             </div>
+                {% else %}
+                    <a class="button is-warning" href="{% url 'keys:key-found' object.key.id  %}" >Gefunden</a>
+                {% endif %}
+            </div>
+
         </div>
     </nav>
 
 </div>
+<!-- Print -->
+    <div class="content print" >
+        <p class="text print" style="display: none">Datum, unterschrift</p>
+    </div>
 
 {% endblock %}
+
+

@@ -212,7 +212,6 @@ class ReturnDeposit(SuccessMessageMixin, LoginRequiredMixin, generic.UpdateView)
     model = Deposit
     form_class = DepositReturnForm
     template_name = 'keys/deposit_return_form.html'
-    initial= {'out_datetime': datetime.datetime.now()}
     success_message = "Kaution von %(amount)s %(currency)s erfolgreich zurückgegeben."
 
     def get_object(self, queryset=None):
@@ -315,7 +314,6 @@ class IssueReturnList(LoginRequiredMixin, generic.ListView):
 class IssueReturn(LoginRequiredMixin, generic.UpdateView):
     model = Issue
     form_class = IssueReturnForm
-    initial= {'in_date': datetime.datetime.now()}
     template_name_suffix ='_return_form'
 
     success_message = "%(key)s erfolgreich zurückgegeben."

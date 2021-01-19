@@ -47,9 +47,9 @@
                 <div class="column is-one-fifth-mobile is-2-tablet is-1-widescreen"><p class="text has-text-weight-bold has-text-right">Kaution</p></div>
                 <div class="column">
                     {% if person.has_paid_deposit %}
-                        <span class="tag is-success"><b>{{ person.deposit.amount }} {{ person.deposit.currency }}</b></span> am {{ person.deposit.in_datetime}}
+                        <span class="tag is-success"><b>{{ person.deposit.amount }} {{ person.deposit.currency }}</b></span> am {{ person.deposit.in_datetime|date:"l, d. F Y"}} um {{ person.deposit.in_datetime |date:"G:i"}}
                     {% elif person.deposit.in_datetime %}
-                        <span class="tag is-info"><b>Zurückerhalten</b></span> am {{ person.deposit.out_datetime }}
+                        <span class="tag is-info"><b>Zurückerhalten</b></span> am {{ person.deposit.out_datetime |date:"l, d. F Y"}} um {{ person.deposit.out_datetime |date:"G:i"}}
                     {% else %}
                        <span class="tag is-light"><b>nicht bezahlt</b></span>
                     {% endif %}
@@ -67,8 +67,8 @@
         <ul>
         {% for issue in person.get_active_issues %}
             <li>
-                <a href="{% url 'keys:issue-detail' pk=issue.id %}">{% if key.stolen_or_lost %}
-                        <span class="tag is-warning">Verloren</span>{% endif %}<strong>Nr. {{ issue.key }}</strong> am {{ issue.out_date }}</a>:
+                <a href="{% url 'keys:issue-detail' pk=issue.id %}">{% if issue.key.stolen_or_lost %}
+                        <span class="tag is-warning"><b>Verloren</b></span> {% endif %}<strong>Nr. {{ issue.key }}</strong> am {{ issue.out_date }}</a>:
                    [{% for room in issue.key.get_rooms %}
                     <em>{{ room }}</em>
                         {% if not forloop.last %}, {% endif %}
@@ -106,7 +106,7 @@
                         </p>
                     {% elif person.has_paid_deposit %}
                         <p class="control">
-                            <a class="button is-warning has-tooltip-bottom has-tooltip-arrow" data-tooltip="noch offene ausleihen" disabled>Kaution zurück</a>
+                            <a class="button is-warning has-tooltip-bottom has-tooltip-arrow" href="{% url 'keys:deposit-return' pk=person.id %}" data-tooltip="Noch offene ausleihen">Kaution zurück</a>
                         </p>
                     {% elif person.deposit.in_datetime %} {% comment %} There alreaedy exists a deposit{% endcomment %}
                         <p class="control">

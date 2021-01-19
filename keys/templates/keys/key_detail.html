@@ -43,10 +43,11 @@
                     keine
                 {% endfor %}
                 </ul>
+            {% if key.comment %}
+                <p><strong>Kommentar:</strong> {{ key.comment }}</p>
+            {% endif %}
     </div>
-    <div class="buttons is-left">
 
-    </div>
     <nav class="level is-max-desktop">
         <div class="level-left">
             <div class="level-item">

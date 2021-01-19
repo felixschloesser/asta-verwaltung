@@ -1,11 +1,10 @@
 from django.core.exceptions import ValidationError
 
 from django import forms
-from django.utils import formats
+from django.utils import formats, timezone
 
 from .models import Issue, Deposit, Key
 
-import datetime
 
 
 class DepositReturnForm(forms.ModelForm):
@@ -18,6 +17,9 @@ class DepositReturnForm(forms.ModelForm):
         widgets = {'amount': forms.HiddenInput(),
                    'currency': forms.HiddenInput()}
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['out_datetime'] = forms.DateTimeField(initial=timezone.now())
 
 
 class IssueForm(forms.ModelForm):
@@ -25,7 +27,12 @@ class IssueForm(forms.ModelForm):
         model= Issue
         fields = ['key',
                   'out_date',
-                  'active']
+                  'active',
+                  'comment',]
+        widgets = {
+            'comment': forms.Textarea(attrs={'cols': 80, 'rows': 3}),
+        }
+
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -48,6 +55,7 @@ class IssueReturnForm(forms.ModelForm):
         model = Issue
         fields = ['in_date',
                   'active']
+
 
     def clean(self):
         cleaned_data = super().clean()

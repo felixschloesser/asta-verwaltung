@@ -115,7 +115,7 @@ class Door(models.Model):
                                         related_name="doors",
                                         verbose_name='Schließsystem',
                                         on_delete = models.CASCADE)
-    comment = models.CharField("Kommentar", max_length=64, blank=True, null=True)
+    comment = models.CharField("Kommentar", max_length=500, blank=True, null=True)
     created_at = models.DateTimeField('Erstellungszeitpunkt', auto_now_add=True)
     updated_at = models.DateTimeField('Aktualisierungszeitpunkt', auto_now=True)
 
@@ -149,6 +149,8 @@ class Key(models.Model):
                                           verbose_name='Aufbewahrungsort',
                                           on_delete=models.PROTECT)
     stolen_or_lost = models.BooleanField('gestohlen oder verloren', default=False)
+
+    comment = models.CharField("Kommentar", max_length=500, blank=True, null=True)
 
     created_at = models.DateTimeField('Erstellungszeitpunkt', auto_now_add=True)
     updated_at = models.DateTimeField('Aktualisierungszeitpunkt', auto_now=True)
@@ -209,7 +211,7 @@ class LockingSystem(models.Model):
                                        choices=method_choices,
                                        default=('mechanical', 'mechanisch'))
     company = models.CharField('Firma', max_length=32, unique=True, blank=True, null=True)
-    comment = models.CharField('Kommentar', max_length=64, blank=True, null=True)
+    comment = models.CharField('Kommentar', max_length=500, blank=True, null=True)
     created_at = models.DateTimeField('Erstellungszeitpunkt', auto_now_add=True)
     updated_at = models.DateTimeField('Aktualisierungszeitpunkt', auto_now=True)
 
@@ -311,7 +313,7 @@ class Deposit(models.Model):
     currency = models.CharField('Währung', max_length=3, choices=currency_choices, default='EUR')
 
 
-    in_datetime = models.DateTimeField('Einzahlungszeitpunkt', default=datetime.datetime.now, validators=[present_or_max_3_days_ago])
+    in_datetime = models.DateTimeField('Einzahlungszeitpunkt', default=timezone.now, validators=[present_or_max_3_days_ago])
     in_method = models.CharField('Zahlungsmittel', max_length=64, choices=method_choices, default='cash')
 
     out_datetime = models.DateTimeField('Rückzahlungszeitpunkt', null=True, validators=[present_or_max_3_days_ago])
@@ -375,6 +377,8 @@ class Issue(models.Model):
     in_date = models.DateField('Rückgabedatum',
                                 null=True, blank=True,
                                 validators=[present_or_max_10_days_ago])
+    comment = models.CharField('Kommentar', max_length=500, null=True, blank=True)
+
     created_at = models.DateTimeField('Erstellungszeitpunkt', auto_now_add=True)
     updated_at = models.DateTimeField('Aktualisierungszeitpunkt', auto_now=True)
 

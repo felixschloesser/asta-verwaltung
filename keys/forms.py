@@ -27,7 +27,7 @@ class IssueForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['key'].queryset = Key.all_keys.availible()
+        #self.fields['key'].queryset = Key.all_keys.availible()
 
     def clean(self):
         cleaned_data = super().clean()

@@ -260,6 +260,8 @@ class IssueNew(SuccessMessageMixin, LoginRequiredMixin, generic.CreateView):
         if person_id:
             person = Person.all_people.get_person(person_id)
             context['person'] = person
+            keys = Key.all_keys.availible()
+            context['keys'] = keys
         return context
 
     def form_valid(self, form):

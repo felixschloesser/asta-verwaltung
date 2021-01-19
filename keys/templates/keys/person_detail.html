@@ -67,7 +67,7 @@
         <ul>
         {% for issue in person.get_active_issues %}
             <li>
-                <a href="{% url 'keys:issue-detail' pk=issue.id %}"><strong>Nr. {{ issue.key }}</strong> am {{ issue.out_date }}</a>:
+                <a href="{% url 'keys:issue-detail' pk=issue.id %}"><strong>{{ issue.key }}</strong> am {{ issue.out_date }}</a>:
                    [{% for room in issue.key.get_rooms %}
                     <em>{{ room }}</em>
                         {% if not forloop.last %}, {% endif %}

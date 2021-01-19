@@ -171,7 +171,10 @@ class Key(models.Model):
     ]
 
     def __str__(self):
-        return self.number
+        if self.locking_system.method == 'transponder':
+            return "Transponder Nr. {}".format(self.number)
+        else:
+            return "Schlüssel Nr. {}".format(self.number)
 
     def get_absolute_url(self):
         return reverse('keys:key-detail', args=[str(self.id)])

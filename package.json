@@ -25,5 +25,6 @@
   "dependencies": {
     "@creativebulma/bulma-tooltip": "^1.2.0",
     "bulma-extensions": "^6.2.7"
-  }
+  },
+  "keywords": []
 }

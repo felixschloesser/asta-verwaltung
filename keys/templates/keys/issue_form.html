@@ -6,6 +6,8 @@
 
 {% block content %}
 <div class="container is-max-desktop">
+    {{ keys }}
+
     <h1 class="title">Neue Ausgabe{% if person %} an {{ person }}{% endif%}</h1>
 
     <form method='post' autocomplete="off">

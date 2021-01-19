@@ -7,7 +7,7 @@
 <div class="container is-max-desktop">
     {% if messages %}
         {% for message in messages %}
-        <article class="message is-success">
+        <article class="message is-{{ message.tags }}">
             <div class="message-body">
                 {{ message }}
             </div>
@@ -67,7 +67,8 @@
         <ul>
         {% for issue in person.get_active_issues %}
             <li>
-                <a href="{% url 'keys:issue-detail' pk=issue.id %}"><strong>{{ issue.key }}</strong> am {{ issue.out_date }}</a>:
+                <a href="{% url 'keys:issue-detail' pk=issue.id %}">{% if key.stolen_or_lost %}
+                        <span class="tag is-warning">Verloren</span>{% endif %}<strong>Nr. {{ issue.key }}</strong> am {{ issue.out_date }}</a>:
                    [{% for room in issue.key.get_rooms %}
                     <em>{{ room }}</em>
                         {% if not forloop.last %}, {% endif %}
@@ -109,7 +110,7 @@
                         </p>
                     {% elif person.deposit.in_datetime %} {% comment %} There alreaedy exists a deposit{% endcomment %}
                         <p class="control">
-                            <a class="button is-info" href="{% url 'keys:deposit-delete' pk=person.id %}">Neue Kaution hinzufügen</a>
+                            <a class="button is-info" href="{% url 'keys:deposit-delete' pk=person.id %}">Neue Kaution</a>
                         </p>
                     {% else %}
                         <p class="control">

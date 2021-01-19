@@ -12,6 +12,9 @@ urlpatterns = [
     path('keys/', views.KeyList.as_view(), name='key-list'),
     path('keys/search', views.KeySearchResults.as_view(), name='key-search-results'),
     path('key/<str:pk>', views.KeyDetail.as_view(), name='key-detail'),
+    path('key/<str:pk>/lost', views.KeyLost.as_view(), name='key-lost'),
+    path('key/<str:pk>/found', views.KeyFound.as_view(), name='key-found'),
+
 
     path('people/', views.PersonList.as_view(), name='person-list'),
     path('people/search', views.PersonSearchResults.as_view(), name='person-search-results'),

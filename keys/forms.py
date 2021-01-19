@@ -12,9 +12,11 @@ class DepositReturnForm(forms.ModelForm):
     class Meta:
         model = Deposit
         fields = ['amount',
+                  'currency',
                   'out_datetime',
                   'out_method']
-        widgets = {'amount': forms.HiddenInput()}
+        widgets = {'amount': forms.HiddenInput(),
+                   'currency': forms.HiddenInput()}
 
 
 

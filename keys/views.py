@@ -50,6 +50,36 @@ class KeySearchResults(LoginRequiredMixin, generic.ListView):
 class KeyDetail(LoginRequiredMixin, generic.DetailView):
     model = Key
 
+class KeyLost(SuccessMessageMixin, LoginRequiredMixin, generic.UpdateView):
+    model = Key
+    template_name_suffix ='_lost'
+    fields = ['stolen_or_lost']
+    success_message = "Als gestolen/verloren gemeldet."
+
+    def form_valid(self, form):
+        """
+        Before validating the form, populate the person field using the request primary key as a lookup for
+        """
+        self.object = form.save(commit=False)
+        self.object.stolen_or_lost = True
+        self.object.save()
+        return super().form_valid(form)
+
+class KeyFound(SuccessMessageMixin, LoginRequiredMixin, generic.UpdateView):
+    model = Key
+    template_name_suffix ='_found'
+    fields = ['stolen_or_lost']
+    success_message = "Nicht mehr als gestolen/verloren gemeldet."
+
+    def form_valid(self, form):
+        """
+        Before validating the form, populate the person field using the request primary key as a lookup for
+        """
+        self.object = form.save(commit=False)
+        self.object.stolen_or_lost = False
+        self.object.save()
+        return super().form_valid(form)
+
 
 # People
 class PersonList(LoginRequiredMixin, generic.ListView):
@@ -151,7 +181,7 @@ class CreateDeposit(SuccessMessageMixin, LoginRequiredMixin, generic.CreateView)
 
 
 
-class DeleteDeposit(SuccessMessageMixin, LoginRequiredMixin,generic.DeleteView):
+class DeleteDeposit(LoginRequiredMixin,generic.DeleteView):
     model = Deposit
     template_name = 'keys/deposit_delete.html'
 
@@ -178,13 +208,12 @@ class DeleteDeposit(SuccessMessageMixin, LoginRequiredMixin,generic.DeleteView):
 
 
 
-class ReturnDeposit(LoginRequiredMixin, generic.UpdateView):
+class ReturnDeposit(SuccessMessageMixin, LoginRequiredMixin, generic.UpdateView):
     model = Deposit
     form_class = DepositReturnForm
     template_name = 'keys/deposit_return_form.html'
     initial= {'out_datetime': datetime.datetime.now()}
-    success_message = "%(name)s was successfully returend"
-
+    success_message = "Kaution von %(amount)s %(currency)s erfolgreich zurückgegeben."
 
     def get_object(self, queryset=None):
         """
@@ -285,7 +314,6 @@ class IssueReturnList(LoginRequiredMixin, generic.ListView):
     paginate_by = 20
 
 
-
 class IssueReturn(LoginRequiredMixin, generic.UpdateView):
     model = Issue
     form_class = IssueReturnForm
@@ -307,6 +335,4 @@ class IssueReturn(LoginRequiredMixin, generic.UpdateView):
         return super().form_valid(form)
 
 
-class IssueReturnSuccess(LoginRequiredMixin, generic.DetailView):
-    model = Issue
-    template_name_suffix = 'return_success'
+

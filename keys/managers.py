@@ -26,8 +26,6 @@ class PersonManager(models.Manager):
 
 
 
-
-
 class IssueManager(models.Manager):
     def get_queryset(self):
         qs = super().get_queryset()

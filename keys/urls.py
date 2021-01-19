@@ -21,9 +21,10 @@ urlpatterns = [
     path('person/add', views.PersonCreate.as_view(), name='person-add'),
     path('person/<str:pk>', views.PersonDetail.as_view(), name='person-detail'),
     path('person/<str:pk>/update', views.PersonUpdate.as_view(), name='person-update'),
-    path('person/<str:pk>/depost/create', views.CreateDeposit.as_view(), name='deposit-create'),
-    path('person/<str:pk>/deposit/return', views.ReturnDeposit.as_view(), name='deposit-return'),
-    path('person/<str:pk>/deposit/delete', views.DeleteDeposit.as_view(), name='deposit-delete'),
+    path('person/<str:pk>/deposit/', views.DepositDelete.as_view(), name='deposit-detail'),
+    path('person/<str:pk>/depost/create', views.DepositCreate.as_view(), name='deposit-create'),
+    path('person/<str:pk>/deposit/return', views.DepositReturn.as_view(), name='deposit-return'),
+    path('person/<str:pk>/deposit/delete', views.DepositDelete.as_view(), name='deposit-delete'),
 
 
     path('issues', views.IssueList.as_view(), name='issue-list'),

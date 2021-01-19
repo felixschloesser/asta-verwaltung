@@ -6,7 +6,7 @@
         <!-- Left side -->
         <div class="level-left">
             <div class="level-item">
-                <h1 class='title'>Schlüssel</h1>
+                <h1 class='title'>Schlüssel und Transponder</h1>
             </div>
         </div>
         <!-- Right side -->
@@ -43,7 +43,7 @@
                     {% for key in key_list %}
                         <tr style="cursor:pointer;" onclick="location.href='{{ key.get_absolute_url }}'">
                             <td data-label="Nummer">
-                                <a href="{{ key.get_absolute_url }}">{{ key }}</a>
+                                <a href="{{ key.get_absolute_url }}">{{ key.number }}</a>
                             </td>
                             <td data-label="Schließsystem">
                                 {{ key.locking_system }}

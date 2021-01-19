@@ -16,6 +16,8 @@
         {% endfor %}
     {% endif %}
 
+    <h1 class='title'>Ausgabe von <a href={% url 'keys:key-detail' pk=issue.key.id %}>{{ issue.key }}</a></h1>
+
     {% if issue.key.stolen_or_lost %}
         <article class="message is-danger">
             <div class="message-body">
@@ -24,7 +26,6 @@
         </article>
     {% endif %}
 
-    <h1 class='title'>Ausgabe von <a href={% url 'keys:key-detail' pk=issue.key.id %}>Schlüssel Nr. {{ issue.key }}</a></h1>
     <div class="content">
         <p><strong>An:</strong> <a href="{% url 'keys:person-detail' pk=issue.person.id %}">{{ issue.person }}, {{ issue.person.group }}</a></p>
         <p><strong>Zugang zu:</strong> {% for room in issue.key.get_rooms %}{{room}}{% if not forloop.last %}, {% endif %}{% endfor %}</a></p>
@@ -51,6 +52,9 @@
             {% if not issue.key.stolen_or_lost %}
              <div class="level-item">
                     <a class="button is-warning" href="{% url 'keys:key-lost' object.key.id  %}" >Verloren/Gestohlen</a>
+            </div>
+            <div class="level-item">
+                <button class="button is-info" onclick="window.print()">Drucken</button>
             </div>
             <div class="level-item">
                 {% if issue.active %}

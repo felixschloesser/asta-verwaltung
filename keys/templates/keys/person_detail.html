@@ -62,13 +62,13 @@
 
     <div class="block">
     <div class="content">
-    <h2 class="subtitle is-4">Aktuelle Ausgeliehen:</h2>
+    <h2 class="subtitle is-4">Aktuelle Ausleihen:</h2>
 
         <ul>
         {% for issue in person.get_active_issues %}
             <li>
                 <a href="{% url 'keys:issue-detail' pk=issue.id %}">{% if issue.key.stolen_or_lost %}
-                        <span class="tag is-warning"><b>Verloren</b></span> {% endif %}<strong>Nr. {{ issue.key }}</strong> am {{ issue.out_date }}</a>:
+                        <span class="tag is-warning"><b>Verloren</b></span> {% endif %}<strong>{{ issue.key }}</strong></a>:
                    [{% for room in issue.key.get_rooms %}
                     <em>{{ room }}</em>
                         {% if not forloop.last %}, {% endif %}

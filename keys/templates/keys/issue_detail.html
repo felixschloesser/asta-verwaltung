@@ -18,15 +18,11 @@
 
     <h1 class='title'>Ausgabe von <a href={% url 'keys:key-detail' pk=issue.key.id %}>{{ issue.key }}</a></h1>
 
-    {% if issue.key.stolen_or_lost %}
-        <article class="message is-danger">
-            <div class="message-body">
-            Schlüssel wurde verloren oder gestohlen!
-            </div>
-        </article>
-    {% endif %}
-
     <div class="content">
+        {% if issue.key.stolen_or_lost %}
+            <p><strong>Status:</strong> <span class="tag is-danger"><b>verloren oder gestohlen</b></span></p>
+        {% endif %}
+
         <p><strong>An:</strong> <a href="{% url 'keys:person-detail' pk=issue.person.id %}">{{ issue.person }}, {{ issue.person.group }}</a></p>
         <p><strong>Zugang zu:</strong> {% for room in issue.key.get_rooms %}{{room}}{% if not forloop.last %}, {% endif %}{% endfor %}</a></p>
         <p><strong>Ausgabedatum:</strong> {{ issue.out_date |date:"l, d. F Y" }}</p>
@@ -52,9 +48,6 @@
             {% if not issue.key.stolen_or_lost %}
              <div class="level-item">
                     <a class="button is-warning" href="{% url 'keys:key-lost' object.key.id  %}" >Verloren/Gestohlen</a>
-            </div>
-            <div class="level-item">
-                <button class="button is-info" onclick="window.print()">Drucken</button>
             </div>
             <div class="level-item">
                 {% if issue.active %}

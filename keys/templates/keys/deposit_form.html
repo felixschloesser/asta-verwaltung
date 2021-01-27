@@ -42,22 +42,6 @@
             {% endfor %}
         </div>
         <div class="field">
-            <label class="label" for="{{ field.id_for_label }}">{{ form.in_datetime.label_tag }}</label>
-            <div class="field has-addons">
-                <div class="control">
-                    {% if not form.in_datetime.errors %}
-                        {{ form.in_datetime|add_class:"input has-addons has_addons-left" }}
-                    {% else %}
-                        {{ form.in_datetime|add_class:"input has-addons has_addons-left is-danger"}}
-                    {% endif %}
-
-                    {% for error in form.in_datetime.errors %}
-                        <p class="help is-danger">{{ error }}</p>
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
-        <div class="field">
             <label class="label" for="{{ field.id_for_label }}">{{ form.in_method.label_tag }}</label>
             <div class="field has-addons">
                 <div class="select">
@@ -72,6 +56,20 @@
                     {% endfor %}
                 </div>
             </div>
+        </div>
+
+        <div class="field">
+            <label class="label is-light" for="{{ form.comment.id_for_label }}">Kommentar:</label>
+            <div class="control">
+                {% if not form.comment.errors %}
+                    {{ form.comment |add_class:"textarea has-fixed-size is-light" |attr:"placeholder:Optionaler Kommentar..." }}
+                {% else %}
+                        {{ form.comment |add_class:"textarea has-fixed-size is-danger" }}
+                {% endif %}
+            </div>
+            {% for error in form.comment.errors %}
+                <p class="help is-danger">{{ error }}</p>
+            {% endfor %}
         </div>
 
 

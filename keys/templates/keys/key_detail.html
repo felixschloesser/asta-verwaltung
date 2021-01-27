@@ -27,7 +27,7 @@
     {% endif %}
     <div class="content">
             {% if key.get_current_issue %}
-                <p><strong>Aktuell verliehen an:</strong> <a href="{% url 'keys:person-detail' pk=key.get_current_issue.person.id %}">{{ key.get_current_issue.person }}</a></p>
+                <p><strong>Verliehen:</strong> Am <a href="{% url 'keys:issue-detail' pk=key.get_current_issue.id %}">{{ key.get_current_issue.out_date }} an {{ key.get_current_issue.person }}</a></p>
             {% endif %}
             <p><strong>Schließsystem:</strong> {{ key.locking_system }}</p>
             <p><strong>Lagerort:</strong> {{ key.storage_location }}</p>

@@ -8,6 +8,18 @@ from .models import Issue, Deposit, Key
 import logging
 
 
+class DepositCreateForm(forms.ModelForm):
+    class Meta:
+        model = Deposit
+        fields = ['amount',
+                  'currency',
+                  'in_method',
+                  'comment']
+
+        widgets = {
+            'comment': forms.Textarea(attrs={'cols': 80, 'rows': 3}),
+        }
+
 class DepositReturnForm(forms.ModelForm):
     class Meta:
         model = Deposit

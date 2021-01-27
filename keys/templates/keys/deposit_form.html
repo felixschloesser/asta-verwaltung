@@ -23,7 +23,6 @@
 
         <div class="field">
             <label class="label" for="{{ field.id_for_label }}">{{ form.amount.label_tag }}</label>
-
             <div class="field has-addons">
                 <p class="control">
                     {% if not form.amount.errors %}
@@ -45,7 +44,7 @@
         <div class="field">
             <label class="label" for="{{ field.id_for_label }}">{{ form.in_datetime.label_tag }}</label>
             <div class="field has-addons">
-                <p class="control">
+                <div class="control">
                     {% if not form.in_datetime.errors %}
                         {{ form.in_datetime|add_class:"input has-addons has_addons-left" }}
                     {% else %}
@@ -55,7 +54,7 @@
                     {% for error in form.in_datetime.errors %}
                         <p class="help is-danger">{{ error }}</p>
                     {% endfor %}
-                </p>
+                </div>
             </div>
         </div>
         <div class="field">

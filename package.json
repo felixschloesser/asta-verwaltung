@@ -25,6 +25,7 @@
   "dependencies": {
     "@creativebulma/bulma-tooltip": "^1.2.0",
     "bulma-extensions": "^6.2.7",
+    "bulma-responsive-tables": "^1.2.3",
     "package.json": "^2.0.1"
   },
   "keywords": []

@@ -1,72 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    {% load static %}
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <meta name="description" content="Ein Schlüsselverwaltungssystem für den AStA der TU-Hamburg.">
-    <title>{% block title %}{% endblock %}</title>
+    <head>
+        {% load static %}
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+        <meta name="description" content="Ein Schlüsselverwaltungssystem für den AStA der TU-Hamburg.">
+        <title>{% block title %}{% endblock %}</title>
 
-    <!-- Favicon -->
-    <link rel="icon" type='image/png' href="{% static 'keys/images/favicon.png' %}">
+        <!-- Favicon -->
+        <link rel="icon" type='image/png' href="{% static 'keys/images/favicon.png' %}">
 
-    <!-- CSS -->
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <link rel="stylesheet" href="{% static 'css/bulma-responsive-tables.css' %}">
-    <link rel="stylesheet" href="{% static 'css/keys.css' %}">
+        <!-- CSS -->
+        <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
-    <!-- JS -->
-    <script src="http://code.jquery.com/jquery-3.5.1.js"></script>
-    <script src={% static 'js/hamburger.js' %}></script>
-
-</head>
-<body class="is-flex is-flex-direction-column" style="min-height: 100vh;min-height: -webkit-fill-available;">
-    <!-- Navbar-->
-    <nav class="navbar is-dark noprint" role="navigation" aria-label="main navigation">
-        <div class="navbar-brand">
-            <a class="navbar-item" href="{% url 'keys:index' %}">
-                {% include 'keys/logo.svg' %}
-            </a>
-            <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasic">
-                <!--Hamburger Button-->
-                <span aria-hidden="true"></span>
-                <span aria-hidden="true"></span>
-                <span aria-hidden="true"></span>
-            </a>
-        </div>
-        <div class="navbar-menu">
-            <div class="navbar-start">
-                <a class="navbar-item" href="{% url 'keys:person-list' %}">Personen</a>
-                <a class="navbar-item" href="{% url 'keys:key-list' %}">Schlüssel</a>
-                <a class="navbar-item" href="{% url 'keys:issue-list' %}">Ausleihen</a>
+        <!-- JS -->
+        <script src={% static 'js/main.js' %}></script>
+        
+    </head>
+    <body class="is-flex is-flex-direction-column" style="min-height: 100vh;min-height: -webkit-fill-available;">
+        <!-- Navbar-->
+        <nav class="navbar is-dark noprint" role="navigation" aria-label="main navigation">
+            <div class="navbar-brand">
+                <a class="navbar-item" href="{% url 'keys:index' %}">
+                    {% include 'keys/logo.svg' %}
+                </a>
+                <a role="button" class="navbar-burger" data-target="navMenu" aria-label="menu" aria-expanded="false" >
+                    <!--Hamburger Button-->
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                </a>
             </div>
-            <div class="navbar-end">
-                <div class="navbar-item">
-                    <a class="button admin-button is-light is-outlined" href="{% url 'admin:index' %}">Administration</a>
+            <div class="navbar-menu" id="navMenu">
+                <div class="navbar-start">
+                    <a class="navbar-item" href="{% url 'keys:person-list' %}">Personen</a>
+                    <a class="navbar-item" href="{% url 'keys:key-list' %}">Schlüssel</a>
+                    <a class="navbar-item" href="{% url 'keys:issue-list' %}">Ausleihen</a>
+                </div>
+                <div class="navbar-end">
+                    <div class="navbar-item">
+                        <a class="button admin-button is-light is-outlined" id="admin-button" href="{% url 'admin:index' %}">Administration</a>
+                    </div>
                 </div>
             </div>
-        </div>
-    </nav>
+        </nav>
 
-    <!--Content -->
-    <section class="section is-flex-grow-1 ">
-    {% block content %} {% endblock %}
-    </section>
-    <!-- Footer -->
-    <footer class="footer noprint">
-        <div class="content has-text-centered">
-            <p>
-                <a href="https://asta-tuhh.de/euer_asta/it/">TinTin's </a><strong>Schlüsselverwaltungssystem</strong>. Quelltext unter der
-                <a href="https://eur-lex.europa.eu/legal-content/DE/TXT/?uri=CELEX:32017D0863">EUPL 1.2</a>.
-            </p>
-        </div>
-    </footer>
+        <!--Content -->
+        <section class="section is-flex-grow-1 ">
+        {% block content %}{% endblock %}
+        </section>
+        <!-- Footer -->
+        <footer class="footer noprint">
+            <div class="content has-text-centered">
+                <p>
+                    <a href="https://asta-tuhh.de/euer_asta/it/">TinTin's </a><strong>Schlüsselverwaltungssystem</strong>. Quelltext unter der
+                    <a href="https://eur-lex.europa.eu/legal-content/DE/TXT/?uri=CELEX:32017D0863">EUPL 1.2</a>.
+                </p>
+            </div>
+        </footer>
 
-    {% block additional_js %}
-    <!--Additional JS-->
-    {% endblock %}
-</body>
+        {% block additional_js %}
+        <!--Additional JS-->
+        {% endblock %}
+    </body>
 </html>
 
 

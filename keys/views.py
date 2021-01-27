@@ -25,6 +25,7 @@ class Home(generic.ListView):
     model = Key
 
 
+
 # Keys
 class KeyList(LoginRequiredMixin, generic.ListView):
     model = Key
@@ -40,17 +41,20 @@ class KeySearchResults(LoginRequiredMixin, generic.ListView):
         # of the keys where matching the search query in the get request
         query = self.request.GET.get('q')
         if query:
-            key_list = Key.objects.filter(models.Q(number__startswith=query) |
-                                          models.Q(locking_system__name__icontains=query) |
-                                          models.Q(locking_system__company__icontains=query)
-                                         )
+            key_list = Key.all_keys.filter(models.Q(number__startswith=query) |
+                                           models.Q(locking_system__name__icontains=query) |
+                                           models.Q(locking_system__company__icontains=query)
+                                          )
         else:
-            key_list = Key.objects.all()
+            key_list = Key.all_keys
         return key_list
+
 
 
 class KeyDetail(LoginRequiredMixin, generic.DetailView):
     model = Key
+
+
 
 class KeyLost(SuccessMessageMixin, LoginRequiredMixin, generic.UpdateView):
     model = Key
@@ -66,6 +70,8 @@ class KeyLost(SuccessMessageMixin, LoginRequiredMixin, generic.UpdateView):
         self.object.stolen_or_lost = True
         self.object.save()
         return super().form_valid(form)
+
+
 
 class KeyFound(SuccessMessageMixin, LoginRequiredMixin, generic.UpdateView):
     model = Key
@@ -83,11 +89,13 @@ class KeyFound(SuccessMessageMixin, LoginRequiredMixin, generic.UpdateView):
         return super().form_valid(form)
 
 
+
 # People
 class PersonList(LoginRequiredMixin, generic.ListView):
     context_object_name = 'people'
     queryset = Person.all_people.order_by('created_at').reverse()
     paginate_by = 30
+
 
 
 class PersonSearchResults(LoginRequiredMixin, generic.ListView):
@@ -112,6 +120,7 @@ class PersonSearchResults(LoginRequiredMixin, generic.ListView):
         return person_list
 
 
+
 class PersonCreate(SuccessMessageMixin, LoginRequiredMixin, generic.CreateView):
     model = Person
     fields = ['first_name',
@@ -122,12 +131,23 @@ class PersonCreate(SuccessMessageMixin, LoginRequiredMixin, generic.CreateView):
               'group']
     success_message = "%(first_name)s %(last_name)s erfolgreich hinzugefügt."
 
+    def form_valid(self, form):
+        """
+        Before validating the form, set set the email adress to lowercase
+        """
+        self.object = form.save(commit=False)
+        self.object.university_email = self.object.university_email.lower()
+        self.object.private_email = self.object.private_email.lower()
+        self.object.save()
+        return super().form_valid(form)
+
 
 class PersonDetail(LoginRequiredMixin, generic.DetailView):
     model = Person
 
 
-class PersonUpdate(LoginRequiredMixin, generic.UpdateView):
+
+class PersonUpdate(SuccessMessageMixin, LoginRequiredMixin, generic.UpdateView):
     model = Person
     fields = ['first_name',
               'last_name',
@@ -136,12 +156,12 @@ class PersonUpdate(LoginRequiredMixin, generic.UpdateView):
               'phone_number',
               'group']
     template_name_suffix = '_update_form'
-    success_message = "%(name)s was successfully updated."
+    success_message = "%(first_name)s %(last_name)s erfolgreich aktualisiert."
+
 
 
 #  Deposit
 class DepositMixin:
-
     def get_object(self, queryset=None):
         """
         Get the deposit from the person-pk in the urlpattern.
@@ -161,21 +181,20 @@ class DepositMixin:
         return context
 
     def get_success_url(self):
-        return reverse_lazy('keys:deposit-detail', args = [self.object.person.id])
+        return reverse_lazy('keys:person-detail',  args=[self.object.person.id])
 
 
 class DepositDetail(DepositMixin, LoginRequiredMixin, generic.DetailView):
     model = Deposit
 
 
+
 class DepositCreate(DepositMixin, SuccessMessageMixin, LoginRequiredMixin, generic.CreateView):
     model = Deposit
     fields = ['amount',
               'currency',
-              'in_datetime',
               'in_method']
     success_message = "Kaution von %(amount)s %(currency)s erfolgreich hinzugefügt."
-
 
     def form_valid(self, form):
         """
@@ -183,36 +202,37 @@ class DepositCreate(DepositMixin, SuccessMessageMixin, LoginRequiredMixin, gener
         """
         self.object = form.save(commit=False)
         self.object.person = Person.all_people.filter(pk=self.kwargs.get('pk')).get()
+        self.object.in_datetime = timezone.now()
         self.object.save()
-        logging.log("DepositCreate form is valid")
+        logging.debug("Polulated the forms person field.")
         return super().form_valid(form)
+
 
 
 class DepositDelete(DepositMixin, LoginRequiredMixin, generic.DeleteView):
     model = Deposit
 
 
+
 class DepositReturn(DepositMixin, SuccessMessageMixin, LoginRequiredMixin, generic.UpdateView):
     model = Deposit
     form_class = DepositReturnForm
     template_name = 'keys/deposit_return_form.html'
-    initial = {'out_datetime': timezone.now(),
-               'out_method': 'cash'}
-    success_message = "Kaution von %(amount)s %(currency)s erfolgreich zurückgegeben."
+    initial = {'out_method': 'cash'}
+    success_message = "Kaution erfolgreich zurückgegeben."
 
-    def get_success_url(self):
-        return reverse_lazy('keys:person-list')
 
     def form_valid(self, form):
         """
-        Before validating the form, set active to False
+        Before validating the form, set active to False, the amount to 0 and note the out datetime
         """
+        logging.debug('validating')
         self.object = form.save(commit=False)
         self.object.active = False
-        self.object.amount = 0
-        self.object.currency = 'EUR'
+        self.object.out_datetime = timezone.now()
         self.object.save()
         return super().form_valid(form)
+
 
 
 # Issues
@@ -232,6 +252,7 @@ class IssueList(LoginRequiredMixin, generic.ListView):
         return issue_list
 
 
+
 class IssueSearchResults(LoginRequiredMixin, generic.ListView):
     model = Issue
     paginate_by = 20
@@ -249,15 +270,17 @@ class IssueSearchResults(LoginRequiredMixin, generic.ListView):
                                               models.Q(key__number__startswith=query)
                                              )
         else:
-            issue_list = Issue.all_issues.active.filter(models.Q(person__first_name__icontains=query) |
+            issue_list = Issue.all_issues.active(models.Q(person__first_name__icontains=query) |
                                             models.Q(person__last_name__icontains=query) |
                                             models.Q(key__number__startswith=query),
                                            )
         return issue_list
 
 
+
 class IssueDetail(LoginRequiredMixin, generic.DetailView):
     model = Issue
+
 
 
 class IssueNew(SuccessMessageMixin, LoginRequiredMixin, generic.CreateView):
@@ -295,9 +318,11 @@ class IssueNew(SuccessMessageMixin, LoginRequiredMixin, generic.CreateView):
         return reverse_lazy('keys:person-detail',  args=[self.object.person.id])
 
 
+
 class IssueReturnList(LoginRequiredMixin, generic.ListView):
     model = Issue
     paginate_by = 20
+
 
 
 class IssueReturn(LoginRequiredMixin, generic.UpdateView):
@@ -314,7 +339,6 @@ class IssueReturn(LoginRequiredMixin, generic.UpdateView):
         self.object = form.save(commit=False)
         self.object.active = False
         self.object.save()
+        logging.debug("Before validating the form, set active to False")
         return super().form_valid(form)
-
-
 

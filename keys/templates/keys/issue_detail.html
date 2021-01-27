@@ -46,18 +46,19 @@
             </div>
 
             {% if not issue.key.stolen_or_lost %}
-             <div class="level-item">
+                <div class="level-item">
                     <a class="button is-warning" href="{% url 'keys:key-lost' object.key.id  %}" >Verloren/Gestohlen</a>
-            </div>
-            <div class="level-item">
-                {% if issue.active %}
-                    <a class="button is-primary" href="{% url 'keys:issue-return' object.id  %}" >Zurückgeben</a>
-                {% endif %}
-            </div>
-                {% else %}
+                </div>
+                <div class="level-item">
+                    {% if issue.active %}
+                        <a class="button is-primary" href="{% url 'keys:issue-return' object.id  %}" >Zurückgeben</a>
+                    {% endif %}
+                </div>
+            {% else %}
+                <div class="level-item">
                     <a class="button is-warning" href="{% url 'keys:key-found' object.key.id  %}" >Gefunden</a>
-                {% endif %}
-            </div>
+                </div>
+            {% endif %}
 
         </div>
     </nav>

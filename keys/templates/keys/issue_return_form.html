@@ -8,11 +8,11 @@
 {% block content %}
 <div class="container is-max-desktop">
 
-    <h1 class="title">Schlüssel zurückgeben</h1>
+    <h1 class="title">{{ issue.key }} zurückgeben</h1>
 
-    <article class="message is-dark">
+    <article class="message is-info">
       <div class="message-body">
-        Bitte den {{ issue.key }} nach der Rückgabe zurück in den <strong>{{ issue.key.storage_location }}</strong> legen.
+        Bitte den nach der Rückgabe zurück in den <strong>{{ issue.key.storage_location }}</strong> legen.
       </div>
     </article>
     <p>
@@ -30,17 +30,32 @@
 
         <div class="field">
             <label class="label" for="{{ form.in_date.id_for_label }}">{{ form.in_date.label_tag }}</label>
-                <div class="control">
-                    {% if not form.in_date.errors %}
-                        {{ form.in_date|add_class:"input" }}
-                    {% else %}
-                        {{ form.in_date|add_class:"input is-danger"}}
-                    {% endif %}
-                </div>
+            <div class="control">
+                {% if not form.in_date.errors %}
+                    {{ form.in_date|add_class:"input" }}
+                {% else %}
+                    {{ form.in_date|add_class:"input is-danger"}}
+                {% endif %}
+            </div>
             {% for error in form.in_date.errors %}
                 <p class="help is-danger">{{ error }}</p>
             {% endfor %}
         </div>
+
+        <div class="field">
+            <label class="label is-light" for="{{ form.comment.id_for_label }}">Kommentar:</label>
+            <div class="control">
+                {% if not form.comment.errors %}
+                    {{ form.comment |add_class:"textarea has-fixed-size is-light" |attr:"placeholder:Optionaler Kommentar zur Ausleihe..." }}
+                {% else %}
+                    {{ form.comment |add_class:"textarea has-fixed-size is-danger" }}
+                {% endif %}
+            </div>
+            {% for error in form.comment.errors %}
+                <p class="help is-danger">{{ error }}</p>
+            {% endfor %}
+        </div>
+
 
         <div class="buttons is-right">
             <div class="control">
@@ -53,3 +68,18 @@
 
 {% endblock %}
 
+{% block additional_js %}
+{% load static %}
+<script src={% static 'js/date_format.js' %} type="text/javascript"></script>
+<script type="text/javascript">
+    var today = new Date();
+    var three_days_ago = today - 1000 * 60 * 60 * 24 * 3; // current date's milliseconds - 1,000 ms * 60 s * 60 mins * 24 hrs * (# of days beyond one to go back)
+    three_days_ago = new Date(three_days_ago);
+
+    var in_date_field = document.getElementById('id_in_date');
+    in_date_field.value = today.format("yyyy-mm-dd");
+    in_date_field.max = today.format("yyyy-mm-dd");
+    in_date_field.min = three_days_ago.format("yyyy-mm-dd");
+
+</script>
+{% endblock %}

@@ -277,6 +277,13 @@ class Person(models.Model): # Add a chron job ro delete after a 2 years of not r
             models.Index(fields=['first_name'], name='first_name_idx'),
         ]
 
+        constraints = [
+            models.CheckConstraint(
+                name='emails_not_the_same',
+                check=~models.Q(university_email__iexact=models.F('private_email'))
+            )
+        ]
+
     def __str__(self):
         full_name = "{} {}".format(self.first_name, self.last_name)
         return full_name
@@ -420,7 +427,7 @@ class Issue(models.Model):
     class Meta:
         verbose_name='Ausleihe'
         verbose_name_plural='Ausleihen'
-        ordering = ['-out_date']
+        ordering = ['-out_date', '-in_date']
 
         constraints = [
             models.UniqueConstraint(

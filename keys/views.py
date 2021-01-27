@@ -123,13 +123,10 @@ class PersonSearchResults(LoginRequiredMixin, generic.ListView):
 
 class PersonCreate(SuccessMessageMixin, LoginRequiredMixin, generic.CreateView):
     model = Person
-    fields = ['first_name',
-              'last_name',
-              'university_email',
-              'private_email',
-              'phone_number',
-              'group']
+    form_class = PersonCreateForm
     success_message = "%(first_name)s %(last_name)s erfolgreich hinzugefügt."
+
+
 
     def form_valid(self, form):
         """
@@ -192,7 +189,7 @@ class DepositDetail(DepositMixin, LoginRequiredMixin, generic.DetailView):
 class DepositCreate(DepositMixin, SuccessMessageMixin, LoginRequiredMixin, generic.CreateView):
     model = Deposit
     form_class = DepositCreateForm
-    initial = {'out_method': 'cash'}
+    initial = {'in_method': 'cash'}
     success_message = "Kaution von %(amount)s %(currency)s erfolgreich hinzugefügt."
 
     def form_valid(self, form):

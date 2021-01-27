@@ -27,8 +27,8 @@
         <p><strong>Am:</strong> {{ deposit.out_datetime|date:"l, d. F Y"}} um {{ deposit.out_datetime |date:"G:i"}}</p>
         {% endif %}
 
-        {% if desosit.comment %}
-            <p><strong>Kommentar:</strong> {{ desosit.comment }}</p>
+        {% if deposit.comment %}
+            <p><strong>Kommentar:</strong> {{ deposit.comment }}</p>
         {% endif %}
     </div>
 

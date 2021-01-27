@@ -15,7 +15,6 @@ class KeyManager(models.Manager):
         return availible
 
 
-
 class PersonManager(models.Manager):
     def get_queryset(self):
         qs = super().get_queryset()
@@ -23,7 +22,6 @@ class PersonManager(models.Manager):
 
     def get_person(self, id,**kwargs):
         return self.filter(id__exact=id, **kwargs).get()
-
 
 
 class IssueManager(models.Manager):

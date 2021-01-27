@@ -10,7 +10,7 @@
 
     <h1 class="title">Kaution von {{ deposit.person }} zurückgeben</h1>
 
-    <form method='post' autocomplete="off">
+    <form method='post'>
         {% csrf_token %}
 
         {% if form.non_field_errors %}
@@ -20,22 +20,8 @@
             </div>
         </article>
         {% endif %}
-
         <div class="field">
-            <label class="label" for="{{ field.id_for_label }}">{{ form.out_datetime.label_tag }}</label>
-            <div class="field has-addons">
-                <p class="control">
-                    {% if not form.out_datetime.errors %}
-                        {{ form.out_datetime|add_class:"input has-addons has_addons-left" }}
-                    {% else %}
-                        {{ form.out_datetime|add_class:"input has-addons has_addons-left is-danger"}}
-                    {% endif %}
-
-                    {% for error in form.out_datetime.errors %}
-                        <p class="help is-danger">{{ error }}</p>
-                    {% endfor %}
-                </p>
-            </div>
+            <label class="label" for="{{ field.id_for_label }}">Betrag:</label>{{ deposit.amount }}
         </div>
 
         <div class="field">
@@ -55,12 +41,6 @@
             </div>
         </div>
 
-        <!-- invisible amount-->
-        {{ form.amount }}
-        {{ form.currency }}
-        {{ form.active }}
-
-
 
         <span class="buttons is-right">
             <a class="button" href={% url 'keys:person-detail' pk=deposit.person.id %}>Abbrechen</a >
@@ -69,11 +49,3 @@
     </form>
 </div>
 {% endblock %}
-<!--
-{% block additional_js %}
-<script src={% static 'js/date_format.js' %} type="text/javascript"></script>
-<script type="text/javascript">
-    document.getElementById('id_out_datetime').value = (new Date()).format("dd.mm.yyyy HH:MM");
-</script>
-{% endblock %}
--->

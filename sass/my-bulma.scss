@@ -25,6 +25,12 @@ $navbar-breakpoint: $tablet;
 // Import all of Bulma
 @import "../node_modules/bulma/bulma.sass";
 
-
 // Import Bulma Extensions
 @import "../node_modules/@creativebulma/bulma-tooltip/src/sass/index.sass";
+
+// Bulma Responsive Tables
+@import "../node_modules/bulma-responsive-tables/bulma-responsive-tables";
+ 
+// Bulma Responsive Tables
+@import "node_modules/bulma/bulma";
+

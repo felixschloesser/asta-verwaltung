@@ -5,26 +5,13 @@ from django.utils import formats, timezone
 
 from .models import Issue, Deposit, Key
 
+import logging
 
 
 class DepositReturnForm(forms.ModelForm):
     class Meta:
         model = Deposit
-        fields = ['amount',
-                  'currency',
-                  'out_datetime',
-                  'out_method',
-                  'active']
-        widgets = {'amount': forms.HiddenInput(),
-                   'currency': forms.HiddenInput(),
-                   'active': forms.HiddenInput()}
-
-
-    def __init__(self, data={}, **kwargs):
-        # get initial even though the form is already bound
-        initial = kwargs.get('initial', {})
-        data = initial
-        super().__init__(data, **kwargs)
+        fields = ['out_method']
 
 
 class IssueForm(forms.ModelForm):

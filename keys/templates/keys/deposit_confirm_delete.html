@@ -11,15 +11,14 @@
 
         <p>Am {{ deposit.out_datetime|date:"l, d. F Y"}} um
           {{ deposit.out_datetime |date:"G:i"}} wurden {{ deposit.amount }} {{ deposit.currency }}
-          an {{ deposit.person }} in zurückgezahlt. Eintrag löschen und neue Kaution erstellen?</p>
+          an {{ deposit.person }} {{ deposit.get_out_method }} zurückgezahlt. Eintrag löschen und neue Kaution erstellen?</p>
 
-        <form method="post">{% csrf_token %}
-            <div class="control">
-            </div>
-        <span class="buttons is-right">
-            <a class="button" href={% url 'keys:person-detail' pk=person.id %}>Abbrechen</a >
-            <input class="button is-danger" type="submit" value="Löschen und neu erstellen">
-        </span>
+        <form method="post">
+			{% csrf_token %}
+			<span class="buttons is-right">
+	            <a class="button" href={% url 'keys:person-detail' pk=deposit.person.id %}>Abbrechen</a >
+	            <input class="button is-danger" type="submit" value="Löschen und neu erstellen">
+	        </span>
         </form>
     </div>
 </div>

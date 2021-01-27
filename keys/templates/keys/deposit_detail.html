@@ -8,7 +8,7 @@
 
     {% if messages %}
         {% for message in messages %}
-        <article class="message is-success">
+        <article class="message is-success noprint">
             <div class="message-body">
                 {{ message }}
             </div>
@@ -16,7 +16,7 @@
         {% endfor %}
     {% endif %}
 
-    <h1 class='title'>Kaution von <a href={% url 'keys:person-detail' pk=deposit.person.id %}>{{ deposit.person }}</a></h1>
+    <h1 class='title'>Kaution von {{ deposit.person }}</h1>
 
     <div class="content">
         <p><strong>Eingezahlt:</strong> {{ deposit.amount }} {{ deposit.currency }} {{ deposit.get_in_method }}</p>
@@ -54,4 +54,7 @@
 {% endblock %}
 
 
-
+{% block additional_js %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/print.css' %}">
+{% endblock %}

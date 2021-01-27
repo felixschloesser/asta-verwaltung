@@ -309,10 +309,10 @@ class Deposit(models.Model):
     currency_choices = [('EUR', '€')]
 
     method_choices = [('cash', 'Bar'),
-                      ('bank transfer', 'Überweisung')]
+                      ('bank_transfer', 'Überweisung')]
 
     person = models.OneToOneField('Person', verbose_name='Person', on_delete=models.PROTECT)
-    amount = models.DecimalField('Kautionsbetrag', max_digits=5, decimal_places=2, default=50, validators=[validate_deposit_mail])
+    amount = models.DecimalField('Kautionsbetrag', max_digits=5, decimal_places=2, default=50, validators=[validate_deposit_mail], blank=True)
 
     currency = models.CharField('Währung', max_length=3, choices=currency_choices, default='EUR')
 
@@ -354,13 +354,13 @@ class Deposit(models.Model):
     def get_in_method(self):
         if self.in_method == 'cash':
             return 'in Bar'
-        elif self.in_method == 'bank transfer':
+        elif self.in_method == 'bank_transfer':
             return 'durch Überweisung'
 
     def get_out_method(self):
         if self.out_method == 'cash':
             return 'in Bar'
-        elif self.out_method == 'bank transfer':
+        elif self.out_method == 'bank_transfer':
             return 'durch Überweisung'
 
     def has_been_returned(self):

@@ -277,6 +277,13 @@ class Person(models.Model): # Add a chron job ro delete after a 2 years of not r
             models.Index(fields=['first_name'], name='first_name_idx'),
         ]
 
+        constraints = [
+            models.CheckConstraint(
+                name='emails_not_the_same',
+                check=~models.Q(university_email__iexact=models.F('private_email'))
+            )
+        ]
+
     def __str__(self):
         full_name = "{} {}".format(self.first_name, self.last_name)
         return full_name
@@ -312,7 +319,7 @@ class Deposit(models.Model):
                       ('bank_transfer', 'Überweisung')]
 
     person = models.OneToOneField('Person', verbose_name='Person', on_delete=models.PROTECT)
-    amount = models.DecimalField('Kautionsbetrag', max_digits=5, decimal_places=2, default=50, validators=[validate_deposit_mail], blank=True)
+    amount = models.DecimalField('Betrag', max_digits=5, decimal_places=2, default=50, validators=[validate_deposit_mail], blank=True)
 
     currency = models.CharField('Währung', max_length=3, choices=currency_choices, default='EUR')
 
@@ -322,6 +329,9 @@ class Deposit(models.Model):
 
     out_datetime = models.DateTimeField('Rückzahlungszeitpunkt', null=True, validators=[present_or_max_3_days_ago])
     out_method = models.CharField('Zahlungsmittel', max_length=64, choices=method_choices, null=True)
+
+    comment = models.CharField('Kommentar', max_length=500, null=True, blank=True)
+
 
     created_at = models.DateTimeField('Erstellungszeitpunkt', auto_now_add=True)
     updated_at = models.DateTimeField('Aktualisierungszeitpunkt', auto_now=True)
@@ -351,6 +361,7 @@ class Deposit(models.Model):
         full_name = "{} {} von {}".format(self.amount, self.currency, self.person.get_full_name())
         return full_name
 
+    # Django makes it unneccecary hard to acces verbose name from template.
     def get_in_method(self):
         if self.in_method == 'cash':
             return 'in Bar'
@@ -363,18 +374,9 @@ class Deposit(models.Model):
         elif self.out_method == 'bank_transfer':
             return 'durch Überweisung'
 
-    def has_been_returned(self):
-        if self.out_datetime and self.out_method:
-            return True
-        else:
-            return False
-
     def get_absolute_url(self):
         return reverse('keys:deposit-detail', args=[str(self.person.id)])
 
-
-    has_been_returned.boolean = True
-    has_been_returned.short_description = "Zurückgegeben"
 
 
 class Group(models.Model):
@@ -425,7 +427,7 @@ class Issue(models.Model):
     class Meta:
         verbose_name='Ausleihe'
         verbose_name_plural='Ausleihen'
-        ordering = ['-out_date']
+        ordering = ['-out_date', '-in_date']
 
         constraints = [
             models.UniqueConstraint(

@@ -15,60 +15,33 @@
         {% endfor %}
     {% endif %}
 
-    <div class="block">
-    <div class="card">
-        <div class="card-header">
-            <div class="card-header-title">
-                <h1 class="title">{{ person.get_full_name }}</h1>
-            </div>
-        </div>
-        <div class="card-content">
-            <div class="columns is-mobile">
-                <div class="column is-one-fifth-mobile is-2-tablet is-1-widescreen" >
-                    <p class="text has-text-weight-bold has-text-right">Gruppe</p>
-                </div>
-                <div class="column"><p class=text>{{ person.group }}</p></div>
-            </div>
-            <div class="columns is-mobile">
-                <div class="column is-one-fifth-mobile is-2-tablet is-1-widescreen" >
-                    <p class="text has-text-weight-bold has-text-right">Uni Mail</p>
-                </div>
-                <div class="column"><p class=text>{{ person.university_email }}</p></div>
-            </div>
-            <div class="columns is-mobile">
-                <div class="column is-one-fifth-mobile is-2-tablet is-1-widescreen"><p class="text has-text-weight-bold has-text-right">Private Mail</p></div>
-                <div class="column"><p class=text>{{ person.private_email }}</p></div>
-            </div>
-            <div class="columns is-mobile">
-                <div class="column is-one-fifth-mobile is-2-tablet is-1-widescreen"><p class="text has-text-weight-bold has-text-right">Telefon</p></div>
-                <div class="column"><p class=text>{{ person.phone_number }}</p></div>
-            </div>
-            <div class="columns is-mobile">
-                <div class="column is-one-fifth-mobile is-2-tablet is-1-widescreen"><p class="text has-text-weight-bold has-text-right">Kaution</p></div>
-                <div class="column">
-                    {% if person.has_paid_deposit %}
-                        <a href={% url 'keys:deposit-detail' pk=person.id %}><span class="tag is-success"><b>{{ person.deposit.amount }} {{ person.deposit.currency }}</b></span></a>
-                    {% elif person.deposit.active == False %}
-                        <a href={% url 'keys:deposit-detail' pk=person.id %}><span class="tag is-info"><b>Zurückerhalten</b></span></a> 
-                    {% else %}
-                        <span class="tag is-light"><b>nicht bezahlt</b></span>
-                    {% endif %}
 
-                </div>
-            </div>
-        </div>
-    </div>
+    <h1 class="title">{{ person.get_full_name }}</h1>
+          
+    <div class="content">
+        <p class='text'><strong>Gruppe: </strong>{{ person.group }}</p>
+        <p class='text'><strong>Uni Mail: </strong><a href="mailto:{{ person.university_email }}">{{ person.university_email }}</a></p>
+        <p class='text'><strong>Private Mail: </strong><a href="mailto:{{ person.private_email }}">{{ person.private_email }}</a></p>
+        <p class='text'><strong>Telefon: </strong>{{ person.phone_number }}</p>
+        <p class='text'><strong>Kaution: </strong>
+        {% if person.has_paid_deposit %}
+            <a href={% url 'keys:deposit-detail' pk=person.id %}><span class="tag is-success"><b>{{ person.deposit.amount }} {{ person.deposit.currency }}</b></span></a>
+        {% elif person.deposit.active == False %}
+            <a href={% url 'keys:deposit-detail' pk=person.id %}><span class="tag is-info"><b>Zurückerhalten</b></span></a> 
+        {% else %}
+            <span class="tag is-light"><b>nicht bezahlt</b></span>
+        {% endif %}
     </div>
 
     <div class="block">
     <div class="content">
-    <h2 class="subtitle is-4">Aktuelle Ausgeliehen:</h2>
+    <h2 class="subtitle is-4">Aktuelle Ausleihen:</h2>
 
         <ul>
         {% for issue in person.get_active_issues %}
             <li>
                 <a href="{% url 'keys:issue-detail' pk=issue.id %}">{% if issue.key.stolen_or_lost %}
-                        <span class="tag is-warning"><b>Verloren</b></span> {% endif %}<strong>Nr. {{ issue.key }}</strong> am {{ issue.out_date }}</a>:
+                        <span class="tag is-warning"><b>Verloren</b></span> {% endif %}<strong>{{ issue.key }}</strong></a>:
                    [{% for room in issue.key.get_rooms %}
                     <em>{{ room }}</em>
                         {% if not forloop.last %}, {% endif %}

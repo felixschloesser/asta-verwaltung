@@ -3,16 +3,54 @@ from django.core.exceptions import ValidationError
 from django import forms
 from django.utils import formats, timezone
 
-from .models import Issue, Deposit, Key
+from .models import Issue, Deposit, Key, Person
 
 import logging
 
+class PersonCreateForm(forms.ModelForm):
+    class Meta:
+        model = Person
+        fields = ['first_name',
+                  'last_name',
+                  'university_email',
+                  'private_email',
+                  'phone_number',
+                  'group']
+
+    def clean(self):
+        cleaned_data = super().clean()
+        university_email = cleaned_data.get("university_email")
+        private_email = cleaned_data.get("private_email")
+        logging.debug(university_email)
+        logging.debug(private_email)
+        logging.debug(CLEANINGADWIOAJDAOWDIJ)
+
+        if university_email == private_email:
+            msg = "Private und Universitäts Mail dürfen nicht indentisch sein."
+            self.add_error('private_email', msg)
+
+
+class DepositCreateForm(forms.ModelForm):
+    class Meta:
+        model = Deposit
+        fields = ['amount',
+                  'currency',
+                  'in_method',
+                  'comment']
+
+        widgets = {
+            'comment': forms.Textarea(attrs={'cols': 80, 'rows': 3}),
+        }
 
 class DepositReturnForm(forms.ModelForm):
     class Meta:
         model = Deposit
-        fields = ['out_method']
+        fields = ['out_method',
+                  'comment']
 
+        widgets = {
+            'comment': forms.Textarea(attrs={'cols': 80, 'rows': 3}),
+        }
 
 class IssueForm(forms.ModelForm):
     class Meta:
@@ -22,6 +60,7 @@ class IssueForm(forms.ModelForm):
                   'active',
                   'comment',]
         widgets = {
+            'out_date': forms.widgets.DateInput(attrs={'type': 'date'}),    
             'comment': forms.Textarea(attrs={'cols': 80, 'rows': 3}),
         }
 
@@ -46,8 +85,13 @@ class IssueReturnForm(forms.ModelForm):
     class Meta:
         model = Issue
         fields = ['in_date',
-                  'active']
+                  'comment']
 
+
+        widgets = {
+            'in_date': forms.widgets.DateInput(attrs={'type': 'date'}),    
+            'comment': forms.Textarea(attrs={'cols': 80, 'rows': 3}),
+        }
 
     def clean(self):
         cleaned_data = super().clean()

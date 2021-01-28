@@ -11,7 +11,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 
 from .models import Key, Person, Issue, Deposit
-from .forms import DepositReturnForm, IssueForm, IssueReturnForm
+from .forms import *
 
 import datetime
 import logging
@@ -123,13 +123,10 @@ class PersonSearchResults(LoginRequiredMixin, generic.ListView):
 
 class PersonCreate(SuccessMessageMixin, LoginRequiredMixin, generic.CreateView):
     model = Person
-    fields = ['first_name',
-              'last_name',
-              'university_email',
-              'private_email',
-              'phone_number',
-              'group']
+    form_class = PersonCreateForm
     success_message = "%(first_name)s %(last_name)s erfolgreich hinzugefügt."
+
+
 
     def form_valid(self, form):
         """
@@ -191,9 +188,8 @@ class DepositDetail(DepositMixin, LoginRequiredMixin, generic.DetailView):
 
 class DepositCreate(DepositMixin, SuccessMessageMixin, LoginRequiredMixin, generic.CreateView):
     model = Deposit
-    fields = ['amount',
-              'currency',
-              'in_method']
+    form_class = DepositCreateForm
+    initial = {'in_method': 'cash'}
     success_message = "Kaution von %(amount)s %(currency)s erfolgreich hinzugefügt."
 
     def form_valid(self, form):
@@ -311,6 +307,7 @@ class IssueNew(SuccessMessageMixin, LoginRequiredMixin, generic.CreateView):
         person_id = self.request.GET.get('person','')
         self.object = form.save(commit=False)
         self.object.person = Person.all_people.get_person(person_id)
+        self.object.active = True
         self.object.save()
         return super().form_valid(form)
 

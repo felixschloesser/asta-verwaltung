@@ -10,7 +10,7 @@
 
     <h1 class="title">Kaution von {{ deposit.person }} zurückgeben</h1>
 
-    <form method='post'>
+    <form method='post' autocomplete="off">
         {% csrf_token %}
 
         {% if form.non_field_errors %}
@@ -20,8 +20,9 @@
             </div>
         </article>
         {% endif %}
+
         <div class="field">
-            <label class="label" for="{{ field.id_for_label }}">Betrag:</label>{{ deposit.amount }}
+            <label class="label" for="{{ field.id_for_label }}">Betrag:</label>{{ deposit.amount }} {{ deposit.currency }}
         </div>
 
         <div class="field">
@@ -39,6 +40,20 @@
                     {% endfor %}
                 </div>
             </div>
+        </div>
+
+        <div class="field">
+            <label class="label is-light" for="{{ form.comment.id_for_label }}">Kommentar:</label>
+            <div class="control">
+                {% if not form.comment.errors %}
+                    {{ form.comment |add_class:"textarea has-fixed-size is-light" |attr:"placeholder:Optionaler Kommentar zur Kaution..." }}
+                {% else %}
+                        {{ form.comment |add_class:"textarea has-fixed-size is-danger" }}
+                {% endif %}
+            </div>
+            {% for error in form.comment.errors %}
+                <p class="help is-danger">{{ error }}</p>
+            {% endfor %}
         </div>
 
 

@@ -9,7 +9,7 @@ from keys.models import Person, Key
 from .serializers import PersonSerializer, KeySerializer
 
 
-class KeyViewSet(viewsets.ModelViewSet):
+class KeyViewSet(viewsets.ReadOnlyModelViewSet):
     """
     A simple ViewSet for listing or retrieving keys.
     """
@@ -18,7 +18,7 @@ class KeyViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
 
-class PersonViewSet(viewsets.ModelViewSet):
+class PersonViewSet(viewsets.ReadOnlyModelViewSet):
     """
     A simple ViewSet for listing or retrieving People.
     """

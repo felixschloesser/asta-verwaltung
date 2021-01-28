@@ -1,14 +1,12 @@
 {% extends "keys/base.html" %}
 
-{% block title %}Personenliste | Schlüsselsystem {% endblock %}
-
 {% block content %}
 <div class="container is-max-desktop">
     <nav class="level">
         <!-- Left side -->
         <div class="level-left">
             <div class="level-item">
-                <h1 class='title is-2'>Personensuche{% if request.GET.q %}: {{ request.GET.q }}{% endif %}</h1>
+                <h1 class='title is-2'>Räume</h1>
             </div>
         </div>
         <!-- Right side -->
@@ -16,8 +14,8 @@
             <div class="level-item">
                 <div class="field has-addons">
                     <div class="control">
-                        <form action={% url 'keys:person-search-results' %} method='get'>
-                            <input class="input" name='q' type="text" placeholder="Vor-/Nachname/Gruppe" required>
+                        <form action={% url 'keys:room-search-results' %} method='get'>
+                            <input class="input" name='q' type="text" placeholder="Raumnr./Gruppe/Zweck" required>
                     </div>
                     <div class="control">
                         <button type='submit' class="button is-info">
@@ -30,33 +28,28 @@
         </div>
     </nav>
 
-
-    {% if person_list %}
-     <div class="container">
+    {% if room_list %}
+        <div class="container">
             <div class="b-table">
                 <div class="table-wrapper has-mobile-cards">
                     <table class="table is-fullwidth is-hoverable">
                         <thead>
-                             <th>Name</th>
-                             <th>Uni-Mail</th>
+                             <th>Raum</th>
+                             <th>Zweck</th>
                              <th>Gruppe</th>
-                             <th>Kaution bezahlt</th>
                         </thead>
 
                         <tbody>
-                        {% for person in person_list %}
-                            <tr style="cursor:pointer;" onclick="location.href='{{ person.get_absolute_url }}'">
-                                <td data-label="Name">
-                                    {{ person }}
+                        {% for room in room_list %}
+                            <tr style="cursor:pointer;" onclick="location.href='{{ room.get_absolute_url }}'">
+                                <td data-label="Raum">
+                                    {{ room }}
                                 </td>
-                                <td data-label="Uni-Mail">
-                                    {{ person.university_email }}
+                                <td data-label="Zweck">
+                                    {{ room.purpose }}
                                 </td>
                                 <td data-label="Gruppe">
-                                    {{ person.group }}
-                                </td>
-                                <td data-label="Kaution bezahlt">
-                                    {{ person.deposit.in_datetime|date:"SHORT_DATE_FORMAT"|default:'-' }}
+                                    {{ room.group }}
                                 </td>
                             </tr>
                         {% endfor %}
@@ -66,15 +59,15 @@
             </div>
         </div>
     {% else %}
-        {% if request.GET.q %}<p>Keine Person mit dem Namen oder Gruppe <em>{{ request.GET.q }}</em> gefunden.</p>{% endif %}
+        <p>Kein Raum {% if request.GET.q %}mit Nummer, Gruppe oder Zweck <em>{{ request.GET.q }}</em> gefunden.</p>{% endif %}
     {% endif %}
 
     {% if is_paginated %}
         {% include 'keys/pagination.html' %}
     {% endif %}
 
-    <div class="control pt-3">
-        <a class='button is-primary' href={% url 'keys:person-add' %}>Neue Person anlegen</a>
-    </div>
+
+
 </div>
+
 {% endblock %}

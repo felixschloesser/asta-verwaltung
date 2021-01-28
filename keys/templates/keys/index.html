@@ -3,12 +3,15 @@
 {% block content %}
 <div class="container is-max-desktop">
         {% if user.is_authenticated %}
-        <h1 class="title">Wilkommen, {{ user.username }}!</h1>
+            <h1 class="title is-2">Wilkommen, {{ user.username }}!</h1>
+            <p class="content">Das hier ist unser neues Schlüsselsystem. Toll oder?</p>
+
         {% else %}
-        <h1 class="title">Wilkommen!</h1>
-        <p>Bitte melden Sie sich an.</p>
+            <h1 class="title">Wilkommen!</h1>
+            <p class="content">Das hier ist das neue Schlüsselsystem des AStAs. Toll oder?</p>
+            <p class="content">Bitte melden Sie sich an.</p>
+            <a class="button is-primary is-right" href="{% url 'login' %}?next=/">Anmelden</a>
         {% endif %}
-        <p class="content">Das hier ist das neue Schlüsselsystem des AStAs. Toll oder?</p>
 </div>
 
 {% endblock %}

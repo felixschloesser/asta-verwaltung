@@ -10,7 +10,7 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 
-from .models import Key, Person, Issue, Deposit
+from .models import Key, Person, Issue, Deposit, Room, Building
 from .forms import *
 
 import datetime
@@ -22,7 +22,16 @@ def index_view(request):
 
 
 class Home(generic.ListView):
-    model = Key
+    model = Issue
+
+    def get_context_data(self, **kwargs):
+        """
+        Get the current person from the request and add it to the context so that the tempalte can access it.
+        """
+        context = super().get_context_data(**kwargs)
+        context["people"] = Person.all_people()
+        context["issues"] = Issue.all_issues()
+        return context
 
 
 
@@ -231,6 +240,40 @@ class DepositReturn(DepositMixin, SuccessMessageMixin, LoginRequiredMixin, gener
 
 
 
+# Rooms
+class RoomList(LoginRequiredMixin, generic.ListView):
+    model = Building
+    template_name = "keys/room_list.html"
+
+
+class RoomSearchResults(LoginRequiredMixin, generic.ListView):
+    model = Room
+    paginate_by = 30
+    template_name_suffix = '_search_results'
+
+    def get_queryset(self):
+        # Alter the queryset of the list view, so that it only contains the entries
+        # of the rooms match the search query in the get request
+        query = self.request.GET.get('q')
+        if query:
+            room_list = Room.all_rooms.filter(models.Q(number__icontains=query) |
+                                              models.Q(name__icontains=query) |
+                                              models.Q(purpose__name__icontains=query) |
+                                              models.Q(building__name__istartswith=query) |
+                                              models.Q(building__identifier__istartswith=query) |
+                                              models.Q(group__name__istartswith=query)
+                                             )
+        else:
+            room_list = Room.all_rooms.all()
+
+        return room_list
+
+
+
+class RoomDetail(LoginRequiredMixin, generic.DetailView):
+    model = Room
+
+
 # Issues
 class IssueList(LoginRequiredMixin, generic.ListView):
     model = Issue
@@ -239,11 +282,11 @@ class IssueList(LoginRequiredMixin, generic.ListView):
     def get_queryset(self):
         # Alter the queryset of the list view, so that it only contains the issues
         # that have not yet been returend
-        show_returned = self.request.GET.get('r')
-        if show_returned:
-            issue_list = Issue.all_issues.all()
-        else:
+        also_show_returned = self.request.GET.get('r')
+        if not also_show_returned:
             issue_list = Issue.all_issues.active()
+        else:
+            issue_list = Issue.all_issues.all()
 
         return issue_list
 

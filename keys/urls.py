@@ -26,6 +26,10 @@ urlpatterns = [
     path('person/<str:pk>/deposit/return', views.DepositReturn.as_view(), name='deposit-return'),
     path('person/<str:pk>/deposit/delete', views.DepositDelete.as_view(), name='deposit-delete'),
 
+    path('rooms/', views.RoomList.as_view(), name='room-list'),
+    path('rooms/search', views.RoomSearchResults.as_view(), name='room-search-results'),
+    path('room/<slug:slug>', views.RoomDetail.as_view(), name='room-detail'),
+
 
     path('issues', views.IssueList.as_view(), name='issue-list'),
     path('issues/search', views.IssueSearchResults.as_view(), name='issue-search-results'),

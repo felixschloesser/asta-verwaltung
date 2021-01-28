@@ -20,7 +20,7 @@
         <!-- Left side -->
         <div class="level-left">
             <div class="level-item">
-                <h1 class='title'>{% if not request.GET.r %}Aktuelle {% endif %}Ausleihen</h1>
+                <h1 class='title is-2'>{% if not request.GET.r %}Aktuelle {% endif %}Ausleihen</h1>
             </div>
         </div>
         <!-- Right side -->
@@ -62,7 +62,7 @@
                     {% for issue in issue_list %}
                         <tr style="cursor:pointer;" onclick="location.href='{{ issue.get_absolute_url }}'">
                             <td data-label="Schlüssel">
-                                <a href="{{ issue.get_absolute_url }}"> {{ issue.key }}</a>
+                                {{ issue.key }}
                             </td>
                             <td data-label="Person">
                                 {{ issue.person }}

@@ -30,7 +30,8 @@ SIMPLE_HISTORY_REVERT_DISABLED=True
 DEBUG = os.getenv('DJANGO_DEBUG', True)
 
 
-ALLOWED_HOSTS = os.getenv('DJANGO_SECRET_KEY', 'localhost').split(',')
+#ALLOWED_HOSTS = os.getenv('DJANGO_SECRET_KEY', 'localhost').split(',')
+ALLOWED_HOSTS = ['10.0.0.25', '134.28.72.225', 'localhost']
 
 INTERNAL_IPS = [
     '127.0.0.1',

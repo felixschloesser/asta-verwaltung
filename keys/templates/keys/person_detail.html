@@ -16,8 +16,8 @@
     {% endif %}
 
 
-    <h1 class="title">{{ person.get_full_name }}</h1>
-          
+    <h1 class="title is-2">{{ person.get_full_name }}</h1>
+
     <div class="content">
         <p class='text'><strong>Gruppe: </strong>{{ person.group }}</p>
         <p class='text'><strong>Uni Mail: </strong><a href="mailto:{{ person.university_email }}">{{ person.university_email }}</a></p>
@@ -27,7 +27,7 @@
         {% if person.has_paid_deposit %}
             <a href={% url 'keys:deposit-detail' pk=person.id %}><span class="tag is-success"><b>{{ person.deposit.amount }} {{ person.deposit.currency }}</b></span></a>
         {% elif person.deposit.active == False %}
-            <a href={% url 'keys:deposit-detail' pk=person.id %}><span class="tag is-info"><b>Zurückerhalten</b></span></a> 
+            <a href={% url 'keys:deposit-detail' pk=person.id %}><span class="tag is-info"><b>Zurückerhalten</b></span></a>
         {% else %}
             <span class="tag is-light"><b>nicht bezahlt</b></span>
         {% endif %}

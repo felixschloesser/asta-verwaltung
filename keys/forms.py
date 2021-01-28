@@ -21,9 +21,6 @@ class PersonCreateForm(forms.ModelForm):
         cleaned_data = super().clean()
         university_email = cleaned_data.get("university_email")
         private_email = cleaned_data.get("private_email")
-        logging.debug(university_email)
-        logging.debug(private_email)
-        logging.debug(CLEANINGADWIOAJDAOWDIJ)
 
         if university_email == private_email:
             msg = "Private und Universitäts Mail dürfen nicht indentisch sein."
@@ -60,7 +57,7 @@ class IssueForm(forms.ModelForm):
                   'active',
                   'comment',]
         widgets = {
-            'out_date': forms.widgets.DateInput(attrs={'type': 'date'}),    
+            'out_date': forms.widgets.DateInput(attrs={'type': 'date'}),
             'comment': forms.Textarea(attrs={'cols': 80, 'rows': 3}),
         }
 
@@ -89,7 +86,7 @@ class IssueReturnForm(forms.ModelForm):
 
 
         widgets = {
-            'in_date': forms.widgets.DateInput(attrs={'type': 'date'}),    
+            'in_date': forms.widgets.DateInput(attrs={'type': 'date'}),
             'comment': forms.Textarea(attrs={'cols': 80, 'rows': 3}),
         }
 

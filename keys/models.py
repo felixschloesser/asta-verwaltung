@@ -13,13 +13,22 @@ from django.contrib.postgres.fields import (
 from phonenumber_field.modelfields import PhoneNumberField
 from simple_history.models import HistoricalRecords
 from hashid_field import HashidAutoField
+from autoslug import AutoSlugField
 
 from .validators import *
 from .managers import *
 
+
+# Populate fro Getter
+from operator import attrgetter
+
+def get_populate_from(instance):
+    return '%s-%s' % (instance.building.identifier, instance.number, )
+
+
 # Create models here.
 class Building(models.Model):
-    identifier = models.CharField('Gebäude', max_length=8, unique=True)
+    identifier = models.CharField('Gebäudekürzel', max_length=8, unique=True)
     name = models.CharField('Name', max_length=32, unique=True, blank=True, null=True)
     created_at = models.DateTimeField('Erstellungszeitpunkt', auto_now_add=True)
     updated_at = models.DateTimeField('Aktualisierungszeitpunkt', auto_now=True)
@@ -34,10 +43,14 @@ class Building(models.Model):
         if self.name:
             return "{} (Geb. {})".format(self.name, self.identifier)
         else:
-            return self.identifier
+            return "Gebäude {}".format(self.identifier)
+
+    def get_rooms(self):
+        return Room.all_rooms.filter(building__identifier=self.identifier)
+
 
     def get_number_of_rooms(self):
-        return Room.objects.filter(building__identifier=self.identifier).count()
+        return Room.all_rooms.filter(building__identifier=self.identifier).count()
 
     get_number_of_rooms.short_description = "Anzahl Räume"
 
@@ -62,22 +75,28 @@ class Room(models.Model):
                                   related_name='rooms',
                                   verbose_name='Gebäude',
                                   on_delete=models.CASCADE)
-    number = models.CharField("Raumnummer", max_length=32)
+    number = models.CharField("Raumnummer (ohne Gebäudekürzel)", max_length=32)
     group = models.ForeignKey('group',
                                blank=True, null=True,
                                related_name='rooms',
                                verbose_name='Gruppe',
                                on_delete=models.PROTECT)
-    name = models.CharField('Raumname', max_length=32, unique=True, blank=True, null=True)
-
     purpose = models.ForeignKey('purpose',
                                  verbose_name='Zweck',
                                  related_name='rooms',
                                  blank=True,
                                  null=True,
                                  on_delete=models.PROTECT)
+    name = models.CharField('Raumname', max_length=32, unique=True, blank=True, null=True)
+
+    comment = models.CharField("Kommentar", max_length=500, blank=True, null=True)
+
+    slug = AutoSlugField(populate_from=get_populate_from, unique=True)
+
     created_at = models.DateTimeField('Erstellungszeitpunkt', auto_now_add=True)
     updated_at = models.DateTimeField('Aktualisierungszeitpunkt', auto_now=True)
+
+    all_rooms = RoomManager()
 
     class Meta:
         verbose_name = "Raum"
@@ -95,6 +114,9 @@ class Room(models.Model):
         else:
             return "{}{}".format(self.building.identifier, self.number)
 
+    def get_absolute_url(self):
+        return reverse('keys:room-detail', kwargs={'slug': self.slug})
+
     def get_identifier(self):
         return "{}{}".format(self.building.identifier, self.number)
 
@@ -106,7 +128,7 @@ class Door(models.Model):
     active = models.BooleanField("Aktiv", default=True)
     room = models.ForeignKey("Room", related_name="doors", verbose_name="führt in Raum",
                              on_delete=models.CASCADE)
-    kind_choices = [('access', 'Zugangstüre'),
+    kind_choices = [('access', 'Zugangstür'),
                     ('connecting', 'Verbindungstür')]
     kind = models.CharField('Typ', max_length=32, choices=kind_choices,
                              default=('access', 'Zugangstüre'))
@@ -133,6 +155,14 @@ class Door(models.Model):
                 return "Verbindungstür zum {} ({})".format(self.room.name, self.room.number)
             else:
                 return "Verbindungstür zu {}".format(self.room.get_identifier())
+
+    def get_kind(self):
+        if self.kind == 'access':
+            return "Zugangstür"
+        elif self.kind == 'connecting':
+            return "Verbindungstür"
+        else:
+            raise ValueError("Invalid door type")
 
 
 
@@ -199,8 +229,8 @@ class Key(models.Model):
     def get_locking_system_method(self):
         return self.locking_system.method
 
-        get_locking_system_method.short_description = 'Typ'
-        get_number_of_doors.short_description = "Anzahl Türen"
+    get_locking_system_method.short_description = 'Typ'
+    get_number_of_doors.short_description = "Anzahl Türen"
 
 
 
@@ -228,6 +258,19 @@ class LockingSystem(models.Model):
 
     def __str__(self):
         return "{} von {}".format(self.name, self.company)
+
+    def get_method(self):
+        # No good way to access verbose name :(
+        if self.method == 'mechanical':
+            return "mechanisch"
+
+        elif self.method == 'mechatronical':
+            return "mechatronisch"
+
+        elif self.method == 'transponder':
+            return "Transponder"
+        else:
+            raise ValueError("Unkown locking-system mehod")
 
 
 
@@ -325,10 +368,10 @@ class Deposit(models.Model):
 
 
     in_datetime = models.DateTimeField('Einzahlungszeitpunkt', default=timezone.now, validators=[present_or_max_3_days_ago])
-    in_method = models.CharField('Zahlungsmittel', max_length=64, choices=method_choices, default='cash')
+    in_method = models.CharField('Einzahlungsmittel', max_length=64, choices=method_choices, default='cash')
 
     out_datetime = models.DateTimeField('Rückzahlungszeitpunkt', null=True, validators=[present_or_max_3_days_ago])
-    out_method = models.CharField('Zahlungsmittel', max_length=64, choices=method_choices, null=True)
+    out_method = models.CharField('Auszahlungsmittel', max_length=64, choices=method_choices, null=True)
 
     comment = models.CharField('Kommentar', max_length=500, null=True, blank=True)
 
@@ -398,7 +441,7 @@ class Issue(models.Model):
     active = models.BooleanField(verbose_name='Aktiv', default=True)
     person = models.ForeignKey('Person',
                                related_name="issues",
-                               verbose_name='Ausgaben',
+                               verbose_name='Person',
                                on_delete=models.PROTECT)
     #limit_key_choices = models.Q(issues__active=False, stolen_or_lost=False)
     #!BUG duplication https://code.djangoproject.com/ticket/11707

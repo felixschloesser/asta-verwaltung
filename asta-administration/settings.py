@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
-import os
+import os, json
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -20,17 +20,17 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "6ey7y$78$t&-)f7z(o44(^z%_mw#)d21_33wr5rw3qy0bfcr^f"
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'changeme')
 
-HASHID_FIELD_SALT = "+9-@)z1&t4mh5@ggez!0gf)5i4zk-7ikxa=+)puqy4d4bu!441"
+HASHID_FIELD_SALT = os.getenv('DJANGO_HASHID_FIELD_SALT', 'changeme')
 
 SIMPLE_HISTORY_REVERT_DISABLED=True
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DJANGO_DEBUG', True)
 
 
-ALLOWED_HOSTS = ['10.0.0.25', 'localhost']
+ALLOWED_HOSTS = os.getenv('DJANGO_SECRET_KEY', 'localhost').split(',')
 
 INTERNAL_IPS = [
     '127.0.0.1',
@@ -99,12 +99,17 @@ WSGI_APPLICATION = 'asta-administration.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'astadb',
-        'USER': 'django',
-        'PASSWORD': 'Payphone0-Observer-Livestock',
-        'HOST': 'localhost',
-        'PORT': '',
+        'ENGINE': 'django.db.backends.{}'.format(
+             os.getenv('DJANGO_DB_ENGINE', 'postgresql_psycopg2')
+        ),
+        'NAME': os.getenv('DB_NAME', 'astadb'),
+        'USER': os.getenv('DB_USER', 'django'),
+        'PASSWORD': os.getenv('DB_PASSWORD','changeme'),
+        'HOST': os.getenv('DB_HOST', 'localhost'),
+        'PORT': os.getenv('DB_PORT', ''),
+        'OPTIONS': json.loads(
+             os.getenv('DJANGO_DB_OPTIONS', '{}')
+        ),
     }
 }
 
@@ -146,11 +151,11 @@ USE_L10N = True
 USE_TZ = True
 
 # Mail
-EMAIL_HOST = 'mail.your-server.de'
-EMAIL_HOST_USER = 'dev@felixschloesser.de'
-EMAIL_HOST_PASSWORD = 'MY1p5x6s9OnNSrT0'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
+EMAIL_HOST = os.getenv('DJANGO_EMAIL_HOST')
+EMAIL_HOST_USER = os.getenv('DJANGO_EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('DJANGO_EMAIL_HOST_PASSWORD')
+EMAIL_PORT = os.getenv('DJANGO_EMAIL_PORT')
+EMAIL_USE_TLS = os.getenv('DJANGO_EMAIL_USE_TLS')
 
 
 # Static files (CSS, JavaScript, Images)
@@ -158,7 +163,11 @@ EMAIL_USE_TLS = True
 
 STATIC_URL = '/static/'
 
+# Logging Configuration
 
+# Clear prev config
+LOGGING_CONFIG = None
+LOGLEVEL = os.getenv('DJANGO_LOGLEVEL', 'info').upper()
 
 # Logging
 LOGGING = {

@@ -23,7 +23,7 @@ admin.site.enable_nav_sidebar = False
 
 urlpatterns = [
     #path('', lambda r: redirect('/keys/')),
-    path('accounts/', include('django.contrib.auth.urls')),
+    path('accounts/', include('django.contrib.auth.urls'), name='account'),
 
     path('admin/', admin.site.urls, name='admin'),
 

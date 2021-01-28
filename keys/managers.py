@@ -1,5 +1,13 @@
 from django.db import models
 
+
+class RoomManager(models.Manager):
+    def get_queryset(self):
+        qs = super().get_queryset()
+        return qs.select_related('building', 'purpose', 'group')
+
+
+
 class KeyManager(models.Manager):
     def get_queryset(self):
         qs = super().get_queryset()
@@ -14,6 +22,7 @@ class KeyManager(models.Manager):
         return availible
 
 
+
 class PersonManager(models.Manager):
     def get_queryset(self):
         qs = super().get_queryset()
@@ -21,6 +30,7 @@ class PersonManager(models.Manager):
 
     def get_person(self, id, *args, **kwargs):
         return self.filter(id__exact=id, *args, **kwargs).get()
+
 
 
 class IssueManager(models.Manager):
@@ -33,3 +43,11 @@ class IssueManager(models.Manager):
         # active issues
         # i.e: Issue.objects.published(insertion_date__gte=datetime.now)
         return self.filter(active=True, *args, **kwargs)
+
+    def count_active(self):
+        number_of_active_issues =  self.filter(active=True).count()
+        return number_of_active_issues
+
+    def count(self):
+        number_of_issues =  super().get_queryset().distinct().count()
+        return number_of_issues

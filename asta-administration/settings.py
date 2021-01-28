@@ -30,7 +30,7 @@ SIMPLE_HISTORY_REVERT_DISABLED=True
 DEBUG = True
 
 
-ALLOWED_HOSTS = ['10.0.0.25', 'localhost']
+ALLOWED_HOSTS = ['10.0.0.25', '134.28.72.225', 'localhost']
 
 INTERNAL_IPS = [
     '127.0.0.1',

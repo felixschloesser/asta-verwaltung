@@ -15,33 +15,38 @@
         {% endfor %}
     {% endif %}
 
-    <h1 class='title'>
+    <h1 class='title is-2'>
         {% if key.locking_system.method == 'transponder' %}
             Transponder
         {% else %}
             Schüssel
         {% endif %}Nr. {{ key.number }}</h1>
 
-    {% if key.stolen_or_lost %}
-        <p><strong>Status:</strong> <span class="tag is-danger"><b>verloren oder gestohlen</b></span></p>
-    {% endif %}
     <div class="content">
-            {% if key.get_current_issue %}
-                <p><strong>Verliehen:</strong> Am <a href="{% url 'keys:issue-detail' pk=key.get_current_issue.id %}">{{ key.get_current_issue.out_date }} an {{ key.get_current_issue.person }}</a></p>
-            {% endif %}
-            <p><strong>Schließsystem:</strong> {{ key.locking_system }}</p>
-            <p><strong>Lagerort:</strong> {{ key.storage_location }}</p>
-            <p><strong>Öffnet folgende Türen:</strong></p>
-                <ul>
-                {% for door in key.doors.all %}
-                    <li>{{ door }}</li>
-                {% empty %}
-                    keine
-                {% endfor %}
-                </ul>
-            {% if key.comment %}
-                <p><strong>Kommentar:</strong> {{ key.comment }}</p>
-            {% endif %}
+        {% if key.stolen_or_lost %}
+            <p><strong>Status:</strong> <span class="tag is-danger"><b>verloren oder gestohlen</b></span></p>
+        {% endif %}
+
+        {% if key.get_current_issue %}
+            <p><strong>Verliehen:</strong> Am <a href="{% url 'keys:issue-detail' pk=key.get_current_issue.id %}">{{ key.get_current_issue.out_date }} an {{ key.get_current_issue.person }}</a></p>
+        {% endif %}
+        <p><strong>Schließverfahren:</strong> <span class="tag is-light"><strong>{{ key.locking_system.get_method }}</strong></span></p>
+        <p><strong>Schließsystem:</strong> {{ key.locking_system }}</p>
+        {% if key.locking_system.comment %}
+            <p><strong>Kommentar:</strong> {{ key.locking_system.comment }}</p>
+        {% endif %}
+        <p><strong>Lagerort:</strong> {{ key.storage_location }}</p>
+        <p><strong>Öffnet folgende Türen:</strong></p>
+            <ul>
+            {% for door in key.doors.all %}
+                <li>{{ door.get_kind }}: <a href={% url 'keys:room-detail' slug=door.room.slug %}>{{ door.room }}</a></li>
+            {% empty %}
+                keine
+            {% endfor %}
+            </ul>
+        {% if key.comment %}
+            <p><strong>Kommentar:</strong> {{ key.comment }}</p>
+        {% endif %}
     </div>
 
     <nav class="level is-max-desktop">
@@ -53,9 +58,9 @@
         <div class="level-right">
              <div class="level-item">
                 {% if not key.stolen_or_lost %}
-                    <a class="button is-warning" href="{% url 'keys:key-lost' key.id  %}" >Verloren/Gestohlen</a>
+                    <a class="button is-warning" href="{% url 'keys:key-lost' key.id  %}">Verloren/Gestohlen</a>
                 {% else %}
-                    <a class="button is-warning" href="{% url 'keys:key-found' key.id  %}" >Gefunden</a>
+                    <a class="button is-warning" href="{% url 'keys:key-found' key.id  %}">Gefunden</a>
                 {% endif %}
             </div>
         </div>

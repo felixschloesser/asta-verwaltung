@@ -1,0 +1,51 @@
+{% extends "keys/base.html" %}
+
+{% block title %}Ausgabe | Schlüsselsystem{% endblock %}
+
+
+{% block content %}
+<div class="container is-max-desktop">
+
+    {% if messages %}
+        {% for message in messages %}
+        <article class="message is-success">
+            <div class="message-body">
+                {{ message }}
+            </div>
+        </article>
+        {% endfor %}
+    {% endif %}
+
+    <h1 class='title is-2'>{% if room.name %} {{ room.name }} {% else %} Raum {{ room.get_identifier }} {% endif %}</h1>
+
+    <div class="content">
+        {% if room.name %}
+        <p><strong>Raumkürzel:</strong> {{ room.get_identifier }}</p>
+        {% endif %}
+        <p><strong>Gruppe:</strong> {{ room.group }}</p>
+        <p><strong>Zweck:</strong> {{ room.purpose }}</p>
+        {% if room.comment %}
+            <p><strong>Kommentar:</strong> {{ room.comment }}</p>
+        {% endif %}
+
+        <h2 class='title'>Türen:</h1>
+        <ul>
+        {% for door in room.doors.all %}
+            <li><strong>{{ door.get_kind }}</strong> mit {{ door.locking_system }}</li>
+        {% endfor %}
+        </ul>
+    </div>
+
+    <nav class="level is-max-desktop noprint">
+        <div class="level-left">
+            <div class="level-item">
+                <a class="button is-link is-outlined" href="{% url 'keys:room-list' %}">Zurück zur Liste</a>
+            </div>
+        </div>
+    </nav>
+
+</div>
+
+{% endblock %}
+
+

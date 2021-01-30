@@ -110,7 +110,7 @@ class StorageLocationAdmin(admin.ModelAdmin):
 
 @admin.register(Person)
 class PersonAdmin(HashIdFieldAdminMixin, admin.ModelAdmin):
-    list_display = ('__str__', 'university_email', 'private_email', 'phone_number', 'has_paid_deposit')
+    list_display = ('__str__', 'university_email', 'private_email', 'phone_number', 'paid_deposit')
     list_filter = ('group', 'deposit__amount', 'updated_at')
     search_fields = ['first_name', 'last_name']
 

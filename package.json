@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/felixschloesser/key-management#readme",
   "devDependencies": {
+    "@creativebulma/bulma-divider": "^1.1.0",
     "bulma": "^0.9.1",
     "node-sass": "^5.0.0"
   },
@@ -26,6 +27,7 @@
     "@creativebulma/bulma-tooltip": "^1.2.0",
     "bulma-extensions": "^6.2.7",
     "bulma-responsive-tables": "^1.2.3",
+    "gulp": "^4.0.2",
     "package.json": "^2.0.1"
   },
   "keywords": []

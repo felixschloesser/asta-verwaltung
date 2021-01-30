@@ -24,12 +24,16 @@
         <p class='text'><strong>Private Mail: </strong><a href="mailto:{{ person.private_email }}">{{ person.private_email }}</a></p>
         <p class='text'><strong>Telefon: </strong>{{ person.phone_number }}</p>
         <p class='text'><strong>Kaution: </strong>
-        {% if person.has_paid_deposit %}
+        {% if not person.deposit %}
+            <span class="tag is-light"><b>Nicht Bezahlt</b></span></a>
+        {% elif person.deposit.state == 'in' %}
             <a href={% url 'keys:deposit-detail' pk=person.id %}><span class="tag is-success"><b>{{ person.deposit.amount }} {{ person.deposit.currency }}</b></span></a>
-        {% elif person.deposit.active == False %}
+        {% elif person.deposit.state == 'retained' %}
+            <a href={% url 'keys:deposit-detail' pk=person.id %}><span class="tag is-warning"><b>Einbehalten</b></span></a>
+        {% elif person.deposit.state == 'out' %}
             <a href={% url 'keys:deposit-detail' pk=person.id %}><span class="tag is-info"><b>Zurückerhalten</b></span></a>
         {% else %}
-            <span class="tag is-light"><b>nicht bezahlt</b></span>
+            <a href={% url 'keys:deposit-detail' pk=person.id %}><span class="tag is-danger"><b>Fehler!</b></span></a>
         {% endif %}
     </div>
 
@@ -73,15 +77,19 @@
                     </p>
                 </div>
                 <div class="level-item">
-                    {% if person.has_paid_deposit and not person.get_active_issues %}
+                    {% if person.deposit.state == 'in' and not person.get_active_issues %}
                         <p class="control">
-                            <a class="button is-warning" href="{% url 'keys:deposit-return' pk=person.id %}">Kaution zurück</a>
+                            <a class="button is-success" href="{% url 'keys:deposit-return' pk=person.id %}">Kaution zurück</a>
                         </p>
-                    {% elif person.has_paid_deposit %}
+                    {% elif person.deposit.state == 'in' %}
                         <p class="control">
-                            <a class="button is-warning has-tooltip-bottom has-tooltip-arrow" href="{% url 'keys:deposit-return' pk=person.id %}" data-tooltip="Noch offene ausleihen">Kaution zurück</a>
+                            <a class="button is-warning has-tooltip-arrow" href="{% url 'keys:deposit-return' pk=person.id %}" data-tooltip="Noch offene ausleihen">Kaution zurück</a>
                         </p>
-                    {% elif person.deposit.in_datetime %} {% comment %} There alreaedy exists a deposit{% endcomment %}
+                    {% elif person.deposit.state == 'retained' %}
+                        <p class="control">
+                            <a class="button is-warning has-tooltip-arrow" href="{% url 'keys:deposit-create' pk=person.id %}">Neue Kaution</a>
+                        </p>
+                    {% elif person.deposit.state == 'out' %} {% comment %} There alreaedy exists a deposit{% endcomment %}
                         <p class="control">
                             <a class="button is-info" href="{% url 'keys:deposit-delete' pk=person.id %}">Neue Kaution</a>
                         </p>

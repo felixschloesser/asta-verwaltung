@@ -7,24 +7,30 @@
 <div class="container is-max-desktop">
 
     <div class="content">
-        <h1 class="title is-2">Neue Kaution</h1>
-        <p>Am {{ deposit.out_datetime|date:"l, d. F Y"}} um
-          {{ deposit.out_datetime |date:"G:i"}} wurden {{ deposit.amount }} {{ deposit.currency }}
-          an {{ deposit.person }} {{ deposit.get_out_method }} zurückgezahlt.</p>
+        {% if deposit.state == 'out' %}
+            <h1 class="title is-2">Neue Kaution</h1>
+            <p>Am {{ deposit.out_datetime|date:"l, d. F Y"}} um {{ deposit.out_datetime |date:"GG:i"}} wurden {{ deposit.amount }} {{ deposit.currency }} an {{ deposit.person }} {{ deposit.get_out_method }} zurückgezahlt.</p>
 
-        {% if deposit.comment %}
-            <p><strong>Kommentar:</strong> {{ deposit.comment }}</p>
+            {% if deposit.comment %}
+                <p><strong>Kommentar:</strong> {{ deposit.comment }}</p>
+            {% endif %}
+
+          	<p>Eintrag löschen und neue Kaution erstellen?</p>
+
+            <form method="post">
+    			{% csrf_token %}
+    			<span class="buttons is-right">
+    	            <a class="button" href={% url 'keys:person-detail' pk=deposit.person.id %}>Abbrechen</a >
+    	            <input class="button is-danger" type="submit" value="Löschen und neu erstellen">
+    	        </span>
+            </form>
+        {% else %}
+        <h1 class="title is-2">Fehler!</h1>
+        <p>Kaution noch nicht zurückgezahlt!</p>
+        <div class="control">
+            <a class="button" href={% url 'keys:person-detail' pk=deposit.person.id %}>Zurück</a >
+        </div>
         {% endif %}
-
-      	<p>Eintrag löschen und neue Kaution erstellen?</p>
-
-        <form method="post">
-			{% csrf_token %}
-			<span class="buttons is-right">
-	            <a class="button" href={% url 'keys:person-detail' pk=deposit.person.id %}>Abbrechen</a >
-	            <input class="button is-danger" type="submit" value="Löschen und neu erstellen">
-	        </span>
-        </form>
     </div>
 </div>
 {% endblock %}

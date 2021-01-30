@@ -39,6 +39,16 @@ class DepositCreateForm(forms.ModelForm):
             'comment': forms.Textarea(attrs={'cols': 80, 'rows': 3}),
         }
 
+class DepositRetainForm(forms.ModelForm):
+    class Meta:
+        model = Deposit
+        fields = ['comment']
+
+        widgets = {
+            'comment': forms.Textarea(attrs={'cols': 80, 'rows': 3}),
+        }
+
+
 class DepositReturnForm(forms.ModelForm):
     class Meta:
         model = Deposit

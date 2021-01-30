@@ -22,15 +22,20 @@ def index_view(request):
 
 
 class Home(generic.ListView):
-    model = Issue
+    queryset = Issue.all_issues.active()
+    ordering = ['-updated_at']
+    paginate_by = 5
+    template_name = 'keys/home.html'
+
 
     def get_context_data(self, **kwargs):
         """
         Get the current person from the request and add it to the context so that the tempalte can access it.
         """
         context = super().get_context_data(**kwargs)
-        context["people"] = Person.all_people()
-        context["issues"] = Issue.all_issues()
+        context["people"] = Person.all_people
+        context["keys"] = Key.all_keys
+        context["rooms"] = Room.all_rooms
         return context
 
 
@@ -213,10 +218,22 @@ class DepositCreate(DepositMixin, SuccessMessageMixin, LoginRequiredMixin, gener
         return super().form_valid(form)
 
 
-
-class DepositDelete(DepositMixin, LoginRequiredMixin, generic.DeleteView):
+class DepositRetain(DepositMixin, SuccessMessageMixin, LoginRequiredMixin, generic.UpdateView):
     model = Deposit
+    form_class = DepositRetainForm
+    template_name_suffix = '_confirm_retain'
+    success_message = "Kaution von erfolgreich einbehalten."
 
+    def form_valid(self, form):
+        """
+        Before validating the form, populate the person field using the request primary key as a lookup for
+        """
+        self.object = form.save(commit=False)
+        self.object.state = 'retained'
+        self.object.retained_datetime = timezone.now()
+        self.object.save()
+        logging.debug("Polulated the forms person field.")
+        return super().form_valid(form)
 
 
 class DepositReturn(DepositMixin, SuccessMessageMixin, LoginRequiredMixin, generic.UpdateView):
@@ -233,11 +250,14 @@ class DepositReturn(DepositMixin, SuccessMessageMixin, LoginRequiredMixin, gener
         """
         logging.debug('validating')
         self.object = form.save(commit=False)
-        self.object.active = False
+        self.object.state = 'out'
         self.object.out_datetime = timezone.now()
         self.object.save()
         return super().form_valid(form)
 
+
+class DepositDelete(DepositMixin, LoginRequiredMixin, generic.DeleteView):
+    model = Deposit
 
 
 # Rooms

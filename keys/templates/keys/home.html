@@ -1,0 +1,131 @@
+{% extends "keys/base.html" %}
+
+{% block title %}Dashboard | Schlüsselsystem{% endblock %}
+
+
+{% block content %}
+<div class="container is-max-widescreen">
+	{% if user.is_authenticated %}
+	    <h1 class="title is-2">Dashboard</h1>
+	    <p class="content">Wilkommen, {{ user.username }}! Das hier ist unser neues Schlüsselsystem. Toll oder?</p>
+
+	    <div class="tile is-ancestor">
+		<div class="tile is-parent">
+		    <article class="tile is-child notification is-white-ter">
+		      <div class="content">
+		        <p class="title">Ausleihen</p>
+		        <p class="subtitle">Anzahl der akutell aktiven Ausleihen: {{ issue_list.count }}</p>
+		        <div class="content">
+		          <table class="table is-hoverable" style="background-color: whitesmoke;">
+		          	<thead>
+                         <th>Schlüssel</th>
+                         <th>Person</th>
+                    </thead>
+
+                    <tbody>
+                    {% for issue in issue_list %}
+                        <tr style="cursor:pointer;" onclick="location.href='{{ issue.get_absolute_url }}'">
+                            <td>
+                                {{ issue.key }}
+                            </td>
+                            <td>
+                                {{ issue.person }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+		          </table>
+		        </div>
+		      </div>
+		    </article>
+		 </div>
+			<div class="tile is-vertical is-8">
+		    	<div class="tile">
+		    		<div class="tile is-parent">
+		        	<article class="tile is-child notification is-info">
+		          		<p class="title">Middle tile</p>
+		          		<p class="subtitle">With an image</p>
+		          		<figure class="image is-4by3">
+		            		<img src="https://bulma.io/images/placeholders/640x480.png">
+		          		</figure>
+		        	</article>
+		     	</div>
+		    		<div class="tile is-parent is-vertical">
+		        		<article class="tile is-child notification is-primary">
+		          			<p class="title">Personensuche</p>
+	          				<form action={% url 'keys:person-search-results' %} method='get'>
+	          					<div class="field has-addons">
+			                    	<div class="control">
+			                            <input class="input" name='q' type="text" placeholder="Vor-/Nachname/Gruppe" required>
+			                    	</div>
+			                    	<div class="control">
+				                        <button type='submit' class="button is-info">Suchen</button>
+			                		</div>
+            					</div>
+            				</form>
+		       			</article>
+		        		<article class="tile is-child notification is-light">
+		        			<p class="title">Schlüsselsuche</p>
+							<form action={% url 'keys:key-search-results' %} method='get'>
+	          					<div class="field has-addons">
+			                    	<div class="control">
+			                            <input class="input" name='q' type="text" placeholder="Schlüsselnr./Modell" required>
+			                    	</div>
+			                    	<div class="control">
+				                        <button type='submit' class="button is-info">Suchen</button>
+			                		</div>
+            					</div>
+            				</form>
+                		</article>
+		      		</div>
+		      	
+		    </div>
+		    <div class="tile is-parent">
+		     	<article class="tile is-child notification is-light">
+		     		<p class="title">Statistiken</p>
+		        	<div class="columns">
+		        		<div class="column" style="padding-left: 0.75rem;padding-bottom: 0.75rem;">
+			        		<div class="content">
+			          			<h2 class="subtitle is-4">Schlüssel</h2>
+			          			<ul>
+			          				<li>Gesamt: {{ keys.count }}
+			          				<li>Ausgeliehen: {{ keys.currently_issued.count }} ({{ keys.currently_issued_percent }}%)
+			          				<li>Verloren: {{ keys.lost_or_stolen.count }} ({{ keys.stolen_or_lost_percent }}%)
+			          			</ul>
+			          		</div>
+			          	</div>
+						<div class="divider is-vertical is-right" style="margin-left: 5px;margin-right: 5px;"></div>
+		        		<div class="column" style="padding-left: 0.75rem;padding-bottom: 0.75rem;">
+			        		<div class="content">
+			          			<h2 class="subtitle is-4">Personen</h2>
+			          			<ul>
+			          				<li>Gesamt: {{ people.count }}
+			          				<li>Kaution bezahlt: {{ people.paid_deposit.count }} ({{ people.paid_deposit_percent }}%)
+			          				<li>Mit Ausleihen: {{ people.active_issues.count }} ({{ people.active_issues_percent }}%)
+			          			</ul>
+			          		</div>
+			          	</div>
+						<div class="divider is-vertical is-right" style="margin-left: 5px;margin-right: 5px;"></div>
+		        		<div class="column" style="padding-left: 0.75rem;padding-bottom: 0.75rem;">
+			        		<div class="content">
+			        			<h2 class="subtitle is-4">Personen</h2>
+
+			          			<p>Anzahl Schlüssel: {{ keys.count }} - davon aktuell ausgeliehen {{ keys.currently_issued.count }} ({{ keys.currently_issued_percent }}%)- davon gestohlen: {{ keys.stolen.count }}</p>
+			          		</div>
+		        		</div>
+		        	</div>
+		      	</article>
+		    </div>
+		 </div>
+	</div>
+
+	{% else %}
+	    <h1 class="title">Wilkommen!</h1>
+	    <p class="content">Das hier ist das neue Schlüsselsystem des AStAs.</p>
+	    <p class="content">Bitte melden Sie sich an.</p>
+	    <a class="button is-primary is-right" href="{% url 'login' %}?next=/">Anmelden</a>
+	{% endif %}
+
+</div>
+
+{% endblock %}

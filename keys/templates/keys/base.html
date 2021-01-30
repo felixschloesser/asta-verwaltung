@@ -5,7 +5,7 @@
         <!-- Required meta tags -->
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-        <meta name="description" content="Ein Schlüsselverwaltungssystem für den AStA der TU-Hamburg.">
+        <meta name="description" content="Schlüsselverwaltungssystem des AStAs der TU-Hamburg.">
         <title>{% block title %}{% endblock %}</title>
 
         <!-- Favicon -->
@@ -18,11 +18,11 @@
         <script src={% static 'js/main.js' %}></script>
 
     </head>
-    <body class="is-flex is-flex-direction-column" style="min-height: 100vh;min-height: -webkit-fill-available;">
+    <body class="is-flex is-flex-direction-column" style="min-height: 100vh;">
         <!-- Navbar-->
         <nav class="navbar is-dark noprint" role="navigation" aria-label="main navigation">
             <div class="navbar-brand">
-                <a class="navbar-item" href="{% url 'keys:index' %}">
+                <a class="navbar-item" href="{% url 'keys:home' %}">
                     {% include 'keys/logo.svg' %}
                 </a>
                 <a role="button" class="navbar-burger" data-target="navMenu" aria-label="menu" aria-expanded="false" >
@@ -49,8 +49,9 @@
 
         <!--Content -->
         <section class="section is-flex-grow-1 ">
-        {% block content %}{% endblock %}
+            {% block content %}{% endblock %}
         </section>
+
         <!-- Footer -->
         <footer class="footer noprint">
             <div class="content has-text-centered">
@@ -58,9 +59,9 @@
                     <a href="https://asta-tuhh.de/euer_asta/it/">TinTin's </a><strong>Schlüsselverwaltungssystem</strong>. Quelltext unter der
                     <a href="https://eur-lex.europa.eu/legal-content/DE/TXT/?uri=CELEX:32017D0863">EUPL 1.2</a>.
 
-                {% if user.is_authenticated %}
-                    <br><a class="has-text-primary" href="{% url 'logout' %}?next=/" >Abmelden.</a>
-                {% endif %}
+                    {% if user.is_authenticated %}
+                        <br><a class="has-text-primary" href="{% url 'logout' %}?next=/" >Abmelden.</a>
+                    {% endif %}
                 </p>
             </div>
         </footer>

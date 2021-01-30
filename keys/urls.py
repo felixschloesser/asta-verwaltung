@@ -7,7 +7,7 @@ from . import views
 app_name = 'keys' # Namespace: keys:detail, keys:index
 
 urlpatterns = [
-    path('', views.index_view, name='index'),
+    path('', views.Home.as_view(), name='home'),
 
     path('keys/', views.KeyList.as_view(), name='key-list'),
     path('keys/search', views.KeySearchResults.as_view(), name='key-search-results'),
@@ -23,6 +23,7 @@ urlpatterns = [
     path('person/<str:pk>/update', views.PersonUpdate.as_view(), name='person-update'),
     path('person/<str:pk>/deposit/', views.DepositDetail.as_view(), name='deposit-detail'),
     path('person/<str:pk>/depost/create', views.DepositCreate.as_view(), name='deposit-create'),
+    path('person/<str:pk>/deposit/retain', views.DepositRetain.as_view(), name='deposit-retain'),
     path('person/<str:pk>/deposit/return', views.DepositReturn.as_view(), name='deposit-return'),
     path('person/<str:pk>/deposit/delete', views.DepositDelete.as_view(), name='deposit-delete'),
 

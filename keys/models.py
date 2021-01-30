@@ -337,8 +337,8 @@ class Person(models.Model): # Add a chron job ro delete after a 2 years of not r
     def get_full_name(self):
         return "{} {}".format(self.first_name, self.last_name)
 
-    def has_paid_deposit(self):
-        if hasattr(self, 'deposit') and not self.deposit.out_datetime:
+    def paid_deposit(self):
+        if self.deposit.state == 'in':
             return True
         else:
             return False
@@ -348,29 +348,40 @@ class Person(models.Model): # Add a chron job ro delete after a 2 years of not r
         return self.issues.active()
 
     # Tell django-admin to display this as an Boolian
-    has_paid_deposit.boolean = True
-    has_paid_deposit.short_description = "Kaution"
+    paid_deposit.boolean = True
+    paid_deposit.short_description = "Kaution"
 
 
 
 class Deposit(models.Model):
-    active = models.BooleanField(verbose_name='Aktiv', default=True)
+    state_choices = [('in', 'Eingezahlt'),
+                     ('retained', 'Einbehalten'),
+                     ('out', 'Ausgezahlt')]
 
     currency_choices = [('EUR', '€')]
 
     method_choices = [('cash', 'Bar'),
                       ('bank_transfer', 'Überweisung')]
 
+    state = models.CharField('Status', max_length=8, choices=state_choices, default='in')
+
     person = models.OneToOneField('Person', verbose_name='Person', on_delete=models.PROTECT)
-    amount = models.DecimalField('Betrag', max_digits=5, decimal_places=2, default=50, validators=[validate_deposit_mail], blank=True)
+    amount = models.DecimalField('Betrag', max_digits=5, decimal_places=2, default=50, 
+                                           validators=[validate_deposit_mail], blank=True)
 
     currency = models.CharField('Währung', max_length=3, choices=currency_choices, default='EUR')
 
 
-    in_datetime = models.DateTimeField('Einzahlungszeitpunkt', default=timezone.now, validators=[present_or_max_3_days_ago])
+    in_datetime = models.DateTimeField('Einzahlungszeitpunkt', default=timezone.now, 
+                                                               validators=[present_or_max_3_days_ago])
     in_method = models.CharField('Einzahlungsmittel', max_length=64, choices=method_choices, default='cash')
+    
+    
+    retained_datetime = models.DateTimeField('Einbehaltungszeitpunkt', null=True, 
+                                                                       validators=[present_or_max_3_days_ago])
 
-    out_datetime = models.DateTimeField('Rückzahlungszeitpunkt', null=True, validators=[present_or_max_3_days_ago])
+    out_datetime = models.DateTimeField('Rückzahlungszeitpunkt', null=True, 
+                                                                 validators=[present_or_max_3_days_ago])
     out_method = models.CharField('Auszahlungsmittel', max_length=64, choices=method_choices, null=True)
 
     comment = models.CharField('Kommentar', max_length=500, null=True, blank=True)
@@ -386,9 +397,15 @@ class Deposit(models.Model):
 
         constraints = [
             models.CheckConstraint(
-                name='active_deposit_no_out_datetime_out_method',
-                check=models.Q(active=True, out_datetime__isnull=True, out_method__isnull=True) | \
-                      models.Q(active=False, out_datetime__isnull=False, out_method__isnull=False)
+                name='state_consistancy',
+                check=models.Q(state='in', out_datetime__isnull=True,
+                                           out_method__isnull=True,
+                                           retained_datetime__isnull=True) | \
+                      models.Q(state='retained', out_datetime__isnull=True,
+                                                 out_method__isnull=True,
+                                                 retained_datetime__isnull=False) | \
+                      models.Q(state='out', out_datetime__isnull=False,
+                                            out_method__isnull=False)
             ),
             models.CheckConstraint(
                 name='take_in_deposit_before_give_out',

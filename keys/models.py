@@ -338,7 +338,7 @@ class Person(models.Model): # Add a chron job ro delete after a 2 years of not r
         return "{} {}".format(self.first_name, self.last_name)
 
     def paid_deposit(self):
-        if self.deposit.state == 'in':
+        if hasattr(self, 'deposit') and self.deposit.state == 'in':
             return True
         else:
             return False

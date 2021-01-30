@@ -85,6 +85,17 @@ class KeyLost(SuccessMessageMixin, LoginRequiredMixin, generic.UpdateView):
         self.object.save()
         return super().form_valid(form)
 
+    def get_success_url(self):
+        if self.object.issues.active():
+            person = self.object.issues.active().get().person
+            if person.paid_deposit():
+                return reverse_lazy('keys:deposit-detail',  args=[person.id])
+            else:
+                return reverse_lazy('keys:person-detail',  args=[person.id])
+
+        else:
+            return reverse_lazy('keys:key-detail',  args=[self.object.id])
+
 
 
 class KeyFound(SuccessMessageMixin, LoginRequiredMixin, generic.UpdateView):

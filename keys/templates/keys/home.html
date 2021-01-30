@@ -51,7 +51,7 @@
 		     	</div>
 		    		<div class="tile is-parent is-vertical">
 		        		<article class="tile is-child notification is-primary">
-		          			<p class="title">Personensuche</p>
+		          			<p class="title is-4">Personensuche</p>
 	          				<form action={% url 'keys:person-search-results' %} method='get'>
 	          					<div class="field has-addons">
 			                    	<div class="control">
@@ -64,7 +64,7 @@
             				</form>
 		       			</article>
 		        		<article class="tile is-child notification is-light">
-		        			<p class="title">Schlüsselsuche</p>
+		        			<p class="title is-4">Schlüsselsuche</p>
 							<form action={% url 'keys:key-search-results' %} method='get'>
 	          					<div class="field has-addons">
 			                    	<div class="control">
@@ -88,8 +88,8 @@
 			          			<h2 class="subtitle is-4 mb-2">Schlüssel</h2>
 		          				<p>
 		          					Gesamtzahl: {{ keys.count }}<br>
-		          					Ausgeliehen: {{ keys.currently_issued.count }} ({{ keys.currently_issued_percent }}%)<br>
-		          					Verloren: {{ keys.stolen_or_lost.count }} ({{ keys.stolen_or_lost_percent }}%)<br>
+		          					Ausgeliehen: {{ keys.currently_issued.count }}&nbsp;({{ keys.currently_issued_percent }}%)<br>
+		          					Verloren: {{ keys.stolen_or_lost.count }}&nbsp;({{ keys.stolen_or_lost_percent }}%)<br>
 			          			</p>
 			          		</div>
 			          	</div>
@@ -99,8 +99,8 @@
 			          			<h2 class="subtitle is-4 mb-2">Personen</h2>
 			          			<p>
 			          				Gesamtzahl: {{ people.count }}<br>
-			          				Kaution bezahlt: {{ people.paid_deposit.count }} ({{ people.paid_deposit_percent }}%)<br>
-			          				Mit Ausleihen: {{ people.active_issues.count }} ({{ people.active_issues_percent }}%)<br>
+			          				Kaution bezahlt: {{ people.paid_deposit.count }}&nbsp;({{ people.paid_deposit_percent }}%)<br>
+			          				Mit Ausleihen: {{ people.active_issues.count }}&nbsp;({{ people.active_issues_percent }}%)<br>
 			          			</p>
 			          		</div>
 			          	</div>

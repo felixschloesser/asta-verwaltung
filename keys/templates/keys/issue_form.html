@@ -11,7 +11,7 @@
     <form method='post' autocomplete="off">
         {% csrf_token %}
 
-        {% if not person.has_paid_deposit %}
+        {% if not person.paid_deposit %}
             <article class="message is-danger">
                 <div class="message-body">
                     {{ person }} hat keine Kaution bezahlt!

@@ -21,15 +21,15 @@ class KeyManager(models.Manager):
         return self.exclude(stolen_or_lost=True).filter(*args, **kwargs)
 
     def currently_issued(self, *args, **kwargs):
-        return self.filter(issues__active=True).distinct().filter(*args, **kwargs)
+        return self.filter(issues__active=True).filter(*args, **kwargs).distinct()
 
     def not_currently_issued(self, *args, **kwargs):
-        return self.exclude(issues__active=True).distinct().filter(*args, **kwargs)
+        return self.exclude(issues__active=True).filter(*args, **kwargs).distinct()
 
 
-    def availible(self, *args, **kwargs):
-        availible = self.intersection(self.not_stolen_or_lost, self.not_currently_issued)
-        return availible.filter(*args, **kwargs)
+    def availible(self):
+        availible = self.intersection(self.not_stolen_or_lost(), self.not_currently_issued())
+        return availible
 
     # Not Returning QuerrySets
     def stolen_or_lost_percent(self):

@@ -13,8 +13,7 @@
 		<div class="tile is-parent">
 		    <article class="tile is-child notification is-white-ter">
 		      <div class="content">
-		        <p class="title">Ausleihen</p>
-		        <p class="subtitle">Anzahl der akutell aktiven Ausleihen: {{ issue_list.count }}</p>
+		        <p class="title mb-4">Ausleihen</p>
 		        <div class="content">
 		          <table class="table is-hoverable" style="background-color: whitesmoke;">
 		          	<thead>
@@ -86,29 +85,29 @@
 		        	<div class="columns">
 		        		<div class="column" style="padding-left: 0.75rem;padding-bottom: 0.75rem;">
 			        		<div class="content">
-			          			<h2 class="subtitle is-4">Schlüssel</h2>
-			          			<ul>
-			          				<li>Gesamt: {{ keys.count }}
-			          				<li>Ausgeliehen: {{ keys.currently_issued.count }} ({{ keys.currently_issued_percent }}%)
-			          				<li>Verloren: {{ keys.lost_or_stolen.count }} ({{ keys.stolen_or_lost_percent }}%)
-			          			</ul>
+			          			<h2 class="subtitle is-4 mb-2">Schlüssel</h2>
+		          				<p>
+		          					Gesamtzahl: {{ keys.count }}<br>
+		          					Ausgeliehen: {{ keys.currently_issued.count }} ({{ keys.currently_issued_percent }}%)<br>
+		          					Verloren: {{ keys.stolen_or_lost.count }} ({{ keys.stolen_or_lost_percent }}%)<br>
+			          			</p>
 			          		</div>
 			          	</div>
 						<div class="divider is-vertical is-right" style="margin-left: 5px;margin-right: 5px;"></div>
 		        		<div class="column" style="padding-left: 0.75rem;padding-bottom: 0.75rem;">
 			        		<div class="content">
-			          			<h2 class="subtitle is-4">Personen</h2>
-			          			<ul>
-			          				<li>Gesamt: {{ people.count }}
-			          				<li>Kaution bezahlt: {{ people.paid_deposit.count }} ({{ people.paid_deposit_percent }}%)
-			          				<li>Mit Ausleihen: {{ people.active_issues.count }} ({{ people.active_issues_percent }}%)
-			          			</ul>
+			          			<h2 class="subtitle is-4 mb-2">Personen</h2>
+			          			<p>
+			          				Gesamtzahl: {{ people.count }}<br>
+			          				Kaution bezahlt: {{ people.paid_deposit.count }} ({{ people.paid_deposit_percent }}%)<br>
+			          				Mit Ausleihen: {{ people.active_issues.count }} ({{ people.active_issues_percent }}%)<br>
+			          			</p>
 			          		</div>
 			          	</div>
 						<div class="divider is-vertical is-right" style="margin-left: 5px;margin-right: 5px;"></div>
 		        		<div class="column" style="padding-left: 0.75rem;padding-bottom: 0.75rem;">
 			        		<div class="content">
-			        			<h2 class="subtitle is-4">Personen</h2>
+			        			<h2 class="subtitle is-4 mb-2">Personen</h2>
 
 			          			<p>Anzahl Schlüssel: {{ keys.count }} - davon aktuell ausgeliehen {{ keys.currently_issued.count }} ({{ keys.currently_issued_percent }}%)- davon gestohlen: {{ keys.stolen.count }}</p>
 			          		</div>

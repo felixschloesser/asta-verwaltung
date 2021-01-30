@@ -70,12 +70,12 @@ class PersonManager(models.Manager):
         percent = self.paid_deposit().count() / self.count() * 100
         return int(percent)
 
-    def active_issues_percent(self, *args, **kwargs):
+    def active_issues_percent(self):
         percent = self.active_issues().count() / self.count() * 100
         return int(percent)
 
     def get_person(self, id):
-        return self.filter(id__exact=id, *args, **kwargs).get()
+        return self.filter(id__exact=id).get()
 
 
 class IssueManager(models.Manager):

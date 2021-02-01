@@ -167,8 +167,8 @@ STATIC_URL = '/static/'
 # Logging Configuration
 
 # Clear prev config
-LOGGING_CONFIG = None
-LOGLEVEL = os.getenv('DJANGO_LOGLEVEL', 'info').upper()
+#LOGGING_CONFIG = None
+#LOGLEVEL = os.getenv('DJANGO_LOGLEVEL', 'debug').upper()
 
 # Logging
 LOGGING = {

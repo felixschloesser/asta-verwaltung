@@ -50,7 +50,7 @@
     <nav class="level is-max-desktop noprint">
         <div class="level-left">
             <div class="level-item">
-                <a class="button is-link is-outlined" href="{% url 'keys:person-detail' pk=deposit.person.id %}">Zurück zur Person</a>
+                <a class="button is-link is-outlined" href={% url 'keys:person-detail' pk=deposit.person.id %}>Zurück zur Person</a>
             </div>
         </div>
         <div class="level-right">
@@ -59,14 +59,14 @@
             </div>
             {% if deposit.state == 'in' %}
                 <div class="level-item">
-                    <a class="button is-warning" href="{% url 'keys:deposit-retain' pk=deposit.person.id %}">Einbehalten</a>
+                    <a class="button is-warning" href={% url 'keys:deposit-retain' pk_p=deposit.person.id pk_d=deposit.id  %}>Einbehalten</a>
                 </div>
                 <div class="level-item">
-                    <a class="button is-success" href="{% url 'keys:deposit-return' pk=deposit.person.id %}">Zurückgeben</a>
+                    <a class="button is-success" href={% url 'keys:deposit-return' pk_p=deposit.person.id pk_d=deposit.id %}>Zurückgeben</a>
                 </div>
             {% elif deposit.state == 'retained' %}
                 <div class="level-item">
-                    <a class="button is-warning" href="{% url 'keys:deposit-return' pk=deposit.person.id %}">Zurückgeben</a>
+                    <a class="button is-warning" href={% url 'keys:deposit-return' pk_p=deposit.person.id pk_d=deposit.id %}>Zurückgeben</a>
                 </div>
             {% endif %}
         </div>

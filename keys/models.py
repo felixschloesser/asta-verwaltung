@@ -323,6 +323,7 @@ class Person(models.Model): # Add a chron job ro delete after a 2 years of not r
         constraints = [
             models.CheckConstraint(
                 name='emails_not_the_same',
+                # ~ == NOT
                 check=~models.Q(university_email__iexact=models.F('private_email'))
             )
         ]
@@ -338,10 +339,14 @@ class Person(models.Model): # Add a chron job ro delete after a 2 years of not r
         return "{} {}".format(self.first_name, self.last_name)
 
     def paid_deposit(self):
-        if hasattr(self, 'deposit') and self.deposit.state == 'in':
-            return True
+        if hasattr(self, 'deposits'):
+            if self.all_deposits.active():
+                return True
         else:
             return False
+
+    def get_active_deposit(self):
+        return self.deposits.active().get()
 
 
     def get_active_issues(self):
@@ -354,6 +359,8 @@ class Person(models.Model): # Add a chron job ro delete after a 2 years of not r
 
 
 class Deposit(models.Model):
+    id = HashidAutoField(primary_key=True)
+
     state_choices = [('in', 'Eingezahlt'),
                      ('retained', 'Einbehalten'),
                      ('out', 'Ausgezahlt')]
@@ -365,7 +372,7 @@ class Deposit(models.Model):
 
     state = models.CharField('Status', max_length=8, choices=state_choices, default='in')
 
-    person = models.OneToOneField('Person', verbose_name='Person', on_delete=models.PROTECT)
+    person = models.ForeignKey('Person', related_name='deposits', verbose_name='Person', on_delete=models.PROTECT)
     amount = models.DecimalField('Betrag', max_digits=5, decimal_places=2, default=50, 
                                            validators=[validate_deposit_mail], blank=True)
 
@@ -390,6 +397,9 @@ class Deposit(models.Model):
     created_at = models.DateTimeField('Erstellungszeitpunkt', auto_now_add=True)
     updated_at = models.DateTimeField('Aktualisierungszeitpunkt', auto_now=True)
 
+
+    all_deposits = DepositManager()
+
     class Meta:
         verbose_name = "Kaution"
         verbose_name_plural = "Kautionen"
@@ -406,6 +416,11 @@ class Deposit(models.Model):
                                                  retained_datetime__isnull=False) | \
                       models.Q(state='out', out_datetime__isnull=False,
                                             out_method__isnull=False)
+            ),
+            models.UniqueConstraint(
+                name='only_one_active_deposit',
+                fields=['person'],
+                condition=models.Q(state='in'),
             ),
             models.CheckConstraint(
                 name='take_in_deposit_before_give_out',
@@ -435,7 +450,7 @@ class Deposit(models.Model):
             return 'durch Überweisung'
 
     def get_absolute_url(self):
-        return reverse('keys:deposit-detail', args=[str(self.person.id)])
+        return reverse('keys:deposit-detail', kwargs={'pk_p': self.person.id, 'pk_d': self.id })
 
 
 

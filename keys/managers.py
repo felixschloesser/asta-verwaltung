@@ -49,14 +49,14 @@ class KeyManager(models.Manager):
 class PersonManager(models.Manager):
     def get_queryset(self):
         qs = super().get_queryset()
-        return qs.select_related('group', 'deposit').prefetch_related('issues')
+        return qs.select_related('group').prefetch_related('issues')
 
     # Returning QuerrySets
     def paid_deposit(self, *args, **kwargs):
-        return self.filter(deposit__state__exact='in').filter(*args, **kwargs)
+        return self.filter(deposits__state__exact='in').filter(*args, **kwargs)
 
     def not_paid_deposit(self, *args, **kwargs):
-        return self.exclude(deposit__state__exact='in').filter(*args, **kwargs)
+        return self.exclude(deposits__state__exact='in').filter(*args, **kwargs)
 
 
     def active_issues(self, *args, **kwargs):
@@ -78,6 +78,22 @@ class PersonManager(models.Manager):
         return self.filter(id__exact=id).get()
 
 
+
+class DepositManager(models.Manager):
+    def get_queryset(self):
+        qs = super().get_queryset()
+        return qs.select_related('person')
+
+
+    def active(self, *args, **kwargs):
+        # the method accepts **kwargs, so that it is possible to filter
+        # active issues
+        # i.e: Issue.all_issues.active(insertion_date__gte=datetime.now)
+        return self.filter(state='in', *args, **kwargs)
+
+
+
+
 class IssueManager(models.Manager):
     def get_queryset(self):
         qs = super().get_queryset()
@@ -88,3 +104,5 @@ class IssueManager(models.Manager):
         # active issues
         # i.e: Issue.all_issues.active(insertion_date__gte=datetime.now)
         return self.filter(active=True, *args, **kwargs)
+
+

@@ -39,7 +39,7 @@
                 </div>
 
     			<span class="buttons is-right">
-    	            <a class="button" href={% url 'keys:deposit-detail' pk=deposit.person.id %}>Abbrechen</a >
+    	            <a class="button" href={% url 'keys:deposit-detail' pk_p=deposit.person.id pk_d=deposit.id %}>Abbrechen</a >
     	            <input class="button is-warning" type="submit" value="Einbehalten">
     	        </span>
             </form>
@@ -47,7 +47,7 @@
         <h1 class="title is-2">Fehler!</h1>
         <p>Kaution nicht eingezahlt!</p>
         <div class="control">
-            <a class="button" href={% url 'keys:deposit-detail' pk=deposit.person.id %}>Zurück</a >
+            <a class="button" href={% url 'keys:deposit-detail' pk_p=deposit.person.id pk_d=deposit.id %}>Zurück</a >
         </div>
         {% endif %}
     </div>

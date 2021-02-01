@@ -89,7 +89,7 @@ class KeyLost(SuccessMessageMixin, LoginRequiredMixin, generic.UpdateView):
         if self.object.issues.active():
             person = self.object.issues.active().get().person
             if person.paid_deposit():
-                return reverse_lazy('keys:deposit-detail',  args=[person.id])
+                return reverse_lazy('keys:deposit-detail',  kwargs={'pk_p': person.id})
             else:
                 return reverse_lazy('keys:person-detail',  args=[person.id])
 
@@ -183,57 +183,52 @@ class PersonUpdate(SuccessMessageMixin, LoginRequiredMixin, generic.UpdateView):
 
 
 #  Deposit
-class DepositMixin:
-    def get_object(self, queryset=None):
-        """
-        Get the deposit from the person-pk in the urlpattern.
-        """
-        queryset = self.get_queryset()
-        pk = self.kwargs.get(self.pk_url_kwarg)
-        obj = queryset.filter(person__id=pk).get()
-        return obj
-
-    def get_context_data(self, **kwargs):
-        """
-        Get the current person from the request and add it to the context so that the tempalte can access it.
-        """
-        context = super().get_context_data(**kwargs)
-        person = Person.all_people.filter(pk=self.kwargs.get('pk')).get()
-        context["person"] = person
-        return context
-
+class DepositMixin:    
     def get_success_url(self):
         return reverse_lazy('keys:person-detail',  args=[self.object.person.id])
 
 
 class DepositDetail(DepositMixin, LoginRequiredMixin, generic.DetailView):
     model = Deposit
+    pk_url_kwarg = 'pk_d'
 
 
 
-class DepositCreate(DepositMixin, SuccessMessageMixin, LoginRequiredMixin, generic.CreateView):
+class DepositCreate(SuccessMessageMixin, LoginRequiredMixin, generic.CreateView):
     model = Deposit
     form_class = DepositCreateForm
     initial = {'in_method': 'cash'}
     success_message = "Kaution von %(amount)s %(currency)s erfolgreich hinzugefügt."
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        pk = self.kwargs.get('pk')
+        person = Person.all_people.filter(pk=pk).get()
+        context["person"] = person
+        return context
 
     def form_valid(self, form):
         """
         Before validating the form, populate the person field using the request primary key as a lookup for
         """
         self.object = form.save(commit=False)
-        self.object.person = Person.all_people.filter(pk=self.kwargs.get('pk')).get()
+        pk = self.kwargs.get('pk')
+        self.object.person = Person.all_people.filter(pk=pk).get()
         self.object.in_datetime = timezone.now()
         self.object.save()
         logging.debug("Polulated the forms person field.")
         return super().form_valid(form)
 
 
+
+
 class DepositRetain(DepositMixin, SuccessMessageMixin, LoginRequiredMixin, generic.UpdateView):
     model = Deposit
+    pk_url_kwarg = 'pk_d'
     form_class = DepositRetainForm
     template_name_suffix = '_confirm_retain'
     success_message = "Kaution von erfolgreich einbehalten."
+
 
     def form_valid(self, form):
         """
@@ -247,13 +242,14 @@ class DepositRetain(DepositMixin, SuccessMessageMixin, LoginRequiredMixin, gener
         return super().form_valid(form)
 
 
-class DepositReturn(DepositMixin, SuccessMessageMixin, LoginRequiredMixin, generic.UpdateView):
+class DepositReturn(SuccessMessageMixin, LoginRequiredMixin, generic.UpdateView):
     model = Deposit
+    pk_url_kwarg = 'pk_d'
     form_class = DepositReturnForm
     template_name = 'keys/deposit_return_form.html'
     initial = {'out_method': 'cash'}
     success_message = "Kaution erfolgreich zurückgegeben."
-
+  
 
     def form_valid(self, form):
         """
@@ -269,6 +265,8 @@ class DepositReturn(DepositMixin, SuccessMessageMixin, LoginRequiredMixin, gener
 
 class DepositDelete(DepositMixin, LoginRequiredMixin, generic.DeleteView):
     model = Deposit
+    pk_url_kwarg = 'pk_d'
+
 
 
 # Rooms

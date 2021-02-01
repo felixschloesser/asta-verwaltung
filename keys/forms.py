@@ -27,6 +27,7 @@ class PersonCreateForm(forms.ModelForm):
             self.add_error('private_email', msg)
 
 
+
 class DepositCreateForm(forms.ModelForm):
     class Meta:
         model = Deposit
@@ -39,6 +40,8 @@ class DepositCreateForm(forms.ModelForm):
             'comment': forms.Textarea(attrs={'cols': 80, 'rows': 3}),
         }
 
+
+
 class DepositRetainForm(forms.ModelForm):
     class Meta:
         model = Deposit
@@ -47,6 +50,7 @@ class DepositRetainForm(forms.ModelForm):
         widgets = {
             'comment': forms.Textarea(attrs={'cols': 80, 'rows': 3}),
         }
+
 
 
 class DepositReturnForm(forms.ModelForm):
@@ -58,6 +62,8 @@ class DepositReturnForm(forms.ModelForm):
         widgets = {
             'comment': forms.Textarea(attrs={'cols': 80, 'rows': 3}),
         }
+
+
 
 class IssueForm(forms.ModelForm):
     class Meta:
@@ -71,10 +77,9 @@ class IssueForm(forms.ModelForm):
             'comment': forms.Textarea(attrs={'cols': 80, 'rows': 3}),
         }
 
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        #self.fields['key'].queryset = Key.all_keys.availible()
+        self.fields['key'].queryset = Key.all_keys.availible()
 
     def clean(self):
         cleaned_data = super().clean()

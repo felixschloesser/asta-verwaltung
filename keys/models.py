@@ -340,7 +340,7 @@ class Person(models.Model): # Add a chron job ro delete after a 2 years of not r
 
     def paid_deposit(self):
         if hasattr(self, 'deposits'):
-            if self.all_deposits.active():
+            if self.deposits.active():
                 return True
         else:
             return False
@@ -475,20 +475,20 @@ class Issue(models.Model):
                                related_name="issues",
                                verbose_name='Person',
                                on_delete=models.PROTECT)
-    #limit_key_choices = models.Q(issues__active=False, stolen_or_lost=False)
+    limit_key_choices = models.Q(issues__active=False, stolen_or_lost=False)
     #!BUG duplication https://code.djangoproject.com/ticket/11707
     # still not fixed in 3.1.5?
 
     key = models.ForeignKey('Key', related_name="issues",
                             verbose_name='Schlüssel',
-                            on_delete=models.PROTECT)
-                            #limit_choices_to=limit_key_choices)
+                            on_delete=models.PROTECT,
+                            limit_choices_to=limit_key_choices)
 
     out_date = models.DateField('Ausgabedatum',
                                 default=timezone.now,
                                 validators=[present_or_max_10_days_ago])
     in_date = models.DateField('Rückgabedatum',
-                                null=True,
+                                null=True, blank=True,
                                 validators=[present_or_max_10_days_ago])
     comment = models.CharField('Kommentar', max_length=500, null=True, blank=True)
 

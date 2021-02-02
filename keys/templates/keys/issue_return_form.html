@@ -7,12 +7,11 @@
 
 {% block content %}
 <div class="container is-max-desktop">
-
     <h1 class="title is-2">{{ issue.key }} zurückgeben</h1>
 
     <article class="message is-info">
       <div class="message-body">
-        Bitte den nach der Rückgabe zurück in den <strong>{{ issue.key.storage_location }}</strong> legen.
+        Bitte nach der Rückgabe zurück in den <strong>{{ issue.key.storage_location }}</strong> legen.
       </div>
     </article>
     <p>
@@ -55,7 +54,6 @@
                 <p class="help is-danger">{{ error }}</p>
             {% endfor %}
         </div>
-
 
         <div class="buttons is-right">
             <div class="control">

@@ -106,3 +106,5 @@ class IssueManager(models.Manager):
         return self.filter(active=True, *args, **kwargs)
 
 
+
+

@@ -1,5 +1,9 @@
 {% extends "keys/base.html" %}
 
+{% block additional_css %}
+    <script src="https://kit.fontawesome.com/ddea523bff.js" crossorigin="anonymous"></script>
+{% endblock %}
+
 {% block content %}
 <div class="container is-max-desktop">
     <nav class="level">
@@ -37,6 +41,8 @@
                          <th>Nummer</th>
                          <th>Schließsystem</th>
                          <th>Türen</th>
+                         <th>Status</th>
+
                     </thead>
 
                     <tbody>
@@ -53,6 +59,20 @@
                                     {{ room }}{% if not forloop.last %}, {% endif %}
                                 {% endfor %}
                             </td>
+                            <td data-label="Status">
+                                {% if key.stolen_or_lost %}
+                                    <span class="icon has-text-danger">
+                                        <i class="far fa-lg fa-question-circle"></i>
+                                    </span>
+                                {% elif key.get_current_issue %}
+                                    <span class="icon has-text-info">
+                                        <i class="far fa-lg fa-times-circle"></i> 
+                                    </span>                                
+                                {% else %}
+                                    <span class="icon has-text-success">
+                                        <i class="far fa-lg fa-check-circle"></i>
+                                    </span>
+                                {% endif %}</td>
                         </tr>
                     {% endfor %}
                     </tbody>

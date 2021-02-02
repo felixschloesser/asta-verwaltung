@@ -25,6 +25,8 @@
   },
   "dependencies": {
     "@creativebulma/bulma-tooltip": "^1.2.0",
+    "@fortawesome/fontawesome-free": "^5.15.2",
+    "bulma-checkradio": "^1.1.1",
     "bulma-extensions": "^6.2.7",
     "bulma-responsive-tables": "^1.2.3",
     "gulp": "^4.0.2",

@@ -166,8 +166,12 @@ class PersonCreate(SuccessMessageMixin, LoginRequiredMixin, generic.CreateView):
 
 class PersonDetail(LoginRequiredMixin, generic.DetailView):
     model = Person
-
-
+  
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        keys = Key.all_keys
+        context["keys"] = keys
+        return context
 
 class PersonUpdate(SuccessMessageMixin, LoginRequiredMixin, generic.UpdateView):
     model = Person
@@ -191,6 +195,7 @@ class DepositMixin:
 class DepositDetail(DepositMixin, LoginRequiredMixin, generic.DetailView):
     model = Deposit
     pk_url_kwarg = 'pk_d'
+
 
 
 
@@ -354,7 +359,6 @@ class IssueDetail(LoginRequiredMixin, generic.DetailView):
 class IssueNew(SuccessMessageMixin, LoginRequiredMixin, generic.CreateView):
     model = Issue
     form_class = IssueForm
-
     success_message = "Ausgabe von %(key)s erfolgreich angelegt."
 
     def get_context_data(self, **kwargs):
@@ -367,8 +371,6 @@ class IssueNew(SuccessMessageMixin, LoginRequiredMixin, generic.CreateView):
         if person_id:
             person = Person.all_people.get_person(person_id)
             context['person'] = person
-            keys = Key.all_keys.availible()
-            context['keys'] = keys
         return context
 
     def form_valid(self, form):
@@ -394,7 +396,7 @@ class IssueReturnList(LoginRequiredMixin, generic.ListView):
 
 
 
-class IssueReturn(LoginRequiredMixin, generic.UpdateView):
+class IssueReturn(SuccessMessageMixin, LoginRequiredMixin, generic.UpdateView):
     model = Issue
     form_class = IssueReturnForm
     template_name_suffix ='_return_form'
@@ -411,3 +413,11 @@ class IssueReturn(LoginRequiredMixin, generic.UpdateView):
         logging.debug("Before validating the form, set active to False")
         return super().form_valid(form)
 
+    def get_success_url(self):
+        return reverse_lazy('keys:person-detail',  args=[self.object.person.id])
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message % dict(
+            cleaned_data,
+            key=self.object.key,
+        )

@@ -1,8 +1,0 @@
-@media print{
-    body{
-        background: white;
-        font-size:10px !important;
-    }
-    .noprint{display:none !important;}
-    .print{display: block !important;}
-}

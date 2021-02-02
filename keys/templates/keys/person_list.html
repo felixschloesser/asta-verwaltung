@@ -67,8 +67,8 @@
                                     {{ person.group }}
                                 </td>
                                 <td data-label="Kaution bezahlt">
-                                    {% if not person.deposit.out_datetime %}
-                                    {{ person.deposit.in_datetime|date:"SHORT_DATE_FORMAT"|default:'-' }}
+                                    {% if person.paid_deposit %}
+                                    {{ person.get_active_deposit.in_datetime|date:"SHORT_DATE_FORMAT"|default:'-' }}
                                     {% else %}
                                     -
                                     {% endif%}

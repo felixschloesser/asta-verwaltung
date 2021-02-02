@@ -13,9 +13,11 @@
 
         <!-- CSS -->
         <link rel="stylesheet" href="{% static 'css/style.css' %}">
+        {% block additional_css%}{% endblock %}
 
         <!-- JS -->
         <script src={% static 'js/main.js' %}></script>
+        {% block additional_js %}{% endblock %}
 
     </head>
     <body class="is-flex is-flex-direction-column" style="min-height: 100vh;">
@@ -65,10 +67,6 @@
                 </p>
             </div>
         </footer>
-
-        {% block additional_js %}
-        <!--Additional JS-->
-        {% endblock %}
     </body>
 </html>
 

@@ -131,7 +131,7 @@ class GroupAdmin(admin.ModelAdmin):
 
 @admin.register(Issue)
 class IssueAdmin(admin.ModelAdmin):
-    list_display = ['person', 'key', 'out_date', 'updated_at']
+    list_display = ['person', 'key', 'out_date', 'in_date']
     list_filter = ['out_date', 'updated_at']
 
     search_fields = ['person__first_name', 'person__last_name', 'key__number']

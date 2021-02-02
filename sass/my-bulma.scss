@@ -35,9 +35,10 @@ $navbar-breakpoint: $tablet;
 // Bulma Divider
 @import "../node_modules/@creativebulma/bulma-divider/src/sass/index.sass";
 
+
+
 // Bulma Responsive Tables
 @import "../node_modules/bulma-responsive-tables/bulma-responsive-tables";
-
  
 // Bulma Responsive Tables
 @import "node_modules/bulma/bulma";
@@ -45,3 +46,6 @@ $navbar-breakpoint: $tablet;
 
 // Set external component variables
 $divider-background-color: $dark;
+
+// Bulma Checkradio
+@import "../node_modules/bulma-extensions/bulma-checkradio/src/sass/index.sass";

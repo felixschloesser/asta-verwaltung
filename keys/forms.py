@@ -79,18 +79,18 @@ class IssueForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['key'].queryset = Key.all_keys.availible()
+        self.fields['key'].queryset = Key.all_keys.not_currently_issued(stolen_or_lost=False)
 
     def clean(self):
         cleaned_data = super().clean()
         key = cleaned_data.get("key")
+        logging.debug("Cleaned Key: {}".format(key))
         if key:
-            current_issue = key.get_current_issue()
-            if current_issue:
+            if key.get_current_issue():
                 raise ValidationError(("Schlüssel ist momentan \
-                                        an {} verliehen".format(current_issue.person)),
+                                        an {} verliehen".format(key.get_current_issue().person)),
                                         code='key-not-returned')
-
+      
 
 
 class IssueReturnForm(forms.ModelForm):
@@ -101,7 +101,7 @@ class IssueReturnForm(forms.ModelForm):
 
 
         widgets = {
-            'in_date': forms.widgets.DateInput(attrs={'type': 'date'}),
+            'in_date': forms.widgets.DateInput(attrs={'type': 'date', 'required':'required'}),
             'comment': forms.Textarea(attrs={'cols': 80, 'rows': 3}),
         }
 

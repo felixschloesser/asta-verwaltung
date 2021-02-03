@@ -97,7 +97,7 @@ class DepositManager(models.Manager):
 class IssueManager(models.Manager):
     def get_queryset(self):
         qs = super().get_queryset()
-        return qs.select_related('person', 'key')
+        return qs.select_related('person', 'key', 'key__locking_system')
 
     def active(self, *args, **kwargs):
         # the method accepts **kwargs, so that it is possible to filter

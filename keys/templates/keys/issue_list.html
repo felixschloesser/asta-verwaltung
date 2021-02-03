@@ -20,7 +20,7 @@
         <!-- Left side -->
         <div class="level-left">
             <div class="level-item">
-                <h1 class='title is-2'>{% if not request.GET.r %}Aktuelle {% endif %}Ausleihen</h1>
+                <h1 class='title is-2'>Ausleihen</h1>
             </div>
         </div>
         <!-- Right side -->
@@ -44,6 +44,22 @@
             </div>
         </div>
     </nav>
+
+    <div class="tabs is-left is-boxed">
+      <ul>
+        <li class="is-active">
+          <a href={% url 'keys:issue-list' %}>
+            <span>Aktiv</span>
+          </a>
+        </li>
+        <li>
+          <a href={% url 'keys:issue-all-list' %}>
+            <span>Alle</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
 
     {% if issue_list %}
     <div class="container">
@@ -86,12 +102,6 @@
 
     {% if is_paginated %}
         {% include 'keys/pagination.html' %}
-    {% endif %}
-
-    {% if not request.GET.r %}
-        <div class="control py-5">
-            <a class="button", href="{% url 'keys:issue-list' %}?r=1">Vergangene anzeigen</a>
-        </div>
     {% endif %}
 </div>
 

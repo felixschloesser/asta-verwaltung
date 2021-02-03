@@ -33,8 +33,8 @@ urlpatterns = [
 
 
     path('issues', views.IssueList.as_view(), name='issue-list'),
+    path('issues/all', views.IssueAllList.as_view(), name='issue-all-list'),
     path('issues/search', views.IssueSearchResults.as_view(), name='issue-search-results'),
-    path('issues/return', views.IssueReturnList.as_view(), name='issue-return-list'),
     path('issue/new', views.IssueNew.as_view(), name='issue-new'),
     path('issue/<str:pk>', views.IssueDetail.as_view(), name='issue-detail'),
     path('issue/<str:pk>/return', views.IssueReturn.as_view(), name='issue-return'),

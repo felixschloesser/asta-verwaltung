@@ -3,7 +3,6 @@
         {% if page_obj.has_previous %}
             href="?page={{ page_obj.previous_page_number }}"
         {% else %}
-            title="Dies ist die erste Seite."
             disabled
         {% endif %}>
         Vorherige
@@ -12,7 +11,6 @@
         {% if page_obj.has_next %}
             href="?page={{ page_obj.next_page_number }}"
         {% else %}
-            title="Dies ist die letzte Seite."
             disabled
         {% endif %}>
         Nächste Seite
@@ -22,23 +20,32 @@
             <li>
                 <a class="pagination-link" aria-label="Goto page 1" href="?page=1">1</a>
             </li>
-            <li>
-                <span class="pagination-ellipsis">&hellip;</span>
-            </li>
-            <li>
-                <a class="pagination-link" aria-label="Goto page {{ page_obj.previous_page_number }}" href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
-            </li>
+            {% if page_obj.previous_page_number == 2 %}
+                <li>
+                    <a class="pagination-link" aria-label="Goto page 2" href="?page=2">2</a>
+                </li>
+            {% elif page_obj.previous_page_number >= 3 %}
+                <li>
+                    <span class="pagination-ellipsis">&hellip;</span>
+                </li>
+                <li>
+                    <a class="pagination-link" aria-label="Goto page {{ page_obj.previous_page_number }}" href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+                </li>
+            {% endif %}
         {% endif %}
-            <li>
-                <a class="pagination-link is-current" aria-label="Page {{ page_obj.number }}" aria-current="page">{{ page_obj.number }}</a>
-            </li>
+        <li>
+            <a class="pagination-link is-current" aria-label="Page {{ page_obj.number }}" aria-current="page">{{ page_obj.number }}</a>
+        </li>
         {% if page_obj.has_next %}
-            <li>
-                <a class="pagination-link" aria-label="Goto page {{ page_obj.next_page_number }}" href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
-            </li>
-            <li>
-                <span class="pagination-ellipsis">&hellip;</span>
-            </li>
+            {% if page_obj.next_page_number|add:"2" <= page_obj.paginator.num_pages %}
+                <li>
+                    <span class="pagination-ellipsis">&hellip;</span>
+                </li>
+            {% elif page_obj.next_page_number|add:"1" == page_obj.paginator.num_pages %}
+                <li>
+                    <a class="pagination-link" aria-label="Goto page {{ page_obj.next_page_number }}" href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+                </li>
+            {% endif %}
             <li>
                 <a class="pagination-link" aria-label="Goto page {{ page_obj.paginator.num_pages }}" href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
             </li>

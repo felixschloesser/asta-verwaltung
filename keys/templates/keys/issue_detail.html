@@ -26,7 +26,7 @@
         <p><strong>An:</strong> <a href="{% url 'keys:person-detail' pk=issue.person.id %}">{{ issue.person }}, {{ issue.person.group }}</a></p>
         <p><strong>Zugang zu:</strong> {% for room in issue.key.get_rooms %}{{room}}{% if not forloop.last %}, {% endif %}{% endfor %}</a></p>
         <p><strong>Ausgabedatum:</strong> {{ issue.out_date |date:"l, d. F Y" }}</p>
-        {% if issue.in_date %}
+        {% if not issue.active %}
             <p><strong>Rückgabedatum:</strong> {{ issue.in_date |date:"l, d. F Y"}}</p>
         {% endif %}
         {% if issue.comment %}
@@ -37,7 +37,11 @@
     <nav class="level is-max-desktop noprint">
         <div class="level-left">
             <div class="level-item">
-                <a class="button is-link is-outlined" href="{% url 'keys:issue-list' %}">Zurück zur Liste</a>
+                {% if issue.active %}
+                    <a class="button is-link is-outlined" href="{% url 'keys:issue-list' %}">Zurück zur Liste</a>
+                {% else %}
+                    <a class="button is-link is-outlined" href="{% url 'keys:issue-all-list' %}">Zurück zur Liste</a>
+                {% endif %}
             </div>
         </div>
         <div class="level-right">
@@ -45,18 +49,18 @@
                 <button class="button is-info" onclick="window.print()">Drucken</button>
             </div>
 
-            {% if not issue.key.stolen_or_lost %}
+            {% if not issue.key.stolen_or_lost and issue.active %}
                 <div class="level-item">
-                    <a class="button is-warning" href="{% url 'keys:key-lost' object.key.id  %}" >Verloren/Gestohlen</a>
+                    <a class="button is-warning" href="{% url 'keys:key-lost' object.key.id  %}">Verloren/Gestohlen</a>
                 </div>
                 <div class="level-item">
                     {% if issue.active %}
-                        <a class="button is-primary" href="{% url 'keys:issue-return' object.id  %}" >Zurückgeben</a>
+                        <a class="button is-primary" href="{% url 'keys:issue-return' object.id  %}">Zurückgeben</a>
                     {% endif %}
                 </div>
-            {% else %}
+            {% elif issue.active %}
                 <div class="level-item">
-                    <a class="button is-warning" href="{% url 'keys:key-found' object.key.id  %}" >Gefunden</a>
+                    <a class="button is-warning" href="{% url 'keys:key-found' object.key.id  %}">Gefunden</a>
                 </div>
             {% endif %}
 

@@ -310,19 +310,14 @@ class RoomDetail(LoginRequiredMixin, generic.DetailView):
 
 # Issues
 class IssueList(LoginRequiredMixin, generic.ListView):
-    model = Issue
+    queryset = Issue.all_issues.active()
     paginate_by = 20
 
-    def get_queryset(self):
-        # Alter the queryset of the list view, so that it only contains the issues
-        # that have not yet been returend
-        also_show_returned = self.request.GET.get('r')
-        if not also_show_returned:
-            issue_list = Issue.all_issues.active()
-        else:
-            issue_list = Issue.all_issues.all()
 
-        return issue_list
+class IssueAllList(LoginRequiredMixin, generic.ListView):
+    model = Issue
+    paginate_by = 20
+    template_name_suffix ='_all_list'
 
 
 
@@ -335,18 +330,11 @@ class IssueSearchResults(LoginRequiredMixin, generic.ListView):
         # Alter the queryset of the list view, so that it only contains the entries
         # of the Issues where matching the search query in the get request
         query = self.request.GET.get('q','')
-        show_returned = self.request.GET.get('r','')
 
-        if show_returned:
-            issue_list = Issue.all_issues.filter(models.Q(person__first_name__icontains=query) |
-                                              models.Q(person__last_name__icontains=query) |
-                                              models.Q(key__number__startswith=query)
-                                             )
-        else:
-            issue_list = Issue.all_issues.active(models.Q(person__first_name__icontains=query) |
-                                            models.Q(person__last_name__icontains=query) |
-                                            models.Q(key__number__startswith=query),
-                                           )
+        issue_list = Issue.all_issues.filter(models.Q(person__first_name__icontains=query) |
+                                             models.Q(person__last_name__icontains=query) |
+                                             models.Q(key__number__startswith=query),
+                                            )
         return issue_list
 
 
@@ -387,12 +375,6 @@ class IssueNew(SuccessMessageMixin, LoginRequiredMixin, generic.CreateView):
 
     def get_success_url(self):
         return reverse_lazy('keys:person-detail',  args=[self.object.person.id])
-
-
-
-class IssueReturnList(LoginRequiredMixin, generic.ListView):
-    model = Issue
-    paginate_by = 20
 
 
 

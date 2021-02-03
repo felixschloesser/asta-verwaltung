@@ -1,12 +1,26 @@
 {% extends "keys/base.html" %}
 
+{% block title %} Ausleihen | Schlüsselsystem{% endblock %}
+
 {% block content %}
 <div class="container is-max-desktop">
+
+     {% if messages %}
+        {% for message in messages %}
+        <article class="message is-success">
+            <div class="message-body">
+                {{ message }}
+            </div>
+        </article>
+        {% endfor %}
+    {% endif %}
+
+
     <nav class="level">
         <!-- Left side -->
         <div class="level-left">
             <div class="level-item">
-                <h1 class='title is-2'>Ausleihensuche{% if request.GET.q %}: {{ request.GET.q }}{% endif %}</h1>
+                <h1 class='title is-2'>Ausleihen</h1>
             </div>
         </div>
         <!-- Right side -->
@@ -15,7 +29,7 @@
                 <div class="field has-addons">
                     <div class="control">
                         <form action={% url 'keys:issue-search-results' %} method='get'>
-                            <input class="input" name='q' type="text" placeholder="Person/Schlüsselnr." required>
+                            <input class="input" name='q' type="text" placeholder="Schlüsselnr./Person" required>
                     </div>
                     <div class="control">
                         <button type='submit' class="button is-info">
@@ -25,8 +39,27 @@
                     </div>
                 </div>
             </div>
+            <div class="level-item">
+
+            </div>
         </div>
     </nav>
+
+    <div class="tabs is-left is-boxed">
+      <ul>
+        <li>
+          <a href={% url 'keys:issue-list' %}>
+            <span>Aktiv</span>
+          </a>
+        </li>
+        <li class="is-active">
+          <a href={% url 'keys:issue-all-list' %}>
+            <span>Alle</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
 
     {% if issue_list %}
     <div class="container">
@@ -43,9 +76,9 @@
 
                     <tbody>
                     {% for issue in issue_list %}
-                        <tr>
+                        <tr style="cursor:pointer;" onclick="location.href='{{ issue.get_absolute_url }}'">
                             <td data-label="Schlüssel">
-                                <a href="{{ issue.get_absolute_url }}"> {{ issue.key }}</a>
+                                {{ issue.key }}
                             </td>
                             <td data-label="Person">
                                 {{ issue.person }}
@@ -54,7 +87,7 @@
                                 {{ issue.out_date }}
                             </td>
                             <td data-label="Rückgabedatum">
-                                {{ issue.in_date|default_if_none:'- ' }}
+                                {{ issue.in_date|default_if_none:'-' }}
                             </td>
                         </tr>
                     {% endfor %}
@@ -64,16 +97,12 @@
         </div>
     </div>
     {% else %}
-        <p>Keine Ausleihen {% if request.GET.q %}mit Person oder Schlüsselnummer <em>{{ request.GET.q }}</em> gefunden.</p>{% endif %}
+        <p>Keine Ausleihen gefunden.</p>
     {% endif %}
-
 
     {% if is_paginated %}
         {% include 'keys/pagination.html' %}
     {% endif %}
-
-
-
 </div>
 
 {% endblock %}

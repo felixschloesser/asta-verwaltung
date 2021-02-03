@@ -15,25 +15,29 @@
 		      <div class="content">
 		        <p class="title mb-4">Ausleihen</p>
 		        <div class="content">
-		          <table class="table is-hoverable" style="background-color: whitesmoke;">
-		          	<thead>
-                         <th>Schlüssel</th>
-                         <th>Person</th>
-                    </thead>
+		        	{% if issue_list %}
+			         	<table class="table is-hoverable" style="background-color: whitesmoke;">
+				          	<thead>
+		                         <th>Schlüssel</th>
+		                         <th>Person</th>
+		                    </thead>
 
-                    <tbody>
-                    {% for issue in issue_list %}
-                        <tr style="cursor:pointer;" onclick="location.href='{{ issue.get_absolute_url }}'">
-                            <td>
-                                {{ issue.key }}
-                            </td>
-                            <td>
-                                {{ issue.person }}
-                            </td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-		          </table>
+		                    <tbody>
+		                    {% for issue in issue_list %}
+		                        <tr style="cursor:pointer;" onclick="location.href='{{ issue.get_absolute_url }}'">
+		                            <td>
+		                                {{ issue.key }}
+		                            </td>
+		                            <td>
+		                                {{ issue.person }}
+		                            </td>
+		                        </tr>
+		                    {% endfor %}
+		                    </tbody>
+			         	</table>
+			         {% else %}
+			         	<p>Keine aktiven Ausleihen.</p>
+			         {% endif %}
 		        </div>
 		      </div>
 		    </article>

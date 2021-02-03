@@ -40,10 +40,8 @@
         {% endfor %}
     </div>
 
-    <div class="block">
     <div class="content">
-    <h2 class="subtitle is-4">Aktuelle Ausleihen:</h2>
-
+        <h2 class="subtitle is-4">Aktuelle Ausleihen:</h2>
         <ul>
         {% for issue in person.get_active_issues %}
             <li>
@@ -60,7 +58,6 @@
             keine.
         {% endfor %}
         </ul>
-
     </div>
         <nav class="level">
             <div class="level-lelft">

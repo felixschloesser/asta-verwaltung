@@ -111,9 +111,11 @@
 						<div class="divider is-vertical is-right" style="margin-left: 5px;margin-right: 5px;"></div>
 		        		<div class="column" style="padding-left: 0.75rem;padding-bottom: 0.75rem;">
 			        		<div class="content">
-			        			<h2 class="subtitle is-4 mb-2">Personen</h2>
-
-			          			<p>Anzahl Schlüssel: {{ keys.count }} - davon aktuell ausgeliehen {{ keys.currently_issued.count }} ({{ keys.currently_issued_percent }}%)- davon gestohlen: {{ keys.stolen.count }}</p>
+			        			<h2 class="subtitle is-4 mb-2">Gruppen</h2>
+			          			<p>
+			          				Gesamtzahl: {{ rooms.all.count }}<br>
+			          				Aktiv: {{ issues.active.count }}&nbsp({{issues.active_percent }}%)
+			          			</p>
 			          		</div>
 		        		</div>
 		        	</div>

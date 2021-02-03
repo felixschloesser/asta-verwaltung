@@ -36,6 +36,19 @@
         </ul>
     </div>
 
+    <div class="content">
+        <h2 class="subtitle is-4">Personen mit Zugang:</h2>
+        <ul>
+        {% for issue in issues %}
+            <li>
+                <a href="{% url 'keys:person-detail' pk=issue.person.id %}">{{ issue.person }}</a>
+            </li>
+        {% empty %}
+            keine.
+        {% endfor %}
+        </ul>
+    </div>
+
     <nav class="level is-max-desktop noprint">
         <div class="level-left">
             <div class="level-item">

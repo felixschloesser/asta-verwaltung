@@ -19,19 +19,21 @@ from .validators import *
 from .managers import *
 
 
-# Populate fro Getter
-from operator import attrgetter
+# Slug Functions
 
-def get_populate_from(instance):
-    return '%s-%s' % (instance.building.identifier, instance.number, )
+# Room
+def get_room_slug(instance):
+    return '%s-%s' % (instance.building.identifier, instance.number)
 
 
-# Create models here.
+# Models
 class Building(models.Model):
     identifier = models.CharField('Gebäudekürzel', max_length=8, unique=True)
     name = models.CharField('Name', max_length=32, unique=True, blank=True, null=True)
     created_at = models.DateTimeField('Erstellungszeitpunkt', auto_now_add=True)
     updated_at = models.DateTimeField('Aktualisierungszeitpunkt', auto_now=True)
+
+    all_buildings = BuildingManager()
 
     class Meta:
         verbose_name = "Gebäude"
@@ -91,7 +93,7 @@ class Room(models.Model):
 
     comment = models.CharField("Kommentar", max_length=500, blank=True, null=True)
 
-    slug = AutoSlugField(populate_from=get_populate_from, unique=True)
+    slug = AutoSlugField(populate_from=get_room_slug, unique=True)
 
     created_at = models.DateTimeField('Erstellungszeitpunkt', auto_now_add=True)
     updated_at = models.DateTimeField('Aktualisierungszeitpunkt', auto_now=True)
@@ -119,7 +121,7 @@ class Room(models.Model):
 
     def get_identifier(self):
         return "{}{}".format(self.building.identifier, self.number)
-
+        
     get_identifier.short_description = "Raumnummer"
 
 
@@ -458,6 +460,8 @@ class Group(models.Model):
     name = models.CharField('Name', max_length=64, unique=True)
     created_at = models.DateTimeField('Erstellungszeitpunkt', auto_now_add=True)
     updated_at = models.DateTimeField('Aktualisierungszeitpunkt', auto_now=True)
+
+    all_groups = GroupManager()
 
     class Meta:
         verbose_name = "Gruppe"

@@ -35,7 +35,8 @@ class Home(generic.ListView):
         context = super().get_context_data(**kwargs)
         context["people"] = Person.all_people
         context["keys"] = Key.all_keys
-        context["rooms"] = Room.all_rooms
+        context["buildings"] = Building.all_buildings
+
         return context
 
 
@@ -148,10 +149,8 @@ class PersonSearchResults(LoginRequiredMixin, generic.ListView):
 
 class PersonCreate(SuccessMessageMixin, LoginRequiredMixin, generic.CreateView):
     model = Person
-    form_class = PersonCreateForm
+    form_class = PersonForm
     success_message = "%(first_name)s %(last_name)s erfolgreich hinzugefügt."
-
-
 
     def form_valid(self, form):
         """
@@ -164,6 +163,7 @@ class PersonCreate(SuccessMessageMixin, LoginRequiredMixin, generic.CreateView):
         return super().form_valid(form)
 
 
+
 class PersonDetail(LoginRequiredMixin, generic.DetailView):
     model = Person
   
@@ -173,29 +173,28 @@ class PersonDetail(LoginRequiredMixin, generic.DetailView):
         context["keys"] = keys
         return context
 
+
+
 class PersonUpdate(SuccessMessageMixin, LoginRequiredMixin, generic.UpdateView):
     model = Person
-    fields = ['first_name',
-              'last_name',
-              'university_email',
-              'private_email',
-              'phone_number',
-              'group']
+    form_class = PersonForm
     template_name_suffix = '_update_form'
     success_message = "%(first_name)s %(last_name)s erfolgreich aktualisiert."
 
 
 
+
 #  Deposit
+
 class DepositMixin:    
     def get_success_url(self):
         return reverse_lazy('keys:person-detail',  args=[self.object.person.id])
 
 
+
 class DepositDetail(DepositMixin, LoginRequiredMixin, generic.DetailView):
     model = Deposit
     pk_url_kwarg = 'pk_d'
-
 
 
 
@@ -221,9 +220,9 @@ class DepositCreate(SuccessMessageMixin, LoginRequiredMixin, generic.CreateView)
         self.object.person = Person.all_people.filter(pk=pk).get()
         self.object.in_datetime = timezone.now()
         self.object.save()
-        logging.debug("Polulated the forms person field.")
+        logging.debug("Polulated the forms person field. with pk: {}".format(pk))
+        logging.debug("Polulated the in_datetime field. with {}".format(timezone.now()))
         return super().form_valid(form)
-
 
 
 
@@ -233,7 +232,6 @@ class DepositRetain(DepositMixin, SuccessMessageMixin, LoginRequiredMixin, gener
     form_class = DepositRetainForm
     template_name_suffix = '_confirm_retain'
     success_message = "Kaution von erfolgreich einbehalten."
-
 
     def form_valid(self, form):
         """
@@ -247,6 +245,7 @@ class DepositRetain(DepositMixin, SuccessMessageMixin, LoginRequiredMixin, gener
         return super().form_valid(form)
 
 
+
 class DepositReturn(SuccessMessageMixin, LoginRequiredMixin, generic.UpdateView):
     model = Deposit
     pk_url_kwarg = 'pk_d'
@@ -254,7 +253,6 @@ class DepositReturn(SuccessMessageMixin, LoginRequiredMixin, generic.UpdateView)
     template_name = 'keys/deposit_return_form.html'
     initial = {'out_method': 'cash'}
     success_message = "Kaution erfolgreich zurückgegeben."
-  
 
     def form_valid(self, form):
         """
@@ -268,16 +266,20 @@ class DepositReturn(SuccessMessageMixin, LoginRequiredMixin, generic.UpdateView)
         return super().form_valid(form)
 
 
+
 class DepositDelete(DepositMixin, LoginRequiredMixin, generic.DeleteView):
     model = Deposit
     pk_url_kwarg = 'pk_d'
 
 
 
+
 # Rooms
+
 class RoomList(LoginRequiredMixin, generic.ListView):
     model = Building
     template_name = "keys/room_list.html"
+
 
 
 class RoomSearchResults(LoginRequiredMixin, generic.ListView):
@@ -307,11 +309,26 @@ class RoomSearchResults(LoginRequiredMixin, generic.ListView):
 class RoomDetail(LoginRequiredMixin, generic.DetailView):
     model = Room
 
+    def get_context_data(self, **kwargs):
+        # Add all Issues of keys that have access to this room as a seperate 
+        # context 
+        context = super().get_context_data(**kwargs)
+        room_slug = self.kwargs.get('slug')
+        logging.debug(room_slug)
+        relevant_issues = Issue.all_issues.active().filter(key__doors__room__slug__exact=room_slug)
+        context['issues'] = relevant_issues
+
+        return context
+
+
+
 
 # Issues
+
 class IssueList(LoginRequiredMixin, generic.ListView):
     queryset = Issue.all_issues.active()
     paginate_by = 20
+
 
 
 class IssueAllList(LoginRequiredMixin, generic.ListView):

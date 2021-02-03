@@ -61,15 +61,15 @@
                             </td>
                             <td data-label="Status">
                                 {% if key.stolen_or_lost %}
-                                    <span class="icon has-text-danger">
+                                    <span class="icon has-text-danger has-tooltip-arrow" data-tooltip="Verloren/Gestohlen">
                                         <i class="far fa-lg fa-question-circle"></i>
                                     </span>
                                 {% elif key.get_current_issue %}
-                                    <span class="icon has-text-info">
+                                    <span class="icon has-text-info has-tooltip-arrow" data-tooltip="Verliehen">
                                         <i class="far fa-lg fa-times-circle"></i> 
                                     </span>                                
                                 {% else %}
-                                    <span class="icon has-text-success">
+                                    <span class="icon has-text-success has-tooltip-arrow" data-tooltip="Verfügbar">
                                         <i class="far fa-lg fa-check-circle"></i>
                                     </span>
                                 {% endif %}</td>

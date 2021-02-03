@@ -67,8 +67,8 @@
             <div class="table-wrapper has-mobile-cards">
                 <table class="table is-fullwidth is-hoverable">
                     <thead>
-                         <th>Schlüssel</th>
                          <th>Person</th>
+                         <th>Schlüssel</th>
                          <th>Ausgabedatum</th>
                          <th>Rückgabedatum</th>
 
@@ -77,15 +77,16 @@
                     <tbody>
                     {% for issue in issue_list %}
                         <tr style="cursor:pointer;" onclick="location.href='{{ issue.get_absolute_url }}'">
-                            <td data-label="Schlüssel">
-                                {{ issue.key }}
-                            </td>
+                       
                             <td data-label="Person">
                                 {{ issue.person }}
                             </td>
+                            <td data-label="Schlüssel">
+                                {{ issue.key }}
+                            </td>
                             <td data-label="Ausgabedatum">
                                 {{ issue.out_date }}
-                            </td>
+                            </td>    
                             <td data-label="Rückgabedatum">
                                 {{ issue.in_date|default_if_none:'-' }}
                             </td>

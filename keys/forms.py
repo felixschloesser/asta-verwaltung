@@ -7,7 +7,7 @@ from .models import Issue, Deposit, Key, Person
 
 import logging
 
-class PersonCreateForm(forms.ModelForm):
+class PersonForm(forms.ModelForm):
     class Meta:
         model = Person
         fields = ['first_name',
@@ -22,9 +22,12 @@ class PersonCreateForm(forms.ModelForm):
         university_email = cleaned_data.get("university_email")
         private_email = cleaned_data.get("private_email")
 
+        logging.debug("MAIL CLEAN")
+        logging.debug("{} - {}".format(university_email, private_email))
+
         if university_email == private_email:
             msg = "Private und Universitäts Mail dürfen nicht indentisch sein."
-            self.add_error('private_email', msg)
+            raise ValidationError(msg, "mails-not-identical")
 
 
 

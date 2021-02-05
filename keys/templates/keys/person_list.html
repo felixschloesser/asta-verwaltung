@@ -42,6 +42,21 @@
         </div>
     </nav>
 
+    <div class="tabs is-left is-boxed">
+      <ul>
+        <li class="is-active">
+          <a href={% url 'keys:person-list' %}>
+            <span>Alle</span>
+          </a>
+        </li>
+        <li>
+          <a href={% url 'keys:person-list-group' %}>
+            <span>Gruppen</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
     {% if people %}
         <div class="container">
             <div class="b-table">
@@ -68,7 +83,7 @@
                                 </td>
                                 <td data-label="Kaution bezahlt">
                                     {% if person.paid_deposit %}
-                                    {{ person.get_active_deposit.in_datetime|date:"SHORT_DATE_FORMAT"|default:'-' }}
+                                    {{ person.get_active_deposit.in_datetime|date:"DATE_FORMAT"|default:'-' }}
                                     {% else %}
                                     -
                                     {% endif%}

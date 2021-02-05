@@ -43,6 +43,8 @@ class PuropseAdmin(admin.ModelAdmin):
     def has_module_permission(self, request):
         return False
 
+
+
 @admin.register(Room)
 class RoomAdmin(admin.ModelAdmin):
 
@@ -53,6 +55,7 @@ class RoomAdmin(admin.ModelAdmin):
     list_filter = ('building', 'group', 'purpose' )
 
     inlines = [DoorInline]
+
 
 
 @admin.register(Building)
@@ -82,6 +85,7 @@ class DoorAdmin(admin.ModelAdmin):
     list_select_related = ['room__building'] #smaller sql querry
 
 
+
 @admin.register(Key)
 class KeyAdmin(admin.ModelAdmin):
     # List
@@ -89,11 +93,14 @@ class KeyAdmin(admin.ModelAdmin):
     list_filter = ('stolen_or_lost', 'storage_location', 'locking_system__method', 'created_at')
     list_select_related = ['locking_system'] #smaller sql query
 
+
+
 @admin.register(LockingSystem)
 class LockingSystemAdmin(admin.ModelAdmin):
     list_display = ('name', 'company', 'method', 'comment')
 
     list_filter = ['method']
+
 
 
 @admin.register(StorageLocation)
@@ -108,6 +115,7 @@ class StorageLocationAdmin(admin.ModelAdmin):
     list_filter = [('location__name')]
 
 
+
 @admin.register(Person)
 class PersonAdmin(HashIdFieldAdminMixin, admin.ModelAdmin):
     list_display = ('__str__', 'university_email', 'private_email', 'phone_number', 'paid_deposit')
@@ -117,16 +125,14 @@ class PersonAdmin(HashIdFieldAdminMixin, admin.ModelAdmin):
     inlines = [DepositInline]
 
 
-class DepositAdmin(admin.ModelAdmin):
-    list_display = ('person', 'amount', 'in_datetime', 'out_datetime')
-    list_filter = ('amount', 'in_method', 'out_datetime')
 
-
+@admin.register(Group)
 class GroupAdmin(admin.ModelAdmin):
     list_display = ['name']
 
     def has_module_permission(self, request):
         return False
+
 
 
 @admin.register(Issue)

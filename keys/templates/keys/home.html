@@ -9,121 +9,128 @@
 	    <h1 class="title is-2">Dashboard</h1>
 	    <p class="content">Wilkommen, {{ user.username }}! Das hier ist unser neues Schlüsselsystem. Toll oder?</p>
 
-	    <div class="tile is-ancestor">
-		<div class="tile is-parent">
-		    <article class="tile is-child notification is-white-ter">
-		      <div class="content">
-		        <p class="title mb-4">Ausleihen</p>
-		        <div class="content">
-		        	{% if issue_list %}
-			         	<table class="table is-hoverable" style="background-color: whitesmoke;">
-				          	<thead>
-		                         <th>Schlüssel</th>
-		                         <th>Person</th>
-		                    </thead>
+	    <div class="grid-container">
+				<div class="issues box has-background-light">
+					<div class="content">
+				        <div class="content">
+				        	<p class="title mb-4">Ausleihen</p>
 
-		                    <tbody>
-		                    {% for issue in issue_list %}
-		                        <tr style="cursor:pointer;" onclick="location.href='{{ issue.get_absolute_url }}'">
-		                            <td>
-		                                {{ issue.key }}
-		                            </td>
-		                            <td>
-		                                {{ issue.person }}
-		                            </td>
-		                        </tr>
-		                    {% endfor %}
-		                    </tbody>
-			         	</table>
-			         {% else %}
-			         	<p>Keine aktiven Ausleihen.</p>
-			         {% endif %}
-		        </div>
-		      </div>
-		    </article>
-		 </div>
-			<div class="tile is-vertical is-8">
-		    	<div class="tile">
-		    		<div class="tile is-parent">
-		        	<article class="tile is-child notification is-info">
-		          		<p class="title">Middle tile</p>
-		          		<p class="subtitle">With an image</p>
-		          		<figure class="image is-4by3">
-		            		<img src="https://bulma.io/images/placeholders/640x480.png">
-		          		</figure>
-		        	</article>
-		     	</div>
-		    		<div class="tile is-parent is-vertical">
-		        		<article class="tile is-child notification is-primary">
-		          			<p class="title is-4">Personensuche</p>
-	          				<form action={% url 'keys:person-search-results' %} method='get'>
-	          					<div class="field has-addons">
-			                    	<div class="control">
-			                            <input class="input" name='q' type="text" placeholder="Vor-/Nachname/Gruppe" required>
-			                    	</div>
-			                    	<div class="control">
-				                        <button type='submit' class="button is-info">Suchen</button>
-			                		</div>
-            					</div>
-            				</form>
-		       			</article>
-		        		<article class="tile is-child notification is-light">
-		        			<p class="title is-4">Schlüsselsuche</p>
-							<form action={% url 'keys:key-search-results' %} method='get'>
-	          					<div class="field has-addons">
-			                    	<div class="control">
-			                            <input class="input" name='q' type="text" placeholder="Schlüsselnr./Modell" required>
-			                    	</div>
-			                    	<div class="control">
-				                        <button type='submit' class="button is-info">Suchen</button>
-			                		</div>
-            					</div>
-            				</form>
-                		</article>
-		      		</div>
-		      	
-		    </div>
-		    <div class="tile is-parent">
-		     	<article class="tile is-child notification is-light">
-		     		<p class="title">Statistiken</p>
-		        	<div class="columns">
-		        		<div class="column" style="padding-left: 0.75rem;padding-bottom: 0.75rem;">
-			        		<div class="content">
-			          			<h2 class="subtitle is-4 mb-2">Schlüssel</h2>
-		          				<p>
-		          					Gesamtzahl: {{ keys.count }}<br>
-		          					Ausgeliehen: {{ keys.currently_issued.count }}&nbsp;({{ keys.currently_issued_percent }}%)<br>
-		          					Verloren: {{ keys.stolen_or_lost.count }}&nbsp;({{ keys.stolen_or_lost_percent }}%)<br>
-			          			</p>
-			          		</div>
-			          	</div>
-						<div class="divider is-vertical is-right" style="margin-left: 5px;margin-right: 5px;"></div>
-		        		<div class="column" style="padding-left: 0.75rem;padding-bottom: 0.75rem;">
-			        		<div class="content">
-			          			<h2 class="subtitle is-4 mb-2">Personen</h2>
-			          			<p>
-			          				Gesamtzahl: {{ people.count }}<br>
-			          				Kaution bezahlt: {{ people.paid_deposit.count }}&nbsp;({{ people.paid_deposit_percent }}%)<br>
-			          				Mit Ausleihen: {{ people.active_issues.count }}&nbsp;({{ people.active_issues_percent }}%)<br>
-			          			</p>
-			          		</div>
-			          	</div>
-						<div class="divider is-vertical is-right" style="margin-left: 5px;margin-right: 5px;"></div>
-		        		<div class="column" style="padding-left: 0.75rem;padding-bottom: 0.75rem;">
-			        		<div class="content">
-			        			<h2 class="subtitle is-4 mb-2">Gruppen</h2>
-			          			<p>
-			          				Gesamtzahl: {{ rooms.all.count }}<br>
-			          				Aktiv: {{ issues.active.count }}&nbsp({{issues.active_percent }}%)
-			          			</p>
-			          		</div>
-		        		</div>
-		        	</div>
-		      	</article>
-		    </div>
-		 </div>
-	</div>
+				        	{% if issue_list %}
+					         	<table class="table is-hoverable" style="background-color: whitesmoke;">
+						          	<thead>
+				                         <th>Schlüssel</th>
+				                         <th>Person</th>
+				                    </thead>
 
+				                    <tbody>
+				                    {% for issue in issue_list %}
+				                        <tr style="cursor:pointer;" onclick="location.href='{{ issue.get_absolute_url }}'">
+				                            <td>
+				                                {{ issue.key }}
+				                            </td>
+				                            <td>
+				                                {{ issue.person }}
+				                            </td>
+				                        </tr>
+				                    {% endfor %}
+				                    </tbody>
+					         	</table>
+					         {% else %}
+					         	<p>Keine aktiven Ausleihen.</p>
+					         {% endif %}
+				        </div>
+				     </div>
+				</div>
+		 	<div class="person-search box">
+		 		<p class="title is-4">Personensuche</p>
+  				<form action={% url 'keys:person-search-results' %} method='get'>
+  					<div class="field has-addons">
+                    	<div class="control">
+                            <input class="input" name='q' type="text" placeholder="Vor-/Nachname/Gruppe" required>
+                    	</div>
+                    	<div class="control">
+	                        <button type='submit' class="button is-info">Suchen</button>
+                		</div>
+					</div>
+				</form>
+		 	</div>
+			<div class="key-search box">
+				<p class="title is-4">Schlüsselsuche</p>
+				<form action={% url 'keys:key-search-results' %} method='get'>
+  					<div class="field has-addons">
+                    	<div class="control">
+                            <input class="input" name='q' type="text" placeholder="Schlüsselnr./Modell" required>
+                    	</div>
+                    	<div class="control">
+	                        <button type='submit' class="button is-info">Suchen</button>
+                		</div>
+					</div>
+				</form>
+			</div>
+		 	<div class="statistics box">
+		 		<p class="title">Statistiken</p>
+	        	<div class="columns">
+	        		<div class="column" style="padding-left: 0.75rem;padding-bottom: 0.75rem;">
+		        		<div class="content">
+		          			<p class="title is-5 mb-2">Schlüssel</p>
+	          				<p>
+	          					Gesamtzahl: {{ keys.count }}<br>
+	          					Ausgeliehen: {{ keys.currently_issued.count }}&nbsp;({{ keys.currently_issued_percent }}%)<br>
+	          					Verloren: {{ keys.stolen_or_lost.count }}&nbsp;({{ keys.stolen_or_lost_percent }}%)<br>
+		          			</p>
+		          		</div>
+		          	</div>
+					<div class="divider is-vertical is-right" style="margin-left: 5px;margin-right: 5px;"></div>
+					
+					<hr>
+
+
+	        		<div class="column" style="padding-left: 0.75rem;padding-bottom: 0.75rem;">
+		        		<div class="content">
+		          			<p class="title is-5 mb-2">Personen</p>
+		          			<p>
+		          				Gesamtzahl: {{ people.count }}<br>
+		          				Kaution bezahlt: {{ people.paid_deposit.count }}&nbsp;({{ people.paid_deposit_percent }}%)<br>
+		          				Mit Ausleihen: {{ people.active_issues.count }}&nbsp;({{ people.active_issues_percent }}%)<br>
+		          			</p>
+		          		</div>
+		          	</div>
+					<div class="divider is-vertical is-right" style="margin-left: 5px;margin-right: 5px;"></div>
+
+					<hr>
+
+	        		<div class="column" style="padding-left: 0.75rem;padding-bottom: 0.75rem;">
+		        		<div class="content">
+		        			<p class="title is-5 mb-2">Räume</p>
+		          			<p>
+		          				Gesamtzahl: {{ rooms.all.count }}<br>
+		          				Aktiv: {{ issues.active.count }}&nbsp({{issues.active_percent }}%)
+		          			</p>
+		          		</div>
+	        		</div>
+	        	</div>
+		 	</div>
+			<div class="shortcuts box">
+			    <div class="asta">
+			    	<p class="title is-5">AStA</p>
+			    </div>
+			    <div class="asta-buttons">
+			    	
+			    </div>
+			    <div class="fsr">
+			    	<p class="title is-5">FSR</p>
+			    </div>
+			    <div class="fsr-buttons">
+			    	
+			    </div>
+			    <div class="ag">
+			    	<p class="title is-5">AGs</p>
+			    </div>
+			    <div class="ag-buttons">
+			    	
+			    </div>
+		  	</div>
+		</div>
 	{% else %}
 	    <h1 class="title">Wilkommen!</h1>
 	    <p class="content">Das hier ist das neue Schlüsselsystem des AStAs.</p>
@@ -133,4 +140,53 @@
 
 </div>
 
+{% endblock %}
+
+{% block additional_css %}
+<style>
+	.grid-container {
+	display: grid;
+	grid-template-columns: 1fr 1fr minmax(15rem,1fr);
+	grid-template-rows: auto auto auto;
+	grid-column-gap: 2%;
+	grid-row-gap: 2%;
+	grid-template-areas:
+	"issues shortcuts person-search"
+	"issues shortcuts key-search"
+	"issues statistics statistics";
+
+	}
+	.issues { grid-area: issues; }
+	.person-search { grid-area: person-search; }
+	.key-search { grid-area: key-search; }
+	.statistics {grid-area: statistics;}
+	.shortcuts {grid-area: shortcuts;}
+
+	@media (max-width: 1024px) {
+  		.grid-container {
+  			grid-template-columns: 1fr; 1fr;
+  			grid-template-rows: 1fr auto auto;
+
+		    grid-template-areas:
+			"issues shortcuts"
+			"person-search key-search"
+			"statistics statistics";
+	  	}
+	}
+
+
+	@media (max-width: 600px) {
+  		.grid-container {
+  			grid-template-columns: 1fr;
+  			grid-template-rows: auto;
+
+		    grid-template-areas:
+		      'shortcuts'
+		      'issues'
+		      'person-search'
+		      'key-search'
+		      'statistics';
+	  	}
+	}
+</style>
 {% endblock %}

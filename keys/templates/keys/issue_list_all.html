@@ -47,13 +47,13 @@
 
     <div class="tabs is-left is-boxed">
       <ul>
-        <li class="is-active">
-          <a href={% url 'keys:issue-list' %}>
+        <li>
+          <a href={% url 'keys:issue-list-active' %}>
             <span>Aktiv</span>
           </a>
         </li>
-        <li>
-          <a href={% url 'keys:issue-all-list' %}>
+        <li class="is-active">
+          <a href={% url 'keys:issue-list-all' %}>
             <span>Alle</span>
           </a>
         </li>
@@ -69,8 +69,8 @@
                     <thead>
                          <th>Person</th>
                          <th>Schlüssel</th>
-                         <th>Räume</th>
                          <th>Ausgabedatum</th>
+                         <th>Rückgabedatum</th>
 
                     </thead>
 
@@ -84,16 +84,12 @@
                             <td data-label="Schlüssel">
                                 {{ issue.key }}
                             </td>
-                            <td data-label="Räume">
-                                {% for room in issue.key.get_rooms %}
-                                    {{ room }}{% if not forloop.last %}, {% endif %}
-                                {% empty%}-
-                                {% endfor %}
-                            </td>
                             <td data-label="Ausgabedatum">
                                 {{ issue.out_date }}
+                            </td>    
+                            <td data-label="Rückgabedatum">
+                                {{ issue.in_date|default_if_none:'-' }}
                             </td>
-                            
                         </tr>
                     {% endfor %}
                     </tbody>

@@ -1,5 +1,8 @@
 {% extends "keys/base.html" %}
 
+{% block title %}Schlüssel | Schlüsselsystem{% endblock %}
+
+
 {% block additional_css %}
     <script src="https://kit.fontawesome.com/ddea523bff.js" crossorigin="anonymous"></script>
 {% endblock %}
@@ -61,17 +64,17 @@
                             </td>
                             <td data-label="Status">
                                 {% if key.stolen_or_lost %}
-                                    <span class="icon has-text-danger has-tooltip-arrow" data-tooltip="Verloren/Gestohlen">
+                                    <p class="icon has-text-centered has-text-warning has-tooltip-arrow" data-tooltip="Verloren/Gestohlen">
                                         <i class="far fa-lg fa-question-circle"></i>
-                                    </span>
+                                    </p>
                                 {% elif key.get_current_issue %}
-                                    <span class="icon has-text-info has-tooltip-arrow" data-tooltip="Verliehen">
+                                    <p class="icon has-text-centered has-text-info has-tooltip-arrow" data-tooltip="Verliehen">
                                         <i class="far fa-lg fa-times-circle"></i> 
-                                    </span>                                
+                                    </p>                                
                                 {% else %}
-                                    <span class="icon has-text-success has-tooltip-arrow" data-tooltip="Verfügbar">
+                                    <p class="icon has-text-centered has-text-success has-tooltip-arrow" data-tooltip="Verfügbar">
                                         <i class="far fa-lg fa-check-circle"></i>
-                                    </span>
+                                    </p>
                                 {% endif %}</td>
                         </tr>
                     {% endfor %}

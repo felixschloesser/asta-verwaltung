@@ -1,12 +1,18 @@
 {% extends "keys/base.html" %}
 
+{% block title %}Suche: {{ request.GET.q }} | Schlüsselsystem{% endblock %}
+
+{% block additional_css %}
+    <script src="https://kit.fontawesome.com/ddea523bff.js" crossorigin="anonymous"></script>
+{% endblock %}
+
 {% block content %}
 <div class="container is-max-desktop">
     <nav class="level">
         <!-- Left side -->
         <div class="level-left">
             <div class="level-item">
-                <h1 class='title is-2'>Schlüsselsuche{% if request.GET.q %}: {{ request.GET.q }}{% endif %}</h1>
+                <h1 class='title is-2'>Schlüsselsuche{% if request.GET.q %}: <em>{{ request.GET.q }}</em>{% endif %}</h1>
             </div>
         </div>
         <!-- Right side -->
@@ -37,22 +43,38 @@
                          <th>Nummer</th>
                          <th>Schließsystem</th>
                          <th>Türen</th>
+                         <th>Status</th>
+
                     </thead>
 
                     <tbody>
                     {% for key in key_list %}
-                        <tr>
+                        <tr style="cursor:pointer;" onclick="location.href='{{ key.get_absolute_url }}'">
                             <td data-label="Nummer">
-                                <a href="{{ key.get_absolute_url }}">{{ key }}</a>
+                                {{ key.number }}
                             </td>
                             <td data-label="Schließsystem">
                                 {{ key.locking_system }}
                             </td>
-                            <td data-label="Räume">
-                                {% for door in key.get_access_doors.distinct %}
-                                    {{ door.room }}{% if not forloop.last %}, {% endif %}
+                            <td data-label="Türen">
+                                {% for room in key.get_rooms %}
+                                    {{ room }}{% if not forloop.last %}, {% endif %}
                                 {% endfor %}
                             </td>
+                            <td data-label="Status">
+                                {% if key.stolen_or_lost %}
+                                    <span class="icon has-text-warning has-tooltip-arrow" data-tooltip="Verloren/Gestohlen">
+                                        <i class="far fa-lg fa-question-circle"></i>
+                                    </span>
+                                {% elif key.get_current_issue %}
+                                    <span class="icon has-text-info has-tooltip-arrow" data-tooltip="Verliehen">
+                                        <i class="far fa-lg fa-times-circle"></i> 
+                                    </span>                                
+                                {% else %}
+                                    <span class="icon has-text-success has-tooltip-arrow" data-tooltip="Verfügbar">
+                                        <i class="far fa-lg fa-check-circle"></i>
+                                    </span>
+                                {% endif %}</td>
                         </tr>
                     {% endfor %}
                     </tbody>
@@ -61,12 +83,18 @@
         </div>
     </div>
     {% else %}
-        <p>Kein Schlüssel {% if request.GET.q %}mit Nummer oder Schließsystem <em>{{ request.GET.q }}</em> {% endif %}gefunden.</p>
+        <p class="text">Kein Schlüssel {% if request.GET.q %}mit Nummer oder Schließsystem <em>{{ request.GET.q }}</em> {% endif %}gefunden.</p>
     {% endif %}
 
     {% if is_paginated %}
         {% include 'keys/pagination.html' %}
     {% endif %}
+
+    <div class="control pt-6">
+        <a class='button is-outlined' href={% url 'keys:key-list' %}>Zurück</a>
+    </div>
+
+
 </div>
 
 {% endblock %}

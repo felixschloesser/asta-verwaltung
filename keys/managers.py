@@ -3,8 +3,19 @@ from django.db import models
 class GroupManager(models.Manager):
     def get_queryset(self):
         qs = super().get_queryset()
-        return qs.prefetch_related('person', 'group')
+        return qs
 
+    def get(self, name):
+        return self.filter(name__iexact=name)
+
+    def fsr(self):
+        return self.filter(group__name__icontains='fsr')
+
+    def students(self):
+        return self.union(self.get('asta'), self.get('stupa'), self.fsr(), self.get('student'))
+
+    def not_students(self):
+        return self.exclude(self.get('asta'), self.get('stupa'), self.fsr(), self.ag() ,self.get('student'))
 
 
 class BuildingManager(models.Manager):
@@ -29,11 +40,18 @@ class RoomManager(models.Manager):
     def of_group(self, name):
         return self.filter(group__name__iexact=name)
 
+
     def of_fsr(self):
-        return self.filter(group_name_icontains='fsr')
+        return self.filter(group__name__icontains='fsr')
+
+    def of_ag(self):
+        return self.filter(group__name__icontains='ag')
 
     def of_students(self):
-        return self.union(self.of_group('asta'), self.of_group('stupa'), self.of_fsr())
+        return self.union(self.of_group('asta'), self.of_group('stupa'), self.of_fsr(), self.of_group('student'))
+
+    def not_students(self):
+        return self.exclude(self.of_group('asta'), self.of_group('stupa'), self.of_fsr(), self.of_group('student'))
 
     def accessible_by(self, key_id):
         return self.filter(doors__keys__id__exact=key_id).distinct()
@@ -96,9 +114,24 @@ class PersonManager(models.Manager):
     def no_active_issues(self, id, *args, **kwargs):
         return self.exclude(issues__active__exact=True).distinct().filter(*args, **kwargs) # double check!
     
-
     def of_group(self, name):
-        return self.filter(group__name__exact=name)
+        return self.filter(group__name__iexact=name)
+
+    def of_fsr(self):
+        return self.filter(group__name_icontains='fsr')
+
+    def of_ag(self):
+        return self.filter(group__name_icontains='ag')
+
+    def of_students(self):
+        return self.union(self.of_group('asta'), self.of_group('stupa'), self.of_fsr(), self.of_group('student'))
+
+    def not_students(self):
+        return self.exclude(self.of_group('asta'), self.of_group('stupa'), self.of_fsr(), self.of_group('student'))
+
+    def accessible_by(self, key_id):
+        return self.filter(doors__keys__id__exact=key_id).distinct()
+
 
 
     # Not Returning QuerrySets

@@ -4,7 +4,7 @@
         {% load static %}
         <!-- Required meta tags -->
         <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no viewport-fit=cover">
         <meta name="description" content="Schlüsselverwaltungssystem des AStAs der TU-Hamburg.">
         <title>{% block title %}{% endblock %}</title>
 
@@ -12,6 +12,7 @@
         <link rel="icon" type='image/png' href="{% static 'keys/images/favicon.png' %}">
 
         <!-- CSS -->
+        <link rel="stylesheet" href="{% static 'css/my-bulma.css' %}">
         <link rel="stylesheet" href="{% static 'css/style.css' %}">
         {% block additional_css%}{% endblock %}
 
@@ -23,39 +24,41 @@
     <body class="is-flex is-flex-direction-column" style="min-height: 100vh;">
         <!-- Navbar-->
         <nav class="navbar is-dark noprint" role="navigation" aria-label="main navigation">
-            <div class="navbar-brand">
-                <a class="navbar-item" href="{% url 'keys:home' %}">
-                    {% include 'keys/logo.svg' %}
-                </a>
-                <a role="button" class="navbar-burger" data-target="navMenu" aria-label="menu" aria-expanded="false" >
-                    <!--Hamburger Button-->
-                    <span aria-hidden="true"></span>
-                    <span aria-hidden="true"></span>
-                    <span aria-hidden="true"></span>
-                </a>
-            </div>
-            <div class="navbar-menu" id="navMenu">
-                <div class="navbar-start">
-                    <a class="navbar-item" href="{% url 'keys:person-list' %}">Personen</a>
-                    <a class="navbar-item" href="{% url 'keys:key-list' %}">Schlüssel</a>
-                    <a class="navbar-item" href="{% url 'keys:room-list' %}">Räume</a>
-                    <a class="navbar-item" href="{% url 'keys:issue-list' %}">Ausleihen</a>
+            <div class="container is-max-widescreen safe-nav">
+                <div class="navbar-brand">
+                    <a class="navbar-item logo" href="{% url 'keys:home' %}">
+                        {% include 'keys/logo.svg' %}
+                    </a>
+                    <a role="button" class="navbar-burger" data-target="navMenu" aria-label="menu" aria-expanded="false" >
+                        <!--Hamburger Button-->
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                    </a>
                 </div>
-                <div class="navbar-end">
-                    <div class="navbar-item">
-                        <a class="button admin-button is-light is-outlined" id="admin-button" href="{% url 'admin:index' %}">Administration</a>
+                <div class="navbar-menu" id="navMenu">
+                    <div class="navbar-start">
+                        <a class="navbar-item" href="{% url 'keys:person-list' %}">Personen</a>
+                        <a class="navbar-item" href="{% url 'keys:key-list' %}">Schlüssel</a>
+                        <a class="navbar-item" href="{% url 'keys:room-list' %}">Räume</a>
+                        <a class="navbar-item" href="{% url 'keys:issue-list' %}">Ausleihen</a>
+                    </div>
+                    <div class="navbar-end">
+                        <div class="navbar-item">
+                            <a class="button admin-button is-light is-outlined" id="admin-button" href="{% url 'admin:index' %}">Administration</a>
+                        </div>
                     </div>
                 </div>
             </div>
         </nav>
 
         <!--Content -->
-        <section class="section is-flex-grow-1 ">
+        <section class="section is-flex-grow-1 safe-body">
             {% block content %}{% endblock %}
         </section>
 
         <!-- Footer -->
-        <footer class="footer noprint">
+        <footer class="footer noprint safe-body">
             <div class="content has-text-centered">
                 <p>
                     <a href="https://asta-tuhh.de/euer_asta/it/">TinTin's </a><strong>Schlüsselverwaltungssystem</strong>. Quelltext unter der

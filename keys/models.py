@@ -27,6 +27,23 @@ def get_room_slug(instance):
 
 
 # Models
+class Group(models.Model):
+    name = models.CharField('Name', max_length=64, unique=True)
+    created_at = models.DateTimeField('Erstellungszeitpunkt', auto_now_add=True)
+    updated_at = models.DateTimeField('Aktualisierungszeitpunkt', auto_now=True)
+
+    all_groups = GroupManager()
+
+    class Meta:
+        verbose_name = "Gruppe"
+        verbose_name_plural = "Gruppen"
+        ordering = ['id']
+
+    def __str__(self):
+        return "{}".format(self.name)
+
+
+
 class Building(models.Model):
     identifier = models.CharField('Gebäudekürzel', max_length=8, unique=True)
     name = models.CharField('Name', max_length=32, unique=True, blank=True, null=True)
@@ -456,22 +473,6 @@ class Deposit(models.Model):
 
 
 
-class Group(models.Model):
-    name = models.CharField('Name', max_length=64, unique=True)
-    created_at = models.DateTimeField('Erstellungszeitpunkt', auto_now_add=True)
-    updated_at = models.DateTimeField('Aktualisierungszeitpunkt', auto_now=True)
-
-    all_groups = GroupManager()
-
-    class Meta:
-        verbose_name = "Gruppe"
-        verbose_name_plural = "Gruppen"
-        ordering = ['id']
-
-    def __str__(self):
-        return "{}".format(self.name)
-
-
 
 class Issue(models.Model):
     active = models.BooleanField(verbose_name='Aktiv', default=True)
@@ -490,7 +491,7 @@ class Issue(models.Model):
 
     out_date = models.DateField('Ausgabedatum',
                                 default=timezone.now,
-                                validators=[present_or_max_10_days_ago])
+                                validators=[present_or_past_date])
     in_date = models.DateField('Rückgabedatum',
                                 null=True, blank=True,
                                 validators=[present_or_max_10_days_ago])

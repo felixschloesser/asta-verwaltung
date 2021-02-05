@@ -12,36 +12,41 @@
     <link rel="icon" type='image/png' href="{% static 'keys/images/favicon.png' %}">
 
     <!-- CSS -->
+    <link rel="stylesheet" href="{% static 'css/my-bulma.css' %}">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    {% block additional_css%}{% endblock %}
+
+    <!--Additional JS-->
+    {% block additional_js %}{% endblock %}
 
 </head>
-<body class="is-flex is-flex-direction-column" style="min-height: 100vh;min-height: -webkit-fill-available;">
+<body class="is-flex is-flex-direction-column">
     <!-- Navbar-->
-    <nav class="navbar is-dark noprint" role="navigation" aria-label="main navigation">
-        <div class="navbar-brand">
-            <div class="navbar-item">
-                {% include 'keys/logo.svg' %}
+    <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
+        <div class="container is-max-widescreen safe-area">
+            <div class="navbar-brand">
+                <div class="navbar-item">
+                    {% include 'keys/logo.svg' %}
+                </div>
             </div>
-        </div>
-        <div id="navMenuColordark-example" class="navbar-menu">
+            <div id="navMenuColordark-example" class="navbar-menu">
+            </div>
         </div>
     </nav>
 
     <!--Content -->
-    <section class="section is-flex-grow-1">
+    <section class="section is-flex-grow-1 safe-area">
     {% block content %}{% endblock %}
     </section>
     <!-- Footer -->
-    <footer class="footer noprint">
+    <footer class="footer noprint safe-area">
         <div class="content has-text-centered">
             <p>
-                <a href="https://asta-tuhh.de/euer_asta/it/">TinTin's </a><strong>Schlüsselverwaltungssystem</strong>. Quelltext unter der
-                <a href="https://eur-lex.europa.eu/legal-content/DE/TXT/?uri=CELEX:32017D0863">EUPL 1.2</a>.
+                TinTin's <strong>Schlüsselverwaltungssystem</strong>. Quelltext unter der
+                EUPL 1.2.
             </p>
         </div>
     </footer>
-    <!--Additional JS-->
-    {% block additional_js %}{% endblock %}
 </body>
 </html>
 

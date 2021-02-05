@@ -19,11 +19,18 @@
     <h1 class="title is-2">{{ person.get_full_name }}</h1>
 
     <div class="content">
-        <p class='text'><strong>Gruppe: </strong>{{ person.group }}</p>
+        <p class='text'><strong>Gruppe: </strong><a href="{% url 'keys:person-search-results' %}?group={{ person.group|lower}}">{{ person.group }}</a></p>
         <p class='text'><strong>Uni Mail: </strong><a href="mailto:{{ person.university_email }}">{{ person.university_email }}</a></p>
         <p class='text'><strong>Private Mail: </strong><a href="mailto:{{ person.private_email }}">{{ person.private_email }}</a></p>
         <p class='text'><strong>Telefon: </strong>{{ person.phone_number }}</p>
-        <p class='text'><strong>Kaution: </strong>
+        <p class='text'>
+            <strong> 
+                {% if person.deposits.count <= 1 %}
+                    Kaution:
+                {% else %}
+                    Kautionen:
+                {% endif%}
+            </strong>
 
         {% for deposit in person.deposits.all %}
             {% if deposit.state == 'in' %}

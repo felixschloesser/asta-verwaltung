@@ -1,6 +1,6 @@
 {% extends "keys/base.html" %}
 
-{% block title %}{{ key.get_full_name }} | Schüssel | Schlüsselsystem{% endblock %}
+{% block title %} {{ key }} | Schlüsselsystem{% endblock %}
 
 
 {% block content %}
@@ -24,7 +24,7 @@
 
     <div class="content">
         {% if key.stolen_or_lost %}
-            <p><strong>Status:</strong> <span class="tag is-danger"><b>verloren oder gestohlen</b></span></p>
+            <p><strong>Status:</strong> <span class="tag is-warning"><b>verloren oder gestohlen</b></span></p>
         {% endif %}
 
         {% if key.get_current_issue %}
@@ -35,7 +35,7 @@
         {% if key.locking_system.comment %}
             <p><strong>Kommentar:</strong> {{ key.locking_system.comment }}</p>
         {% endif %}
-        <p><strong>Lagerort:</strong> {{ key.storage_location }}</p>
+        <p><strong>Lagerort:</strong> <a href="{% url 'keys:key-search-results' %}?storage_location={{ key.storage_location }}">{{ key.storage_location }}</a></p>
         <p><strong>Öffnet folgende Türen:</strong></p>
             <ul>
             {% for door in key.doors.all %}

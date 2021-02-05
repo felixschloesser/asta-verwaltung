@@ -4,7 +4,7 @@
   "description": "A key management system written in django",
   "main": "sass/my-bulma.scss",
   "scripts": {
-    "css-build": "node-sass --omit-source-map-url sass/my-bulma.scss keys/static/css/style.css",
+    "css-build": "node-sass --omit-source-map-url sass/my-bulma.scss keys/static/css/my-bulma.css",
     "css-watch": "npm run css-build -- --watch",
     "start": "npm run css-watch"
   },

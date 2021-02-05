@@ -1,12 +1,15 @@
 {% extends "keys/base.html" %}
 
+{% block title %}Suche: {{ request.GET.q }} | Schlüsselsystem{% endblock %}
+
+
 {% block content %}
 <div class="container is-max-desktop">
     <nav class="level">
         <!-- Left side -->
         <div class="level-left">
             <div class="level-item">
-                <h1 class='title is-2'>Räume</h1>
+                <h1 class='title is-2'>Raumsuche{% if request.GET.q %}: <em>{{ request.GET.q }}</em>{% endif %}</h1>
             </div>
         </div>
         <!-- Right side -->
@@ -59,13 +62,16 @@
             </div>
         </div>
     {% else %}
-        <p>Kein Raum {% if request.GET.q %}mit Nummer, Gruppe oder Zweck <em>{{ request.GET.q }}</em> gefunden.</p>{% endif %}
+        <p class="text">Kein Raum {% if request.GET.q %}mit Nummer, Gruppe oder Zweck <em>{{ request.GET.q }}</em> gefunden.</p>{% endif %}
     {% endif %}
 
     {% if is_paginated %}
         {% include 'keys/pagination.html' %}
     {% endif %}
 
+    <div class="control pt-6">
+        <a class='button is-outlined' href={% url 'keys:room-list' %}>Zurück</a>
+    </div>
 
 
 </div>

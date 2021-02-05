@@ -22,7 +22,7 @@
         {% if room.name %}
         <p><strong>Raumkürzel:</strong> {{ room.get_identifier }}</p>
         {% endif %}
-        <p><strong>Gruppe:</strong> {{ room.group }}</p>
+        <p><strong>Gruppe:</strong> <a href="{% url 'keys:room-search-results' %}?group={{ room.group.name|lower }}">{{ room.group }}</a></p>
         <p><strong>Zweck:</strong> {{ room.purpose }}</p>
         {% if room.comment %}
             <p><strong>Kommentar:</strong> {{ room.comment }}</p>

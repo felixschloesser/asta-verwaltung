@@ -10,7 +10,7 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 
-from .models import Key, Person, Issue, Deposit, Room, Building
+from .models import *
 from .forms import *
 
 import datetime
@@ -26,7 +26,6 @@ class Home(generic.ListView):
     ordering = ['-updated_at']
     paginate_by = 5
     template_name = 'keys/home.html'
-
 
     def get_context_data(self, **kwargs):
         """
@@ -54,14 +53,20 @@ class KeySearchResults(LoginRequiredMixin, generic.ListView):
     def get_queryset(self):
         # Alter the queryset of the list view, so that it only contains the entries
         # of the keys where matching the search query in the get request
-        query = self.request.GET.get('q')
-        if query:
-            key_list = Key.all_keys.filter(models.Q(number__startswith=query) |
-                                           models.Q(locking_system__name__icontains=query) |
-                                           models.Q(locking_system__company__icontains=query)
+        storage_location_query_parameter = self.request.GET.get('storage_location')
+        if storage_location_query_parameter:
+            key_list = Key.all_keys.filter(storage_location__name__icontains=storage_location_query_parameter)
+
+            return key_list
+
+        search_query_parameter = self.request.GET.get('q')
+        if search_query_parameter:
+            key_list = Key.all_keys.filter(models.Q(number__startswith=search_query_parameter) |
+                                           models.Q(locking_system__name__icontains=search_query_parameter) |
+                                           models.Q(locking_system__company__icontains=search_query_parameter)
                                           )
         else:
-            key_list = Key.all_keys
+            key_list = Key.all_keys.none()
         return key_list
 
 
@@ -123,6 +128,11 @@ class PersonList(LoginRequiredMixin, generic.ListView):
     paginate_by = 30
 
 
+class PersonListGroup(LoginRequiredMixin, generic.ListView):
+    model = Group
+    template_name = 'keys/person_list_group.html'
+
+
 
 class PersonSearchResults(LoginRequiredMixin, generic.ListView):
     model = Person
@@ -133,15 +143,24 @@ class PersonSearchResults(LoginRequiredMixin, generic.ListView):
         # Alter the queryset of the list view, so that it only contains the entries
         # of the people where first or last name of a person match the search query
         # in the get request
-        query = self.request.GET.get('q')
-        if query:
-            person_list = Person.all_people.filter(models.Q(first_name__istartswith=query) |
-                                                models.Q(last_name__istartswith=query) |
-                                                models.Q(university_email__icontains=query) |
-                                                models.Q(group__name__istartswith=query)
-                                               )
+        group_query_parameter = self.request.GET.get('group')
+        logging.debug("QUERY: {}".format(group_query_parameter))
+        if group_query_parameter:
+            room_list = Person.all_people.of_group(group_query_parameter)
+            logging.debug("LIST: {}".format(room_list))
+
+            return room_list
+
+        logging.debug("NO GROUP")
+        search_query_parameter = self.request.GET.get('q')
+        if search_query_parameter:
+            person_list = Person.all_people.filter(models.Q(first_name__istartswith=search_query_parameter) |
+                                                   models.Q(last_name__istartswith=search_query_parameter) |
+                                                   models.Q(university_email__icontains=search_query_parameter) |
+                                                   models.Q(group__name__istartswith=search_query_parameter)
+                                                  )
         else:
-            person_list = Person.all_people
+            person_list = Person.all_people.none()
 
         return person_list
 
@@ -276,10 +295,14 @@ class DepositDelete(DepositMixin, LoginRequiredMixin, generic.DeleteView):
 
 # Rooms
 
-class RoomList(LoginRequiredMixin, generic.ListView):
+class RoomListBuilding(LoginRequiredMixin, generic.ListView):
     model = Building
-    template_name = "keys/room_list.html"
+    template_name = "keys/room_list_building.html"
 
+
+class RoomListGroup(LoginRequiredMixin, generic.ListView):
+    model = Group
+    template_name = "keys/room_list_group.html"
 
 
 class RoomSearchResults(LoginRequiredMixin, generic.ListView):
@@ -290,6 +313,18 @@ class RoomSearchResults(LoginRequiredMixin, generic.ListView):
     def get_queryset(self):
         # Alter the queryset of the list view, so that it only contains the entries
         # of the rooms match the search query in the get request
+        query = self.request.GET.get('building')
+        if query:
+            room_list = Room.all_rooms.filter(building__identifier__exact=query)
+
+            return room_list
+
+        query = self.request.GET.get('group')
+        if query:
+            room_list = Room.all_rooms.of_group(query)
+
+            return room_list
+
         query = self.request.GET.get('q')
         if query:
             room_list = Room.all_rooms.filter(models.Q(number__icontains=query) |
@@ -300,7 +335,7 @@ class RoomSearchResults(LoginRequiredMixin, generic.ListView):
                                               models.Q(group__name__istartswith=query)
                                              )
         else:
-            room_list = Room.all_rooms.all()
+            room_list = Person.all_people.none()
 
         return room_list
 
@@ -325,16 +360,16 @@ class RoomDetail(LoginRequiredMixin, generic.DetailView):
 
 # Issues
 
-class IssueList(LoginRequiredMixin, generic.ListView):
-    queryset = Issue.all_issues.active()
-    paginate_by = 20
-
-
-
-class IssueAllList(LoginRequiredMixin, generic.ListView):
+class IssueListAll(LoginRequiredMixin, generic.ListView):
     model = Issue
     paginate_by = 20
-    template_name_suffix ='_all_list'
+    template_name_suffix ='_list_all'
+
+
+class IssueListActive(LoginRequiredMixin, generic.ListView):
+    queryset = Issue.all_issues.active()
+    paginate_by = 20
+    template_name_suffix ='_list_active'
 
 
 

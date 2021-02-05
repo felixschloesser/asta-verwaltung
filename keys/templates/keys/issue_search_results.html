@@ -1,12 +1,14 @@
 {% extends "keys/base.html" %}
 
+{% block title %}Suche: {{ request.GET.q }} | Schlüsselsystem{% endblock %}
+
 {% block content %}
 <div class="container is-max-desktop">
     <nav class="level">
         <!-- Left side -->
         <div class="level-left">
             <div class="level-item">
-                <h1 class='title is-2'>Ausleihensuche{% if request.GET.q %}: {{ request.GET.q }}{% endif %}</h1>
+                <h1 class='title is-2'>Ausleihensuche{% if request.GET.q %}: <em>{{ request.GET.q }}</em>{% endif %}</h1>
             </div>
         </div>
         <!-- Right side -->
@@ -72,6 +74,9 @@
         {% include 'keys/pagination.html' %}
     {% endif %}
 
+    <div class="control pt-6">
+        <a class='button is-outlined' href={% url 'keys:issue-list' %}>Zurück</a>
+    </div>
 
 
 </div>

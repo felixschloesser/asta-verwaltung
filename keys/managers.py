@@ -40,6 +40,8 @@ class RoomManager(models.Manager):
     def of_group(self, name):
         return self.filter(group__name__iexact=name)
 
+    def of_asta(self):
+        return self.filter(group__name__iexact='asta')
 
     def of_fsr(self):
         return self.filter(group__name__icontains='fsr')
@@ -55,6 +57,24 @@ class RoomManager(models.Manager):
 
     def accessible_by(self, key_id):
         return self.filter(doors__keys__id__exact=key_id).distinct()
+
+
+    # Not Returning QuerrySets
+    def of_asta_percent(self):
+        percent = self.of_asta().count() / self.count() * 100
+        return int(percent)
+
+    def of_fsr_percent(self):
+        percent = self.of_fsr().count() / self.count() * 100
+        return int(percent)
+
+    def of_ag_percent(self):
+        percent = self.of_ag().count() / self.count() * 100
+        return int(percent)
+
+    def of_students_percent(self):
+        percent = self.of_students().count() / self.count() * 100
+        return int(percent)
 
 
 class KeyManager(models.Manager):

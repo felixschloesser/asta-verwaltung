@@ -8,7 +8,13 @@
         <!-- Left side -->
         <div class="level-left">
             <div class="level-item">
-                <h1 class='title is-2'>Ausleihensuche{% if request.GET.q %}: <em>{{ request.GET.q }}</em>{% endif %}</h1>
+                <h1 class='title is-2'>
+                    {% if request.GET.q %}
+                        Ausleihensuche: <em>{{ request.GET.q }}</em>
+                    {% else %}
+                        Ausleihensuche
+                    {% endif %}</h1>
+                </h1>
             </div>
         </div>
         <!-- Right side -->

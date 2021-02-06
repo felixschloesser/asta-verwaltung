@@ -36,7 +36,7 @@ class Home(generic.ListView):
         context = super().get_context_data(**kwargs)
         context["people"] = Person.all_people
         context["keys"] = Key.all_keys
-        context["buildings"] = Building.all_buildings
+        context["rooms"] = Room.all_rooms
 
         return context
 

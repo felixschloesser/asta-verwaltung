@@ -40,36 +40,98 @@
 					    {% endif %}
 				    </div>
 				</div>
-			 	<div class="person-search box has-background-primary">
-			 		<p class="title is-4">Personensuche</p>
-	  				<form action={% url 'keys:person-search-results' %} method='get'>
-	  					<div class="field has-addons">
-	                    	<div class="control is-expanded">
-	                            <input class="input is-fullwidth" name='q' type="text" placeholder="Vor-/Nachname/Gruppe" required>
-	                    	</div>
-	                    	<div class="control">
-		                        <button type='submit' class="button is-info">Suchen</button>
-	                		</div>
+				<div class="shortcuts-container">
+					<div class="box">
+					    <div class="asta">
+					    	<h1 class="title">Kurzbefehle</h1>
+					    	<div class="columns">
+					    		<div class="column is-one-third">
+					    			<p class="title is-4">AStA:</p>
+					    		</div>
+						    	<div class="column">
+						       		<div class="content">
+									 	<a href="{% url 'keys:room-search-results' %}?group=AStA">
+									 		<span class="tag is-medium is-light">Räume</span>
+									 	</a>
+									 	<a href="{% url 'keys:person-search-results' %}?group=AStA">
+									 		<span class="tag is-medium is-dark">Personen</span>
+									 	</a>
+									</div>
+						    	</div>
+						    </div>
+					    </div>
+					    <div class="divider is-right" style="margin: 1rem 1rem"></div>
+					    <div class="fsr">
+					 		<div class="columns">
+					    		<div class="column is-one-third">
+					    			<p class="title is-4">FSRe:</p>
+					    		</div>
+						    	<div class="column">
+						       		<div class="content block">
+									 	<a href="{% url 'keys:room-search-results' %}?group=FSR">
+									 		<span class="tag is-medium is-light">Räume</span>
+									 	</a>
+									 	<a href="{% url 'keys:person-search-results' %}?group=FSR">
+									 		<span class="tag is-medium is-dark">Personen</span>
+									 	</a>
+									</div>
+						    	</div>
+						    </div>
+					    </div>
+					    <div class="divider is-right" style="margin: 1rem 1rem"></div>
+					    <div class="ag">
+					    	<div class="columns">
+					    		<div class="column is-one-third">
+					    			<p class="title is-4">AGs:</p>
+					    		</div>
+						    	<div class="column">
+						       		<div class="content">
+									 	<a href="{% url 'keys:room-search-results' %}?group=AG">
+									 		<span class="tag is-medium is-light">Räume</span>
+									 	</a>
+									 	<a href="{% url 'keys:person-search-results' %}?group=AG">
+									 		<span class="tag is-medium is-dark">Personen</span>
+									 	</a>
+									</div>
+						    	</div>
+						    </div>
 						</div>
-					</form>
+				    </div>
+			  	</div>
+			 	<div class="person-search">
+			 		<div class="box has-background-primary">
+			 			<p class="title is-4 has-text-light">Personensuche</p>
+		  				<form action={% url 'keys:person-search-results' %} method='get'>
+		  					<div class="field has-addons">
+		                    	<div class="control is-expanded">
+		                            <input class="input is-fullwidth" name='q' type="text" placeholder="Vor-/Nachname/Gruppe" required>
+		                    	</div>
+		                    	<div class="control">
+			                        <button type='submit' class="button is-info">Suchen</button>
+		                		</div>
+							</div>
+						</form>
+					</div>
 			 	</div>
-				<div class="key-search box">
-					<p class="title is-4">Schlüsselsuche</p>
-					<form action={% url 'keys:key-search-results' %} method='get'>
-	  					<div class="field has-addons">
-	                    	<div class="control is-expanded">
-	                            <input class="input is-fullwidth" name='q' type="text" placeholder="Schlüsselnr./Modell" required>
-	                    	</div>
-	                    	<div class="control">
-		                        <button type='submit' class="button is-info">Suchen</button>
-	                		</div>
-						</div>
-					</form>
+				<div class="key-search">
+					<div class="box has-background-light">
+			 			<p class="title is-4">Schlüsselsuche</p>
+						<form action={% url 'keys:key-search-results' %} method='get'>
+		  					<div class="field has-addons">
+		                    	<div class="control is-expanded">
+		                            <input class="input is-fullwidth" name='q' type="text" placeholder="Schlüsselnr./Modell" required>
+		                    	</div>
+		                    	<div class="control">
+			                        <button type='submit' class="button is-info">Suchen</button>
+		                		</div>
+							</div>
+						</form>
+					</div>
 				</div>
 			 	<div class="statistics box">
 			 		<p class="title">Statistiken</p>
 		        	<div class="columns">
-		        		<div class="column" style="padding-left: 0.75rem;padding-bottom: 0.75rem;">
+		        		<div class="column key" style="padding-left: 0.75rem;padding-bottom: 0.75rem;">
 			        		<div class="content">
 			          			<p class="title is-5 mb-2">Schlüssel</p>
 		          				<p>
@@ -79,12 +141,11 @@
 			          			</p>
 			          		</div>
 			          	</div>
-						<div class="divider is-vertical is-right" style="margin-left: 5px;margin-right: 5px;"></div>
 						
-						<hr>
-
-
-		        		<div class="column" style="padding-left: 0.75rem;padding-bottom: 0.75rem;">
+						
+						<hr class="person">
+						<div class="person divider is-vertical is-right" style="margin-left: 5px;margin-right: 5px;"></div>
+		        		<div class="column person" style="padding-left: 0.75rem;padding-bottom: 0.75rem;">
 			        		<div class="content">
 			          			<p class="title is-5 mb-2">Personen</p>
 			          			<p>
@@ -94,65 +155,23 @@
 			          			</p>
 			          		</div>
 			          	</div>
-						<div class="divider is-vertical is-right" style="margin-left: 5px;margin-right: 5px;"></div>
-
-						<hr>
-
-		        		<div class="column" style="padding-left: 0.75rem;padding-bottom: 0.75rem;">
+						
+						<hr class="room">
+						<div class="room divider is-vertical is-right" style="margin-left: 5px;margin-right: 5px;"></div>
+		        		
+		        		<div class="column room" style="padding-left: 0.75rem;padding-bottom: 0.75rem;">
 			        		<div class="content">
 			        			<p class="title is-5 mb-2">Räume</p>
 			          			<p>
 			          				Gesamtzahl: {{ rooms.all.count }}<br>
-			          				Aktiv: {{ issues.active.count }}&nbsp({{issues.active_percent }}%)
+			          				AStA: {{ rooms.of_asta.count }}&nbsp;({{ rooms.of_asta_percent }}%)<br>
+			          				FSRe: {{ rooms.of_fsr.count }}&nbsp;({{ rooms.of_fsr_percent }}%)
 			          			</p>
 			          		</div>
 		        		</div>
 		        	</div>
 		 		</div>
-				<div class="shortcuts-container box">
-				    <div class="asta">
-				    	<h1 class="title">Kurzbefehle</h1>
-				    	<div class="columns">
-				    		<div class="column is-one-third">
-				    			<p class="title is-4">AStA:</p>
-				    		</div>
-					    	<div class="column">
-					       		<div class="tags">
-								 	<a href="{% url 'keys:room-search-results' %}?group=asta"><span class="tag is-medium is-danger is-light">Räume</span></a>
-								 	<span class="tag is-medium is-danger is-light">Personen</span>
-								</div>
-					    	</div>
-					    </div>
-				    </div>
-				    <div class="divider is-right" style="margin: 1rem 1rem"></div>
-				    <div class="fsr">
-				 		<div class="columns">
-				    		<div class="column is-one-third">
-				    			<p class="title is-4">FSRe:</p>
-				    		</div>
-					    	<div class="column">
-					       		<div class="tags">
-								 	<span class="tag is-medium is-success is-light">Räume</span>
-								 	<span class="tag is-medium is-success is-light">Personen</span>
-								</div>
-					    	</div>
-					    </div>
-				    </div>
-				    <div class="divider is-right" style="margin: 1rem 1rem"></div>
-				    <div class="ag">
-				    	<div class="columns">
-				    		<div class="column is-one-third">
-				    			<p class="title is-4">AGs:</p>
-				    		</div>
-					    	<div class="column">
-					       		<div class="tags">
-								 	<span class="tag is-medium is-info is-light">Räume</span>
-								 	<span class="tag is-medium is-info is-light">Personen</span>
-								</div>
-					    	</div>
-					    </div>
-				    </div>
-			  	</div>
+				
 			</div>
 		</div>
 	{% else %}
@@ -204,6 +223,20 @@
 	  	}
 	}
 
+	@media (max-width: 769px) {
+		.columns {
+			display: flex;
+		}
+		.columns .column {
+			flex-basis: 0;
+			flex-grow: 1;
+			flex-shrink: 1;
+		}
+	  	.statistics .room {
+	  		display: none;
+	  	}
+	  	
+	}
 
 	@media (max-width: 640px) {
   		.grid-container {
@@ -211,12 +244,14 @@
   			grid-template-rows: auto;
 
 		    grid-template-areas:
-		      'shortcuts'
 		      'issues'
+		      'shortcuts'
 		      'person-search'
 		      'key-search'
 		      'statistics';
 	  	}
 	}
+
+	
 </style>
 {% endblock %}

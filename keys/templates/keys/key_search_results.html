@@ -12,7 +12,15 @@
         <!-- Left side -->
         <div class="level-left">
             <div class="level-item">
-                <h1 class='title is-2'>Schlüsselsuche{% if request.GET.q %}: <em>{{ request.GET.q }}</em>{% endif %}</h1>
+                <h1 class='title is-2'>
+                    {% if request.GET.q %}
+                        Schlüsselsuche: <em>{{ request.GET.q }}</em>
+                    {% elif request.GET.group %}
+                        Schlüsselgruppe: <em>{{ request.GET.group }}</em>
+                    {% else %}
+                        Schlüsselsuche
+                    {% endif %}</h1>
+                </h1>
             </div>
         </div>
         <!-- Right side -->

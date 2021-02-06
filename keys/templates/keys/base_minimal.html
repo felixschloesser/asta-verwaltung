@@ -4,7 +4,7 @@
     {% load static %}
     <!-- Required meta tags -->
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no viewport-fit=cover">
     <meta name="description" content="Ein Schlüsselverwaltungssystem für den AStA der TU-Hamburg.">
     <title>{% block title %}{% endblock %}</title>
 
@@ -23,7 +23,7 @@
 <body class="is-flex is-flex-direction-column">
     <!-- Navbar-->
     <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
-        <div class="container is-max-widescreen safe-area">
+        <div class="container is-max-widescreen safe-nav">
             <div class="navbar-brand">
                 <div class="navbar-item">
                     {% include 'keys/logo.svg' %}
@@ -35,11 +35,11 @@
     </nav>
 
     <!--Content -->
-    <section class="section is-flex-grow-1 safe-area">
+    <section class="section is-flex-grow-1 safe-body">
     {% block content %}{% endblock %}
     </section>
     <!-- Footer -->
-    <footer class="footer noprint safe-area">
+    <footer class="footer noprint safe-body">
         <div class="content has-text-centered">
             <p>
                 TinTin's <strong>Schlüsselverwaltungssystem</strong>. Quelltext unter der

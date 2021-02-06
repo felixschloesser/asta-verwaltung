@@ -22,7 +22,9 @@ def index_view(request):
 
 
 class Home(generic.ListView):
-    queryset = Issue.all_issues.active()
+    #queryset = Issue.all_issues.active()
+    queryset = Issue.all_issues.all()
+
     ordering = ['-updated_at']
     paginate_by = 5
     template_name = 'keys/home.html'

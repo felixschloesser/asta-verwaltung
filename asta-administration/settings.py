@@ -10,7 +10,15 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
-import os, json
+import os, json, re
+from os.path import join, dirname
+from dotenv import load_dotenv
+
+import logging 
+
+# Get secrets from .env file
+load_dotenv()
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -27,14 +35,21 @@ HASHID_FIELD_SALT = os.getenv('DJANGO_HASHID_FIELD_SALT', 'changeme')
 SIMPLE_HISTORY_REVERT_DISABLED=True
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DJANGO_DEBUG', True)
+DEBUG = os.getenv('DJANGO_DEBUG', True) == True
 
 
-#ALLOWED_HOSTS = os.getenv('DJANGO_SECRET_KEY', 'localhost').split(',')
-ALLOWED_HOSTS = ['10.0.0.25', '134.28.72.225', 'localhost']
+ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS','localhost').split(' ')
+#ALLOWED_HOSTS = ['10.0.0.25', '134.28.72.225', 'localhost', '31.18.186.22']
 
 INTERNAL_IPS = [
     '127.0.0.1',
+]
+
+
+IGNORABLE_404_URLS = [
+    re.compile(r'^/apple-touch-icon.*\.png$'),
+    re.compile(r'^/favicon\.ico$'),
+    re.compile(r'^/robots\.txt$')
 ]
 
 # Application definition
@@ -56,6 +71,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'simple_history',
     'debug_toolbar',
+    'fontawesome-free',
 
     # Local
     'keys',
@@ -64,6 +80,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware', # serve static files without nginx
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -108,6 +125,7 @@ DATABASES = {
         'PASSWORD': os.getenv('DB_PASSWORD','changeme'),
         'HOST': os.getenv('DB_HOST', 'localhost'),
         'PORT': os.getenv('DB_PORT', ''),
+        'CONN_MAX_AGE': int(os.getenv('DB_CONN_MAX_AGE', '0')),
         'OPTIONS': json.loads(
              os.getenv('DJANGO_DB_OPTIONS', '{}')
         ),
@@ -162,7 +180,11 @@ EMAIL_USE_TLS = os.getenv('DJANGO_EMAIL_USE_TLS')
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
+STATIC_ROOT = os.getenv('DJANGO_STATIC_ROOT', os.path.join(BASE_DIR, 'static'))
 STATIC_URL = '/static/'
+WHITENOISE_ROOT = os.getenv('DJANGO_WHITENOISE_ROOT', os.path.join(STATIC_ROOT, 'root'))
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 # Logging Configuration
 
@@ -174,6 +196,7 @@ STATIC_URL = '/static/'
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+   
     'handlers': {
         'console': {
             'class': 'logging.StreamHandler',

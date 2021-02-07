@@ -3,7 +3,8 @@
 {% block title %}Ausleihen | Schlüsselsystem{% endblock %}
 
 {% block additional_css %}
-    <script src="https://kit.fontawesome.com/ddea523bff.js" crossorigin="anonymous"></script>
+    {% load static %}
+    <link href="{% static 'fontawesome_free/css/all.min.css' %}" rel="stylesheet" type="text/css">
 {% endblock %}
 
 {% block content %}

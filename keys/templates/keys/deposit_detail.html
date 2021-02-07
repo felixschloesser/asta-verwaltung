@@ -4,83 +4,85 @@
 
 
 {% block content %}
-<div class="container is-max-desktop">
+    <div class="container is-max-desktop">
 
-    {% if messages %}
-        {% for message in messages %}
-        <article class="message is-success noprint">
-            <div class="message-body">
-                {{ message }}
-            </div>
-        </article>
-        {% endfor %}
-    {% endif %}
-
-    <h1 class='title is-2'>Kaution von {{ deposit.person }}</h1>
-
-    <div class="content">
-        <div class="columns">
-            <div class="column">
-                <p><strong>Eingezahlt:</strong> <span class="tag is-info "><b>{{ deposit.amount }} {{ deposit.currency }}</b></span> {{ deposit.get_in_method }}</p>
-                <p><strong>Am:</strong> {{ deposit.in_datetime|date:"l, d. F Y"}} um {{ deposit.in_datetime |date:"G:i"}}</p>
-            </div>
-            {% if deposit.retained_datetime %} {% comment %}This should stay even if returned{% endcomment %}
-            <div class="divider is-vertical is-right" style="margin-left: 5px;margin-right: 5px;"></div>
-            <div class="column">
-                <p><strong>Einbehalten:</strong> {{ deposit.amount }} {{ deposit.currency }}</p>
-                <p><strong>Am:</strong> {{ deposit.retained_datetime|date:"l, d. F Y"}} um {{ deposit.retained_datetime |date:"G:i"}}</p>
-                
-            </div>
-            {% endif %}
-            {% if deposit.state == 'out' %}
-            <div class="divider is-vertical is-right" style="margin-left: 5px;margin-right: 5px;"></div>
-            <div class="column">
-                <p><strong>Ausgezahlt:</strong> <span class="tag is-info "><b>{{ deposit.amount }} {{ deposit.currency }}</b></span> {{ deposit.get_out_method }}</p>
-                <p><strong>Am:</strong> {{ deposit.out_datetime|date:"l, d. F Y"}} um {{ deposit.out_datetime |date:"G:i"}}</p>
-                
-            </div>
-            {% endif %}
-        </div>
-
-        {% if deposit.comment %}
-            <p><strong>Kommentar:</strong> {{ deposit.comment }}</p>
+        {% if messages %}
+            {% for message in messages %}
+            <article class="message is-success noprint">
+                <div class="message-body">
+                    {{ message }}
+                </div>
+            </article>
+            {% endfor %}
         {% endif %}
-    </div>
 
-    <nav class="level is-max-desktop noprint">
-        <div class="level-left">
-            <div class="level-item">
-                <a class="button is-link is-outlined" href={% url 'keys:person-detail' pk=deposit.person.id %}>Zurück zur Person</a>
+        <h1 class='title is-2'>Kaution von {{ deposit.person }}</h1>
+
+        <div class="content">
+            <div class="columns">
+                <div class="column">
+                    <p><strong>Eingezahlt:</strong> <span class="tag is-info "><b>{{ deposit.amount }} {{ deposit.currency }}</b></span> {{ deposit.get_in_method }}</p>
+                    <p><strong>Am:</strong> {{ deposit.in_datetime|date:"l, d. F Y"}} um {{ deposit.in_datetime |date:"G:i"}}</p>
+                </div>
+                {% if deposit.retained_datetime %} {% comment %}This should stay even if returned{% endcomment %}
+                <div class="divider is-vertical is-right" style="margin-left: 5px;margin-right: 5px;"></div>
+                <div class="column">
+                    <p><strong>Einbehalten:</strong> {{ deposit.amount }} {{ deposit.currency }}</p>
+                    <p><strong>Am:</strong> {{ deposit.retained_datetime|date:"l, d. F Y"}} um {{ deposit.retained_datetime |date:"G:i"}}</p>
+                    
+                </div>
+                {% endif %}
+                {% if deposit.state == 'out' %}
+                <div class="divider is-vertical is-right" style="margin-left: 5px;margin-right: 5px;"></div>
+                <div class="column">
+                    <p><strong>Ausgezahlt:</strong> <span class="tag is-info "><b>{{ deposit.amount }} {{ deposit.currency }}</b></span> {{ deposit.get_out_method }}</p>
+                    <p><strong>Am:</strong> {{ deposit.out_datetime|date:"l, d. F Y"}} um {{ deposit.out_datetime |date:"G:i"}}</p>
+                    
+                </div>
+                {% endif %}
             </div>
-        </div>
-        <div class="level-right">
-            <div class="level-item">
-                <button class="button is-info" onclick="window.print()">Drucken</button>
-            </div>
-            {% if deposit.state == 'in' %}
-                <div class="level-item">
-                    <a class="button is-warning" href={% url 'keys:deposit-retain' pk_p=deposit.person.id pk_d=deposit.id  %}>Einbehalten</a>
-                </div>
-                <div class="level-item">
-                    <a class="button is-success" href={% url 'keys:deposit-return' pk_p=deposit.person.id pk_d=deposit.id %}>Zurückgeben</a>
-                </div>
-            {% elif deposit.state == 'retained' %}
-                <div class="level-item">
-                    <a class="button is-warning" href={% url 'keys:deposit-return' pk_p=deposit.person.id pk_d=deposit.id %}>Zurückgeben</a>
-                </div>
+
+            {% if deposit.comment %}
+                <p><strong>Kommentar:</strong> {{ deposit.comment }}</p>
             {% endif %}
         </div>
-    </nav>
-</div>
-<!-- Print -->
-    <div class="content print" >
-        <p class="text print" style="display: none">Datum, unterschrift</p>
+
+        <nav class="level is-max-desktop noprint">
+            <div class="level-left">
+                <div class="level-item">
+                    <a class="button is-link is-outlined" href={% url 'keys:person-detail' pk=deposit.person.id %}>Zurück zur Person</a>
+                </div>
+            </div>
+            <div class="level-right">
+                <div class="level-item">
+                    <button class="button is-info" onclick="window.print()">Drucken</button>
+                </div>
+                {% if deposit.state == 'in' %}
+                    <div class="level-item">
+                        <a class="button is-warning" href={% url 'keys:deposit-retain' pk_p=deposit.person.id pk_d=deposit.id  %}>Einbehalten</a>
+                    </div>
+                    <div class="level-item">
+                        <a class="button is-success" href={% url 'keys:deposit-return' pk_p=deposit.person.id pk_d=deposit.id %}>Zurückgeben</a>
+                    </div>
+                {% elif deposit.state == 'retained' %}
+                    <div class="level-item">
+                        <a class="button is-warning" href={% url 'keys:deposit-return' pk_p=deposit.person.id pk_d=deposit.id %}>Zurückgeben</a>
+                    </div>
+                {% endif %}
+            </div>
+        </nav>
     </div>
-
 {% endblock %}
 
-
-{% block additional_js %}
+<!-- Print -->
+{% block additional_css %}
     {% load static %}
-    <link rel="stylesheet" href="{% static 'css/print.css' %}">
+    <link rel="stylesheet" media="print" href="{% static 'css/print.css' %}">
 {% endblock %}
+
+{% block print %}
+    {% include 'keys/deposit_detail_print.html' %}
+{% endblock %}
+
+
+

@@ -44,8 +44,6 @@ $navbar-breakpoint: $tablet;
 @import "node_modules/bulma/bulma";
 
 
+
 // Set external component variables
 $divider-background-color: $dark;
-
-// Bulma Checkradio
-@import "../node_modules/bulma-extensions/bulma-checkradio/src/sass/index.sass";

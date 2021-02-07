@@ -18,6 +18,7 @@ from autoslug import AutoSlugField
 from .validators import *
 from .managers import *
 
+import logging
 
 # Slug Functions
 
@@ -94,7 +95,7 @@ class Room(models.Model):
                                   related_name='rooms',
                                   verbose_name='Gebäude',
                                   on_delete=models.CASCADE)
-    number = models.CharField("Raumnummer (ohne Gebäudekürzel)", max_length=32)
+    number = models.CharField("Raumnummer", help_text='Ohne Gebäudekürzel: E0.069 -> 0.069', max_length=32)
     group = models.ForeignKey('group',
                                blank=True, null=True,
                                related_name='rooms',
@@ -103,6 +104,7 @@ class Room(models.Model):
     purpose = models.ForeignKey('purpose',
                                  verbose_name='Zweck',
                                  related_name='rooms',
+                                 help_text='Für FSRe&AStA wird automatisch ein Name aus Gruppe und Zweck generiert. "FSR VT" + "Lager" -> "FSR VT LAGER"',
                                  blank=True,
                                  null=True,
                                  on_delete=models.PROTECT)
@@ -129,12 +131,28 @@ class Room(models.Model):
 
     def __str__(self):
         if self.name:
-            return "{} ({})".format(self.name, self.number)
+            name_string = "{} ({})".format(self.name, self.number)
+        elif self.purpose.name == 'Gremienraum' and self.group.name in Group.all_groups.fsr_list():
+            name_string = "{} ({})".format(self.group, self.number)
+        elif self.purpose.name != 'Gremienraum' and self.group.name in Group.all_groups.fsr_list():
+            name_string = "{} {} ({})".format(self.group, self.purpose, self.number)
+        elif self.group.name == 'AStA':
+            name_string = "{} {} ({})".format(self.group, self.purpose, self.number)
+        elif self.group.name == 'StuPa':
+            name_string = "{} {} ({})".format(self.group, self.purpose, self.number)
         else:
-            return "{}{}".format(self.building.identifier, self.number)
+            name_string = "{}{}".format(self.building.identifier, self.number)
+
+        return name_string
 
     def get_absolute_url(self):
         return reverse('keys:room-detail', kwargs={'slug': self.slug})
+
+    def get_short_name(self):
+        if self.name:
+            return "{} ({})".format(self.name, self.number)
+        else:
+            return "{}{}".format(self.building.identifier, self.number)
 
     def get_identifier(self):
         return "{}{}".format(self.building.identifier, self.number)
@@ -507,7 +525,7 @@ class Issue(models.Model):
     class Meta:
         verbose_name='Ausleihe'
         verbose_name_plural='Ausleihen'
-        ordering = ['-out_date', '-in_date']
+        ordering = ['-out_date', '-in_date', 'updated_at']
 
         constraints = [
             models.UniqueConstraint(

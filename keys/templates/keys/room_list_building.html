@@ -68,7 +68,7 @@
                                 {% for room in building.get_rooms %}
                                     <tr style="cursor:pointer;" onclick="location.href='{{ room.get_absolute_url }}'">
                                         <td data-label="Raum">
-                                            {{ room }}
+                                            {{ room.get_short_name }}
                                         </td>
                                         <td data-label="Zweck">
                                             {{ room.purpose }}

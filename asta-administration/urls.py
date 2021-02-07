@@ -17,20 +17,25 @@ from django.contrib import admin
 from django.urls import include, path
 from django.conf import settings
 
+from django.conf.urls.static import static
+
 from django.shortcuts import redirect
 
 admin.site.enable_nav_sidebar = False
+admin.site.site_header = "Administration"
+admin.site.site_title = "Backend"
+admin.site.index_title = "Datenbank-Tabellen"
+
 
 urlpatterns = [
-    #path('', lambda r: redirect('/keys/')),
+    path('', lambda r: redirect('/keys/')),
     path('accounts/', include('django.contrib.auth.urls'), name='account'),
 
     path('admin/', admin.site.urls, name='admin'),
 
     path('api/', include('api.urls'), name='api'),
-    path('', include('keys.urls'), name='keys'),
+    path('keys/', include('keys.urls'), name='keys'),
 ]
-
 
 if settings.DEBUG:
     import debug_toolbar

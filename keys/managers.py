@@ -9,13 +9,30 @@ class GroupManager(models.Manager):
         return self.filter(name__iexact=name)
 
     def fsr(self):
-        return self.filter(group__name__icontains='fsr')
+        return self.filter(name__icontains='fsr')
 
     def students(self):
         return self.union(self.get('asta'), self.get('stupa'), self.fsr(), self.get('student'))
 
     def not_students(self):
         return self.exclude(self.get('asta'), self.get('stupa'), self.fsr(), self.ag() ,self.get('student'))
+
+
+     # Not Returning QuerrySets
+    def fsr_list(self):
+        return [ group.name for group in self.fsr()]
+
+    def of_fsr_percent(self):
+        percent = self.of_fsr().count() / self.count() * 100
+        return int(percent)
+
+    def of_ag_percent(self):
+        percent = self.of_ag().count() / self.count() * 100
+        return int(percent)
+
+    def of_students_percent(self):
+        percent = self.of_students().count() / self.count() * 100
+        return int(percent)
 
 
 class BuildingManager(models.Manager):

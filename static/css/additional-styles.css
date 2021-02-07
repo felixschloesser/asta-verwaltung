@@ -1,0 +1,59 @@
+/* Placing the footer at the bottom */
+body {
+	min-height: 100vh;
+	min-height: -webkit-fill-available;
+}
+
+
+/* Adjusting padding for mobile devices with a "notch" */
+.safe-nav {
+ 	padding-left: max(12px, env(safe-area-inset-left));
+    padding-right: max(12px, env(safe-area-inset-right));
+    padding-right: 12px
+
+}
+
+
+
+/* Fixing Navbar behavior*/
+.navbar-brand > .logo {
+	padding-left: 0px;
+	margin-left: 0px;
+}
+
+
+.navbar-end > .navbar-item {
+	padding-right: 0px;
+	margin-right: 0px;
+}
+
+@media screen and (min-width: 758px) and (max-width: 1023px) {
+	.navbar-brand > .logo {
+		padding-left: 12px !important;
+	}
+	.navbar-end > .navbar-item {
+		padding-right: 12px !important;
+	}
+}
+
+@media screen and (max-width: 768px) {
+	.navbar-brand > .logo {
+		padding-left: 12px !important;
+	}
+	.navbar-end > .navbar-item {
+		padding-right: 12px !important;
+	}
+	.safe-nav {
+		padding: 0px !important;
+	}
+}
+
+.safe-body {
+ 	padding-left: max(32px, env(safe-area-inset-left));
+    padding-right: max(32px, env(safe-area-inset-right));
+}
+
+/* Dont show printing stuff on screens*/
+.print {
+    display: none;
+}

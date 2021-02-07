@@ -16,23 +16,26 @@ from .forms import *
 import datetime
 import logging
 
+import os
 
 def index_view(request):
     return render(request, 'keys/index.html')
 
 
 class Home(generic.ListView):
-    #queryset = Issue.all_issues.active()
-    queryset = Issue.all_issues.all()
-
+    queryset = Issue.all_issues.active()
     ordering = ['-updated_at']
     paginate_by = 5
+    context_object_name = 'issues'
     template_name = 'keys/home.html'
 
     def get_context_data(self, **kwargs):
         """
-        Get the current person from the request and add it to the context so that the tempalte can access it.
+        Add all people, all keys and all rooms to the view so we can display statisics
         """
+        loglevel = os.getenv('DJANGO_LOGLEVEL', 'NOT SET').upper()
+        logging.debug(loglevel)
+
         context = super().get_context_data(**kwargs)
         context["people"] = Person.all_people
         context["keys"] = Key.all_keys
@@ -86,7 +89,8 @@ class KeyLost(SuccessMessageMixin, LoginRequiredMixin, generic.UpdateView):
 
     def form_valid(self, form):
         """
-        Before validating the form, populate the person field using the request primary key as a lookup for
+        Before validating the form, set the stolen_or_lost field to True
+        so that this view actually does what it name says it does.
         """
         self.object = form.save(commit=False)
         self.object.stolen_or_lost = True
@@ -114,7 +118,8 @@ class KeyFound(SuccessMessageMixin, LoginRequiredMixin, generic.UpdateView):
 
     def form_valid(self, form):
         """
-        Before validating the form, populate the person field using the request primary key as a lookup for
+        Before validating the form, set the stolen_or_lost field to False
+        so that this view actually does what it name says it does.
         """
         self.object = form.save(commit=False)
         self.object.stolen_or_lost = False
@@ -291,8 +296,6 @@ class DepositReturn(SuccessMessageMixin, LoginRequiredMixin, generic.UpdateView)
 class DepositDelete(DepositMixin, LoginRequiredMixin, generic.DeleteView):
     model = Deposit
     pk_url_kwarg = 'pk_d'
-
-
 
 
 # Rooms

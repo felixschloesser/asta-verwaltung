@@ -18,3 +18,4 @@ django-simple-history==2.12.0
 python-dotenv==0.15.0
 whitenoise==5.2.0
 fontawesome-free==5.15.2
+gunicorn==20.0.4

@@ -9,7 +9,7 @@ Install Postgres:
 `sudo apt install postgresql postgresql-contrib`
 
 Access the postgres cli as the automatically created 'postgres' os-user:
-`sudo -u postgres psql``
+`sudo -u postgres psql`
 
 Next, create a database and user. Make sure to change the password:
 `CREATE DATABASE asta_administration_db;`

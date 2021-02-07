@@ -28,7 +28,9 @@ Exit the PostgreSQL prompt:
 
 
 
-## Virtualenv
+## Python Virtualenv
+`sudo apt install python3-venv python3-pi`
+
 `python3 -m pip install --upgrade pip`
 
 `python3 -m venv .django-env`

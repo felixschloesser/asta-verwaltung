@@ -13,7 +13,7 @@ Access the postgres cli as the automatically created 'postgres' os-user:
 
 Next, create a database and user. Make sure to change the password:
 `CREATE DATABASE asta_administration_db;`
-`CREATE USER django WITH PASSWORD 'changeme'`
+`CREATE USER django WITH PASSWORD 'changeme';`
 
 Modify a few of the connection parameters for the user:
 `ALTER ROLE django SET client_encoding TO 'utf8';`
@@ -21,7 +21,7 @@ Modify a few of the connection parameters for the user:
 `ALTER ROLE django SET timezone TO 'Europe/Berlin';`
 
 Give the new user access to administer our new database:
-`GRANT ALL PRIVILEGES ON asta_administration_db TO django'`
+`GRANT ALL PRIVILEGES ON asta_administration_db TO django';`
 
 Exit the PostgreSQL prompt:
 `\q`

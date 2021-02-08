@@ -1,7 +1,7 @@
 # Digitale Verwaltung
 A key management system written in django
 
-![Images/Bildschirmfoto_2021-02-08_um_19.07.55.png]
+![](Images/Bildschirmfoto_2021-02-08_um_19.07.55.png)
 
 ## Database Setup
 

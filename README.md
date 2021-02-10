@@ -32,6 +32,7 @@ Exit the PostgreSQL prompt:
 
 ## Python Virtualenv
 `sudo apt install python3-venv python3-pi`
+`sudo apt install python3-pip``
 
 `python3 -m pip install --upgrade pip`
 
@@ -42,4 +43,4 @@ Exit the PostgreSQL prompt:
 
 
 ## Starting Dev Server
-`python manage.py runserver``
+`python manage.py runserver`

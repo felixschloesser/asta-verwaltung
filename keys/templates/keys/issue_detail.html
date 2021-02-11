@@ -43,9 +43,9 @@
         <div class="level-left">
             <div class="level-item">
                 {% if issue.active %}
-                    <a class="button is-link is-outlined" href="{% url 'keys:issue-list' %}">Zurück zur Liste</a>
+                    <a class="button is-link is-outlined" href="{% url 'keys:issue-list-active' %}">Zurück zur Liste</a>
                 {% else %}
-                    <a class="button is-link is-outlined" href="{% url 'keys:issue-all-list' %}">Zurück zur Liste</a>
+                    <a class="button is-link is-outlined" href="{% url 'keys:issue-list-all' %}">Zurück zur Liste</a>
                 {% endif %}
             </div>
         </div>

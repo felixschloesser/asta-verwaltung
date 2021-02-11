@@ -1,53 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    {% load static %}
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no viewport-fit=cover">
-    <meta name="description" content="Ein Schlüsselverwaltungssystem für den AStA der TU-Hamburg.">
-    <title>{% block title %}{% endblock %}</title>
+    <head>
+        {% load static %}
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no viewport-fit=cover">
+        <meta name="description" content="Ein Schlüsselverwaltungssystem für den AStA der TU-Hamburg.">
+        <title>{% block title %}{% endblock %}</title>
 
-    <!-- Favicon -->
-    <link rel="icon" type='image/png' href="{% static 'keys/images/favicon.png' %}">
+        <!-- Favicon -->
+        <link rel="icon" type='image/png' href="{% static 'keys/images/favicon.png' %}">
 
-    <!-- CSS -->
-    <link rel="stylesheet" href="{% static 'css/my-bulma.css' %}">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    {% block additional_css%}{% endblock %}
-
-    <!--Additional JS-->
-    {% block additional_js %}{% endblock %}
-
-</head>
-<body class="is-flex is-flex-direction-column">
-    <!-- Navbar-->
-    <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
-        <div class="container is-max-widescreen safe-nav">
-            <div class="navbar-brand">
-                <div class="navbar-item">
-                    {% include 'keys/logo.svg' %}
+        <!-- CSS -->
+        <link rel="stylesheet" href="{% static 'css/custom-bulma.css' %}">
+        <link rel="stylesheet" href="{% static 'css/additional-styles.css' %}">
+        {% block additional_css%}{% endblock %}
+    </head>
+    <body class="is-flex is-flex-direction-column">
+        <!-- Navbar-->
+        <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
+            <div class="container is-max-widescreen safe-nav">
+                <div class="navbar-brand">
+                    <div class="navbar-item">
+                        {% include 'keys/logo.svg' %}
+                    </div>
+                </div>
+                <div id="navMenuColordark-example" class="navbar-menu">
                 </div>
             </div>
-            <div id="navMenuColordark-example" class="navbar-menu">
-            </div>
-        </div>
-    </nav>
+        </nav>
 
-    <!--Content -->
-    <section class="section is-flex-grow-1 safe-body">
-    {% block content %}{% endblock %}
-    </section>
-    <!-- Footer -->
-    <footer class="footer safe-body">
-        <div class="content has-text-centered">
-            <p>
-                TinTin's <strong>Schlüsselverwaltungssystem</strong>. Quelltext unter der
-                EUPL 1.2.
-            </p>
-        </div>
-    </footer>
-</body>
+        <!--Content -->
+        <section class="section is-flex-grow-1 safe-body">
+        {% block content %}{% endblock %}
+        </section>
+        <!-- Footer -->
+        <footer class="footer safe-body">
+            <div class="content has-text-centered">
+                <p>
+                    TinTin's <strong>Schlüsselverwaltungssystem</strong>. Quelltext unter der
+                    EUPL 1.2.
+                </p>
+            </div>
+        </footer>
+        <!--Additional JS-->
+        {% block additional_js %}{% endblock %}
+    </body>
 </html>
 
 

@@ -411,7 +411,7 @@ class Deposit(models.Model):
 
     person = models.ForeignKey('Person', related_name='deposits', verbose_name='Person', on_delete=models.PROTECT)
     amount = models.DecimalField('Betrag', max_digits=5, decimal_places=2, default=50, 
-                                           validators=[validate_deposit_mail], blank=True)
+                                           validators=[amount_is_not_negative_and_reasonable], blank=True)
 
     currency = models.CharField('Währung', max_length=3, choices=currency_choices, default='EUR')
 
@@ -498,14 +498,14 @@ class Issue(models.Model):
                                related_name="issues",
                                verbose_name='Person',
                                on_delete=models.PROTECT)
-    limit_key_choices = models.Q(issues__active=False, stolen_or_lost=False)
+    # limit_key_choices = models.Q(issues__active=True, stolen_or_lost=True)
     #!BUG duplication https://code.djangoproject.com/ticket/11707
     # still not fixed in 3.1.5?
 
     key = models.ForeignKey('Key', related_name="issues",
                             verbose_name='Schlüssel',
-                            on_delete=models.PROTECT,
-                            limit_choices_to=limit_key_choices)
+                            on_delete=models.PROTECT)
+                            # limit_choices_to=limit_key_choices)
 
     out_date = models.DateField('Ausgabedatum',
                                 default=timezone.now,

@@ -140,9 +140,7 @@ dmypy.json
 .DS_Store
 
 # node
-node_modules/
+node_modules
 
-
-# Deployment Secrets
-db-secrets.env
-django-secrets.env
+# static
+/static

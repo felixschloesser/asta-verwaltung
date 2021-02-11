@@ -3,11 +3,11 @@ from django.core.exceptions import ValidationError
 import datetime
 
 # Create your validators here.
-def validate_deposit_mail(value):
+def amount_is_not_negative_and_reasonable(value):
     if value < 0:
         raise ValidationError("Kaution darf nicht negativ sein.")
     elif value == 0:
-        raise ValidationError("Kaution darf nicht Null sein.")
+        raise ValidationError("Kaution darf nicht 0€ betragen.")
     elif value >= 500:
         raise ValidationError("Kaution zu hoch!")
 

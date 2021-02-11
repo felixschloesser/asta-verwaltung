@@ -2,33 +2,36 @@
     <page size="A4">
         <div class="letter layout">
             <div class="logo">
-                <div class="asta-logo">
+                <div class="asta_logo">
                     {% include 'keys/asta_logo.html' %}
                 </div>
             </div>
             <div class="head">
-                <p>Allgeiner Studierendenausschuss der TUHH</p>
-                <hr>
-                <p>
+                <p class="sender">
+                    Allgeiner Studierendenausschuss der TUHH
+                </p>
+                <svg width="252px" height="2px" viewBox="0 0 252 2" version="1.1" xmlns="http://www.w3.org/2000/svg" >
+                    <line x1="1" y1="1" x2="251" y2="1" id="Line" stroke="black"></line>
+                </svg>
+                <p class="adress">
                     {{ issue.person }}, {{ issue.person.group }}<br>
                     {{ issue.person.university_email }}<br>
                     {{ issue.person.phone_number }}<br>
                 </p>
             </div>
             <div class="body">
-                <p class="date">{% now "l, j. F Y" %}</p>
                 <h1>Schlüsselausgabe</h1>
                 <p>Hiermit bestätige ich, {{ issue.person }} am {{ issue.out_date }} folgenden Schlüssel ausgehändigt bekommen zu haben:</p>
-            
+
                 <ul>
                     <li>{{ issue.key }}</li>
                 </ul>
 
-                {% if issue.person.get_active_issues.count > 1 %}
+                {% if issue.person.get_active_issues.count > 2 %}
                     <p>Ausserdem habe ich noch folgende andere Schlüssel in meinem Besitz:</p>
                     <ul>
-                        {% for key in issue.person.get_current_issues %}
-                            <li>{{ key }}</li>
+                        {% for issue in issue.person.get_current_issues %}
+                            <li>{{ issue.key }}</li>
                         {% endfor %}
                     </ul>
                 {% endif %}
@@ -36,13 +39,13 @@
                 {% if issue.person.get_active_deposit %}
                     <p>Am {{ issue.person.get_active_deposit.in_datetime }} wurde eine Kaution von {{ issue.person.get_active_deposit.amount }} {{ issue.person.get_active_deposit.currency }} {{ issue.person.get_active_deposit.get_in_method }} hinterlegt.</p>
                 {% else %}
-                    <p>Es wurde keine Kaution hinterlegt.</p>
+                    <p>Es ist keine Kaution hinterlegt.</p>
                 {% endif %}
                 <br>
                 <svg width="162px" height="2px" viewBox="0 0 162 2" version="1.1" xmlns="http://www.w3.org/2000/svg" >
                     <line x1="1" y1="1" x2="161" y2="1" id="Line" stroke="black"></line>
                 </svg>
-                <p class="signature">Datum, Unterschrift</p>
+                <p class="signature">Unterschrift {{ issue.person }}</p>
             </div>
             <div class="aside">
                 <p class="adress">
@@ -53,32 +56,43 @@
                     (040) 42878 3764<br>
                     sekreteriat@asta.tuhh.de
                 </p>
+                <p class="date">
+                    Hamburg, {% now "j. F Y" %}
+                </p>
+
                 <p class="user">
                     {{ user.first_name }} {{ user.last_name }}<br>
                     {{ user.email }}
                 </p>
             </div>
 
-            <div class="footer">
-                <h2>Quittung</h2>
-                <p>
-                    Am {% now "l, j. F Y" %} wurde {{ issue.person }} der {{ issue.key }} ausgehändigt.
-                </p>
-                {% if issue.person.get_active_deposit %}
+            <div class="reciept">
+                <div class="reciept_text">
+                    <h2>Quittung</h2>
                     <p>
-                        Eine Kaution von {{ issue.person.get_active_deposit.amount }} {{ issue.person.get_active_deposit.currency }} ist hinterlegt.
+                        Am {% now "l, j. F Y" %} wurde {{ issue.person }} der {{ issue.key }} ausgehändigt.
                     </p>
-                {% else %}
-                    <p>
-                        Es ist keine Kaution hinterlegt.
-                    </p>
-                {% endif %}
-                <br>
-                <svg width="252px" height="2px" viewBox="0 0 252 2" version="1.1" xmlns="http://www.w3.org/2000/svg" >
-                    <line x1="1" y1="1" x2="251" y2="1" id="Line" stroke="black"></line>
-                </svg>
-                <p class="signature">Datum, Unterschrift, Stempel (AStA)</p>
+                    {% if issue.person.get_active_deposit %}
+                        <p>
+                            Eine Kaution von {{ issue.person.get_active_deposit.amount }} {{ issue.person.get_active_deposit.currency }} ist hinterlegt.
+                        </p>
+                    {% else %}
+                        <p>
+                            Es ist keine Kaution hinterlegt.
+                        </p>
+                    {% endif %}
+                    <br>
+                    <svg width="252px" height="2px" viewBox="0 0 252 2" version="1.1" xmlns="http://www.w3.org/2000/svg" >
+                        <line x1="1" y1="1" x2="251" y2="1" id="Line" stroke="black"></line>
+                    </svg>
+                    <p class="signature">Unterschrift {{ user.first_name }} {{ user.last_name }}</p>
+                </div>
+                <div class="reciept_logo">
+                    <div class="reciept_asta_logo">
+                        {% include 'keys/asta_logo.html' %}
+                    </div>
+                </div>
             </div>
-        </div>            
+        </div>
     </page>
 </div>

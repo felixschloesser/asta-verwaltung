@@ -1,33 +1,38 @@
-# key-management
+# Digitale Verwaltung
 A key management system written in django
 
+![](Images/Bildschirmfoto_2021-02-08_um_19.07.55.png)
+
 ## Database Setup
-### macOS
-`brew update`
-`brew install postgres`
-`brew services start postgres`
 
-Access the postgres command line as root
-`sudo mysql -u root`
+### Ubuntu 20.4
+Install Postgres:
+`sudo apt update`
+`sudo apt install postgresql postgresql-contrib`
 
-`CREATE DATABASE astadb`
-`CREATE USER django WITH PASSWORD 'changeme'`
-`GRANT ALL PRIVILEGES ON astadb TO django'`
+Access the postgres cli as the automatically created 'postgres' os-user:
+`sudo -u postgres psql`
 
+Next, create a database and user. Make sure to change the password:
+`CREATE DATABASE asta_administration_db;`
+`CREATE USER django WITH PASSWORD 'changeme';`
+
+Modify a few of the connection parameters for the user:
 `ALTER ROLE django SET client_encoding TO 'utf8';`
 `ALTER ROLE django SET default_transaction_isolation TO 'read committed';`
-`ALTER ROLE django SET timezone TO 'Europe/Berlin';`:
+`ALTER ROLE django SET timezone TO 'Europe/Berlin';`
 
-### ubuntu
-`sudo apt update`
-`sudo apt install mariadb-server`
-`sudo mysql_secure_installation`
+Give the new user access to administer our new database:
+`GRANT ALL PRIVILEGES ON asta_administration_db TO django';`
 
-`sudo apt install libmariadbclient-dev`
+Exit the PostgreSQL prompt:
+`\q`
 
-## Virtualenv
-`brew update`
-`brew upgrade python3`
+
+
+## Python Virtualenv
+`sudo apt install python3-venv python3-pi`
+`sudo apt install python3-pip``
 
 `python3 -m pip install --upgrade pip`
 
@@ -37,6 +42,5 @@ Access the postgres command line as root
 `pip install -r requirements.txt`
 
 
-
-## Starting Django
-`python manage.py runserver
+## Starting Dev Server
+`python manage.py runserver`

@@ -23,7 +23,7 @@
 			                    </thead>
 			                <tbody>
 			                    {% for issue in issues %}
-			                        <tr style="cursor:pointer;" onclick="location.href='{{ issue.get_absolute_url }}'">
+			                        <tr onclick="location.href='{{ issue.get_absolute_url }}'">
 			                            <td>
 			                                {{ issue.key }}
 			                            </td>

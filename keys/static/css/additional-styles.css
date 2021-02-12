@@ -4,11 +4,17 @@ body {
 	min-height: -webkit-fill-available;
 }
 
+/* Table rows show clickable cursor*/
+table > tbody > tr {
+	cursor:pointer;
+}
+
 
 .tag {
 	margin-top: 6px;
 	margin-bottom: 6px;
 }
+
 
 /* Dashboard Grid */
 .grid-container {

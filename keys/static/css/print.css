@@ -30,11 +30,10 @@ nav, .main, footer {
 body {
     display: block;
     margin: 0px;
-    background: rgb(204, 204, 204);
+    background: white;
 }
 
 page {
-    background: white;
     display: block;
     font-size: 12pt;
     margin: 0px;
@@ -51,7 +50,7 @@ page {
     display: grid;
     grid-template-columns: 2fr 0.8fr 1.2fr;
     grid-template-rows: 0.5fr 0.5fr 2.5fr 1.5fr;
-    gap: 0.7cm 0.5cm;
+    gap: 0.5cm 0.5cm;
     grid-template-areas:
         ". . logo"
         "head . aside"
@@ -86,7 +85,7 @@ page {
     grid-area: body;
 }
 
-.body > .signature {
+.signature {
     margin-top: 0px;
 }
 

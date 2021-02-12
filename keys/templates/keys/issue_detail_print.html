@@ -27,11 +27,11 @@
                     <li>{{ issue.key }}</li>
                 </ul>
 
-                {% if issue.person.get_active_issues.count > 2 %}
+                {% if issue.person.get_active_issues.count > 1 %}
                     <p>Ausserdem habe ich noch folgende andere Schlüssel in meinem Besitz:</p>
                     <ul>
-                        {% for issue in issue.person.get_current_issues %}
-                            <li>{{ issue.key }}</li>
+                        {% for issue in issue.person.get_active_issues %}
+                            {% if not forloop.last %}<li>{{ issue.key }}</li>{% endif %}
                         {% endfor %}
                     </ul>
                 {% endif %}
@@ -41,6 +41,7 @@
                 {% else %}
                     <p>Es ist keine Kaution hinterlegt.</p>
                 {% endif %}
+                <br>
                 <br>
                 <svg width="162px" height="2px" viewBox="0 0 162 2" version="1.1" xmlns="http://www.w3.org/2000/svg" >
                     <line x1="1" y1="1" x2="161" y2="1" id="Line" stroke="black"></line>

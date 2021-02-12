@@ -223,7 +223,7 @@ class DepositDetail(DepositMixin, LoginRequiredMixin, generic.DetailView):
 
 
 
-class DepositCreate(SuccessMessageMixin, LoginRequiredMixin, generic.CreateView):
+class DepositCreate(DepositMixin, SuccessMessageMixin, LoginRequiredMixin, generic.CreateView):
     model = Deposit
     form_class = DepositCreateForm
     initial = {'in_method': 'cash'}
@@ -271,7 +271,7 @@ class DepositRetain(DepositMixin, SuccessMessageMixin, LoginRequiredMixin, gener
 
 
 
-class DepositReturn(SuccessMessageMixin, LoginRequiredMixin, generic.UpdateView):
+class DepositReturn(DepositMixin, SuccessMessageMixin, LoginRequiredMixin, generic.UpdateView):
     model = Deposit
     pk_url_kwarg = 'pk_d'
     form_class = DepositReturnForm

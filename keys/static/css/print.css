@@ -20,7 +20,7 @@ li {
     font-family: Ubuntu;
     font-size: 14px;
     font-weight: 400;
-    line-height: 30px;
+    line-height: 1.4rem;
 }
 
 nav, .main, footer {
@@ -53,8 +53,8 @@ page {
 .layout {
     display: grid;
     grid-template-columns: 2fr 0.8fr 1.2fr;
-    grid-template-rows: 0.5fr 0.5fr 2.5fr 1.5fr;
-    gap: 0.5cm 0.5cm;
+    grid-template-rows: 0.5fr 0.5fr 2.5fr 1fr;
+    gap: 0.25cm 0.25cm;
     grid-template-areas:
         ". . logo"
         "head . aside"
@@ -79,6 +79,8 @@ page {
 
 .head > .sender {
     margin-bottom: 0px;
+    font-size: 10pt;
+    transform: translate(0%, +50%);
 }
 
 .head > .adress {
@@ -113,7 +115,7 @@ page {
     display: grid;
     grid-template-columns: 2fr 0.8fr 1.2fr;
     grid-template-rows: 1fr;
-    gap: 0.5cm 0.5cm;
+    gap: 0.25cm 0.25cm;
     grid-template-areas:
         "reciept_text reciept_text reciept_logo";
 }

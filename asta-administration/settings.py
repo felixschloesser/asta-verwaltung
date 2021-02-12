@@ -184,7 +184,7 @@ STATIC_ROOT = os.getenv('DJANGO_STATIC_ROOT', os.path.join(BASE_DIR, 'static'))
 STATIC_URL = '/static/'
 
 WHITENOISE_ROOT = os.path.join(STATIC_ROOT, 'root')
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_STORAGE = os.getenv('DJANGO_STATICFILES_STORAGE')
 
 # Logging Configuration
 

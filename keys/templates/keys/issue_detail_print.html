@@ -8,7 +8,7 @@
             </div>
             <div class="head">
                 <p class="sender">
-                    Allgeiner Studierendenausschuss der TUHH
+                    Allgemeiner Studierendenausschuss der TUHH
                 </p>
                 <svg width="252px" height="2px" viewBox="0 0 252 2" version="1.1" xmlns="http://www.w3.org/2000/svg" >
                     <line x1="1" y1="1" x2="251" y2="1" id="Line" stroke="black"></line>
@@ -21,17 +21,17 @@
             </div>
             <div class="body">
                 <h1>Schlüsselausgabe</h1>
-                <p>Hiermit bestätige ich, {{ issue.person }} am {{ issue.out_date }} folgenden Schlüssel ausgehändigt bekommen zu haben:</p>
+                <p>Hiermit bestätige ich, {{ issue.person }}, am {{ issue.out_date }} folgenden Schlüssel ausgehändigt bekommen zu haben:</p>
 
                 <ul>
                     <li>{{ issue.key }}</li>
                 </ul>
 
                 {% if issue.person.get_active_issues.count > 1 %}
-                    <p>Ausserdem habe ich noch folgende andere Schlüssel in meinem Besitz:</p>
+                    <p>Insgesamt befinden sich die folgenden Schlüssel in meinem Besitz:</p>
                     <ul>
                         {% for issue in issue.person.get_active_issues %}
-                            {% if not forloop.last %}<li>{{ issue.key }}</li>{% endif %}
+                            <li>{{ issue.key }}</li>
                         {% endfor %}
                     </ul>
                 {% endif %}
@@ -54,7 +54,7 @@
                     Am Schwarzenberg-Campus 3<br>
                     21075 Hamburg<br>
                     <br>
-                    (040) 42878 3764<br>
+                    (040) 42878 4160<br>
                     sekreteriat@asta.tuhh.de
                 </p>
                 <p class="date">

@@ -65,7 +65,7 @@
 
                                 <tbody>
                                 {% for room in group.rooms.all %}
-                                    <tr style="cursor:pointer;" onclick="location.href='{{ room.get_absolute_url }}'">
+                                    <tr onclick="location.href='{{ room.get_absolute_url }}'">
                                         <td data-label="Raum">
                                             {{ room }}
                                         </td>

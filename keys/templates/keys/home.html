@@ -16,7 +16,7 @@
 				<div class="content">
 			        <p class="title mb-4">Ausleihen</p>
 			        {% if issues %}
-				        <table class="table is-hoverable" style="background-color: whitesmoke;">
+				        <table class="table is-hoverable has-background-light">
 					        <thead>
 			                    <th>Schlüssel</th>
 			                        <th>Person</th>
@@ -59,7 +59,7 @@
 					    	</div>
 					    </div>
 				    </div>
-				    <div class="divider is-right" style="margin: 1rem 1rem"></div>
+				    <div class="divider is-right"></div>
 				    <div class="fsr">
 				 		<div class="columns">
 				    		<div class="column is-one-third">
@@ -77,7 +77,7 @@
 					    	</div>
 					    </div>
 				    </div>
-				    <div class="divider is-right" style="margin: 1rem 1rem"></div>
+				    <div class="divider is-right"></div>
 				    <div class="ag">
 				    	<div class="columns">
 				    		<div class="column is-one-third">
@@ -130,7 +130,7 @@
 		 	<div class="statistics box">
 		 		<p class="title">Statistiken</p>
 	        	<div class="columns">
-	        		<div class="column key" style="padding-left: 0.75rem;padding-bottom: 0.75rem;">
+	        		<div class="column key">
 		        		<div class="content">
 		          			<p class="title is-5 mb-2">Schlüssel</p>
 	          				<p>
@@ -143,8 +143,8 @@
 					
 					
 					<hr class="person">
-					<div class="person divider is-vertical is-right" style="margin-left: 5px;margin-right: 5px;"></div>
-	        		<div class="column person" style="padding-left: 0.75rem;padding-bottom: 0.75rem;">
+					<div class="person divider is-vertical is-right"></div>
+	        		<div class="column person">
 		        		<div class="content">
 		          			<p class="title is-5 mb-2">Personen</p>
 		          			<p>
@@ -156,9 +156,9 @@
 		          	</div>
 					
 					<hr class="room">
-					<div class="room divider is-vertical is-right" style="margin-left: 5px;margin-right: 5px;"></div>
+					<div class="room divider is-vertical is-right"></div>
 	        		
-	        		<div class="column room" style="padding-left: 0.75rem;padding-bottom: 0.75rem;">
+	        		<div class="column room">
 		        		<div class="content">
 		        			<p class="title is-5 mb-2">Räume</p>
 		          			<p>
@@ -181,75 +181,4 @@
 
 </div>
 
-{% endblock %}
-
-{% block additional_css %}
-<style>
-	.grid-container {
-	display: grid;
-	grid-template-columns: 1fr 1fr minmax(15rem,1fr);
-	grid-template-rows: auto auto auto;
-	grid-column-gap: 16px;
-	grid-row-gap: 16px;
-	grid-template-areas:
-	"issues shortcuts person-search"
-	"issues shortcuts key-search"
-	"issues statistics statistics";
-
-	}
-	.issues { grid-area: issues; }
-	.person-search { grid-area: person-search;}
-	.key-search { grid-area: key-search;}
-	.statistics {grid-area: statistics;}
-	.shortcuts-container {grid-area: shortcuts;}
-
-
-	.box {
-		margin-bottom: 0px !important
-	}
-
-
-	@media (max-width: 1024px) {
-  		.grid-container {
-  			grid-template-columns: 1fr 1fr;
-  			grid-template-rows: 1fr auto auto;
-
-		    grid-template-areas:
-			"issues shortcuts"
-			"person-search key-search"
-			"statistics statistics";
-	  	}
-	}
-
-	@media (max-width: 769px) {
-		.columns {
-			display: flex;
-		}
-		.columns .column {
-			flex-basis: 0;
-			flex-grow: 1;
-			flex-shrink: 1;
-		}
-	  	.statistics .room {
-	  		display: none;
-	  	}
-	  	
-	}
-
-	@media (max-width: 640px) {
-  		.grid-container {
-  			grid-template-columns: 1fr;
-  			grid-template-rows: auto;
-
-		    grid-template-areas:
-		      'issues'
-		      'shortcuts'
-		      'person-search'
-		      'key-search'
-		      'statistics';
-	  	}
-	}
-
-	
-</style>
 {% endblock %}

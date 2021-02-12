@@ -1,6 +1,6 @@
 {% extends "keys/base.html" %}
 
-{% block title %}Ausgabe {{ issue.person }}{% endblock %}
+{% block title %}Ausleihe {{ issue.person }}{% endblock %}
 
 
 {% block content %}
@@ -16,7 +16,7 @@
         {% endfor %}
     {% endif %}
 
-    <h1 class='title is-2'>Ausgabe von <a href={% url 'keys:key-detail' pk=issue.key.id %}>{{ issue.key }}</a></h1>
+    <h1 class='title is-2'>Ausleihe von <a href={% url 'keys:key-detail' pk=issue.key.id %}>{{ issue.key }}</a></h1>
 
     <div class="content">
         {% if issue.key.stolen_or_lost %}
@@ -30,7 +30,7 @@
                 {% if not forloop.last %}, {% endif %}
             {% endfor %}
         </p>
-        <p><strong>Ausgabedatum:</strong> {{ issue.out_date |date:"l, d. F Y" }}</p>
+        <p><strong>Ausleihdatum:</strong> {{ issue.out_date |date:"l, d. F Y" }}</p>
         {% if not issue.active %}
             <p><strong>Rückgabedatum:</strong> {{ issue.in_date |date:"l, d. F Y"}}</p>
         {% endif %}

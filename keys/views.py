@@ -33,9 +33,6 @@ class Home(generic.ListView):
         """
         Add all people, all keys and all rooms to the view so we can display statisics
         """
-        loglevel = os.getenv('DJANGO_LOGLEVEL', 'NOT SET').upper()
-        logging.debug(loglevel)
-
         context = super().get_context_data(**kwargs)
         context["people"] = Person.all_people
         context["keys"] = Key.all_keys
@@ -151,14 +148,16 @@ class PersonSearchResults(LoginRequiredMixin, generic.ListView):
         # of the people where first or last name of a person match the search query
         # in the get request
         group_query_parameter = self.request.GET.get('group')
-        logging.debug("QUERY: {}".format(group_query_parameter))
-        if group_query_parameter:
-            room_list = Person.all_people.of_group(group_query_parameter)
-            logging.debug("LIST: {}".format(room_list))
+        if group_query_parameter == 'FSR':
+            room_list = Person.all_people.of_fsr()
 
             return room_list
 
-        logging.debug("NO GROUP")
+        if group_query_parameter:
+            room_list = Person.all_people.of_group(group_query_parameter)
+
+            return room_list
+
         search_query_parameter = self.request.GET.get('q')
         if search_query_parameter:
             person_list = Person.all_people.filter(models.Q(first_name__istartswith=search_query_parameter) |
@@ -325,10 +324,16 @@ class RoomSearchResults(LoginRequiredMixin, generic.ListView):
             return room_list
 
         query = self.request.GET.get('group')
+        if query == "FSR":
+            room_list = Room.all_rooms.of_fsr()
+
+            return room_list
         if query:
             room_list = Room.all_rooms.of_group(query)
 
             return room_list
+
+
 
         query = self.request.GET.get('q')
         if query:

@@ -39,6 +39,11 @@
         {% if page_obj.has_next %}
             {% if page_obj.next_page_number|add:"2" <= page_obj.paginator.num_pages %}
                 <li>
+                    <a class="pagination-link" aria-label="Goto page {{ page_obj.next_page_number }}" href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+                </li>
+            {% endif %}
+            {% if page_obj.next_page_number|add:"2" <= page_obj.paginator.num_pages %}
+                <li>
                     <span class="pagination-ellipsis">&hellip;</span>
                 </li>
             {% elif page_obj.next_page_number|add:"1" == page_obj.paginator.num_pages %}

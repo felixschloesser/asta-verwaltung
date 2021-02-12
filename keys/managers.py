@@ -155,10 +155,10 @@ class PersonManager(models.Manager):
         return self.filter(group__name__iexact=name)
 
     def of_fsr(self):
-        return self.filter(group__name_icontains='fsr')
+        return self.filter(group__name__icontains='fsr')
 
     def of_ag(self):
-        return self.filter(group__name_icontains='ag')
+        return self.filter(group__name__icontains='ag')
 
     def of_students(self):
         return self.union(self.of_group('asta'), self.of_group('stupa'), self.of_fsr(), self.of_group('student'))

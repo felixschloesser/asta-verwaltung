@@ -1,12 +1,12 @@
 {% extends "keys/base_minimal.html" %}
 
-{% block title %}Neue Ausgabe | Schlüsselsystem{% endblock %}
+{% block title %}Neue Ausleihe | Schlüsselsystem{% endblock %}
 
 {% load widget_tweaks %}
 
 {% block content %}
 <div class="container is-max-desktop">
-    <h1 class="title is-2">Neue Ausgabe{% if person %} an {{ person }}{% endif%}</h1>
+    <h1 class="title is-2">Neue Ausleihe{% if person %} an {{ person }}{% endif%}</h1>
 
     <form method='post' autocomplete="off">
         {% csrf_token %}

@@ -109,9 +109,9 @@
                 <div class="level-item">
                     <p class="control">
                         {% if keys.availible %}
-                        <a class="button is-primary" href="{% url 'keys:issue-new'  %}?person={{person.id}}">Neue Ausgabe</a>
+                        <a class="button is-primary" href="{% url 'keys:issue-new'  %}?person={{person.id}}">Neue Ausleihe</a>
                         {% else %}
-                        <a class="button is-primary has-tooltip-arrow" data-tooltip="Keine Schlüssel verfügbar." disabled>Neue Ausgabe</a>               
+                        <a class="button is-primary has-tooltip-arrow" data-tooltip="Keine Schlüssel verfügbar." disabled>Neue Ausleihe</a>               
                         {% endif %}
                     </p>
                 </div>

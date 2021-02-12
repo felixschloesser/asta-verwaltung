@@ -360,7 +360,9 @@ class RoomDetail(LoginRequiredMixin, generic.DetailView):
         context = super().get_context_data(**kwargs)
         room_slug = self.kwargs.get('slug')
         logging.debug(room_slug)
-        relevant_issues = Issue.all_issues.active().filter(key__doors__room__slug__exact=room_slug)
+        relevant_issues = Issue.all_issues.active().filter(key__doors__room__slug__exact=room_slug,
+                                                           key__doors__kind__exact='access'
+                                                          )
         context['issues'] = relevant_issues
 
         return context

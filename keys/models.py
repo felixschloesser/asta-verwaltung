@@ -299,7 +299,10 @@ class LockingSystem(models.Model):
         ]
 
     def __str__(self):
-        return "{} von {}".format(self.name, self.company)
+        if self.company:
+            return "{} von {}".format(self.name, self.company)
+        else:
+            return self.name
 
     def get_method(self):
         # No good way to access verbose name :(

@@ -44,7 +44,7 @@
                     <thead>
                          <th>Nummer</th>
                          <th>Schließsystem</th>
-                         <th>Türen</th>
+                         <th>Räume</th>
                          <th>Status</th>
 
                     </thead>
@@ -58,9 +58,11 @@
                             <td data-label="Schließsystem">
                                 {{ key.locking_system }}
                             </td>
-                            <td data-label="Türen">
+                            <td data-label="Räume">
                                 {% for room in key.get_rooms %}
                                     {{ room }}{% if not forloop.last %}, {% endif %}
+                                {% empty %}
+                                    (keine / nur Verbindungstüren)
                                 {% endfor %}
                             </td>
                             <td data-label="Status">

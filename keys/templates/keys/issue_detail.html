@@ -28,6 +28,8 @@
             {% for room in issue.key.get_rooms %}
                 <a href={% url 'keys:room-detail' slug=room.slug %}>{{room}}</a>
                 {% if not forloop.last %}, {% endif %}
+            {% empty %}
+                Keinen Räumen oder ausschließlich Verbindungstüren.
             {% endfor %}
         </p>
         <p><strong>Ausleihdatum:</strong> {{ issue.out_date |date:"l, d. F Y" }}</p>

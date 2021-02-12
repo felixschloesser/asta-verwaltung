@@ -70,7 +70,7 @@
                          <th>Person</th>
                          <th>Schlüssel</th>
                          <th>Räume</th>
-                         <th>Ausgabedatum</th>
+                         <th>Ausleihdatum</th>
 
                     </thead>
 
@@ -87,10 +87,10 @@
                             <td data-label="Räume">
                                 {% for room in issue.key.get_rooms %}
                                     {{ room }}{% if not forloop.last %}, {% endif %}
-                                {% empty%}-
+                                {% empty%}keine / nur Verbindungstüren
                                 {% endfor %}
                             </td>
-                            <td data-label="Ausgabedatum">
+                            <td data-label="Ausleihdatum">
                                 {{ issue.out_date }}
                             </td>
                             

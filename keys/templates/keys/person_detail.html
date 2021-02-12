@@ -2,6 +2,10 @@
 
 {% block title %}{{ person.get_full_name }} | Person | Schlüsselsystem{% endblock %}
 
+{% block additional_css %}
+    {% load static %}
+    <link href="{% static 'fontawesome_free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
 
 {% block content %}
 <div class="container is-max-desktop">
@@ -58,7 +62,7 @@
                     <em>{{ room }}</em>
                         {% if not forloop.last %}, {% endif %}
                     {% empty %}
-                        keine.
+                        keine / nur Verbindungstüren
                     {% endfor %}]
             </li>
         {% empty %}
@@ -80,21 +84,56 @@
             <div class="level-right">
                 <div class="level-item">
                     <p class="control">
-                        <a class="button is-light has-tooltip-bottom" href="{% url 'keys:person-update' pk=person.id  %}">Bearbeiten</a>
+                        <a class="button is-light has-tooltip-bottom" href="{% url 'keys:person-update' pk=person.id  %}">Kontakt bearbeiten</a>
                     </p>
                 </div>
                 <div class="level-item">
                     {% if person.get_active_deposit and not person.get_active_issues %}
-                        <p class="control">
-                            <a class="button is-success" href={% url 'keys:deposit-return' pk_p=person.id pk_d=person.get_active_deposit.id %}>Kaution zurück</a>
-                        </p>
-                    {% elif person.deposits.active %}
-                        <p class="control">
-                            <a class="button is-warning has-tooltip-arrow" href={% url 'keys:deposit-return' pk_p=person.id pk_d=person.get_active_deposit.id %} data-tooltip="Noch offene ausleihen">Kaution zurück</a>
-                        </p>
+                        <div class="dropdown-trigger">
+                                <button class="button is-warning" aria-haspopup="true" aria-controls="dropdown-menu">
+                                    <span>Kaution</span>
+                                    <span class="icon is-small">
+                                        <i class="fas fa-angle-down" aria-hidden="true"></i>
+                                    </span>
+                                </button>
+                            </div>
+                            <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                                <div class="dropdown-content has-background-warning">
+                                    <a href={% url 'keys:deposit-return' pk_p=person.id pk_d=person.get_active_deposit.id %} class="dropdown-item has-background-warning">
+                                        Zurückgeben
+                                    </a>
+                                    <hr class="dropdown-divider">
+                                    <a href={% url 'keys:deposit-retain' pk_p=person.id pk_d=person.get_active_deposit.id %} class="dropdown-item has-background-warning">
+                                        Einbehalten
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    {% elif person.get_active_deposit %}
+                        <div class="dropdown is-hoverable">
+                            <div class="dropdown-trigger">
+                                <button class="button is-warning" aria-haspopup="true" aria-controls="dropdown-menu">
+                                    <span>Kaution</span>
+                                    <span class="icon is-small">
+                                        <i class="fas fa-angle-down" aria-hidden="true"></i>
+                                    </span>
+                                </button>
+                            </div>
+                            <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                                <div class="dropdown-content has-background-warning">
+                                    <a href={% url 'keys:deposit-return' pk_p=person.id pk_d=person.get_active_deposit.id %} class="dropdown-item has-background-warning has-tooltip-right has-tooltip-arrow" data-tooltip="Noch offene ausleihen">
+                                        Zurückgeben
+                                    </a>
+                                    <hr class="dropdown-divider">
+                                    <a href={% url 'keys:deposit-retain' pk_p=person.id pk_d=person.get_active_deposit.id %} class="dropdown-item has-background-warning">
+                                        Einbehalten
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
                     {% elif person.deposit.state == 'retained' %}
                         <p class="control">
-                            <a class="button is-warning has-tooltip-arrow" href={% url 'keys:deposit-create' pk=person.id %}>Neue Kaution</a>
+                            <a class="button is-warning has-tooltip-right has-tooltip-arrow" href={% url 'keys:deposit-create' person.id %}>Neue Kaution</a>
                         </p>
                     {% elif person.deposit.state == 'out' %} {% comment %} There alreaedy exists a deposit{% endcomment %}
                         <p class="control">

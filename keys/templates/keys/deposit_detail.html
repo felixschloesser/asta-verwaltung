@@ -21,13 +21,13 @@
         <div class="content">
             <div class="columns">
                 <div class="column">
-                    <p><strong>Eingezahlt:</strong> <span class="tag is-info "><b>{{ deposit.amount }} {{ deposit.currency }}</b></span> {{ deposit.get_in_method }}</p>
+                    <p><strong>Eingezahlt:</strong> <span class="tag is-success "><b>{{ deposit.amount }} {{ deposit.currency }}</b></span> {{ deposit.get_in_method }}</p>
                     <p><strong>Am:</strong> {{ deposit.in_datetime|date:"l, d. F Y"}} um {{ deposit.in_datetime |date:"G:i"}}</p>
                 </div>
                 {% if deposit.retained_datetime %} {% comment %}This should stay even if returned{% endcomment %}
                 <div class="divider is-vertical is-right" style="margin-left: 5px;margin-right: 5px;"></div>
                 <div class="column">
-                    <p><strong>Einbehalten:</strong> {{ deposit.amount }} {{ deposit.currency }}</p>
+                    <p><strong>Einbehalten:</strong> <span class="tag is-warning "><b>{{ deposit.amount }} {{ deposit.currency }}</b></span></p>
                     <p><strong>Am:</strong> {{ deposit.retained_datetime|date:"l, d. F Y"}} um {{ deposit.retained_datetime |date:"G:i"}}</p>
                     
                 </div>
@@ -62,7 +62,7 @@
                         <a class="button is-warning" href={% url 'keys:deposit-retain' pk_p=deposit.person.id pk_d=deposit.id  %}>Einbehalten</a>
                     </div>
                     <div class="level-item">
-                        <a class="button is-success" href={% url 'keys:deposit-return' pk_p=deposit.person.id pk_d=deposit.id %}>Zurückgeben</a>
+                        <a class="button is-primary" href={% url 'keys:deposit-return' pk_p=deposit.person.id pk_d=deposit.id %}>Zurückgeben</a>
                     </div>
                 {% elif deposit.state == 'retained' %}
                     <div class="level-item">

@@ -89,23 +89,25 @@
                 </div>
                 <div class="level-item">
                     {% if person.get_active_deposit and not person.get_active_issues %}
-                        <div class="dropdown-trigger">
-                            <button class="button is-warning" aria-haspopup="true" aria-controls="dropdown-menu">
-                                <span>Kaution</span>
-                                <span class="icon is-small">
-                                    <i class="fas fa-angle-down" aria-hidden="true"></i>
-                                </span>
-                            </button>
-                        </div>
-                        <div class="dropdown-menu" id="dropdown-menu" role="menu">
-                            <div class="dropdown-content has-background-warning">
-                                <a href={% url 'keys:deposit-return' pk_p=person.id pk_d=person.get_active_deposit.id %} class="dropdown-item has-background-warning">
-                                    Zurückgeben
-                                </a>
-                                <hr class="dropdown-divider">
-                                <a href={% url 'keys:deposit-retain' pk_p=person.id pk_d=person.get_active_deposit.id %} class="dropdown-item has-background-warning">
-                                    Einbehalten
-                                </a>
+                       <div class="dropdown is-hoverable">
+                            <div class="dropdown-trigger">
+                                <button class="button is-warning" aria-haspopup="true" aria-controls="dropdown-menu">
+                                    <span>Kaution</span>
+                                    <span class="icon is-small">
+                                        <i class="fas fa-angle-down" aria-hidden="true"></i>
+                                    </span>
+                                </button>
+                            </div>
+                            <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                                <div class="dropdown-content has-background-warning">
+                                    <a href={% url 'keys:deposit-return' pk_p=person.id pk_d=person.get_active_deposit.id %} class="dropdown-item has-background-warning">
+                                        Zurückgeben
+                                    </a>
+                                    <hr class="dropdown-divider">
+                                    <a href={% url 'keys:deposit-retain' pk_p=person.id pk_d=person.get_active_deposit.id %} class="dropdown-item has-background-warning">
+                                        Einbehalten
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     {% elif person.get_active_deposit %}

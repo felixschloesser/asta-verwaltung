@@ -103,7 +103,7 @@
 	  				<form action={% url 'keys:person-search-results' %} method='get'>
 	  					<div class="field has-addons">
 	                    	<div class="control is-expanded">
-	                            <input class="input is-fullwidth" name='q' type="text" placeholder="Vor-/Nachname/Gruppe" required>
+	                            <input class="input is-fullwidth" aria-label="Personensuche" name='q' type="text" placeholder="Vor-/Nachname/Gruppe" required>
 	                    	</div>
 	                    	<div class="control">
 		                        <button type='submit' class="button is-info">Suchen</button>
@@ -118,7 +118,7 @@
 					<form action={% url 'keys:key-search-results' %} method='get'>
 	  					<div class="field has-addons">
 	                    	<div class="control is-expanded">
-	                            <input class="input is-fullwidth" name='q' type="text" placeholder="Schlüsselnr./Modell" required>
+	                            <input class="input is-fullwidth" aria-label="Schlüsselsuche" name='q' type="text" placeholder="Schlüsselnr./Modell" required>
 	                    	</div>
 	                    	<div class="control">
 		                        <button type='submit' class="button is-info">Suchen</button>

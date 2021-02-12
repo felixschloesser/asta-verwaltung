@@ -5,6 +5,12 @@ body {
 }
 
 
+.tag {
+	margin-top: 6px;
+	margin-bottom: 6px;
+}
+
+
 /* Adjusting padding for mobile devices with a "notch" */
 .safe-nav {
  	padding-left: max(12px, env(safe-area-inset-left));
@@ -13,10 +19,8 @@ body {
 
 }
 
-
 /* Fixing Navbar behavior*/
 .navbar-brand > .logo {
-	padding-left: 0px;
 	margin-left: 0px;
 }
 

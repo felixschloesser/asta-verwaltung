@@ -8,7 +8,9 @@
             </div>
             <div class="head">
                 <p>Allgeiner Studierendenausschuss der TUHH</p>
-                <hr>
+                <svg width="162px" height="2px" viewBox="0 0 162 2" version="1.1" xmlns="http://www.w3.org/2000/svg" >
+                    <line x1="1" y1="1" x2="161" y2="1" id="Line" stroke="black"></line>
+                </svg>
                 <p>
                     {{ deposit.person }}, {{ deposit.person.group }}<br>
                     {{ deposit.person.university_email }}<br>
@@ -16,10 +18,9 @@
                 </p>
             </div>
             <div class="body">
-                <p class="date">{% now "l, j. F Y" %}</p>
                 <h1>Schlüsselausgabe</h1>
                 <p>Hiermit bestätige ich, {{ deposit.person }} am {{ deposit.out_date }} folgenden Schlüssel ausgehändigt bekommen zu haben:</p>
-            
+
                 <ul>
                     <li>{{ deposit.key }}</li>
                 </ul>
@@ -42,7 +43,7 @@
                 <svg width="162px" height="2px" viewBox="0 0 162 2" version="1.1" xmlns="http://www.w3.org/2000/svg" >
                     <line x1="1" y1="1" x2="161" y2="1" id="Line" stroke="black"></line>
                 </svg>
-                <p class="signature">Datum, Unterschrift</p>
+                <p class="signature">Unterschrift {{ deposit.person }}</p>
             </div>
             <div class="aside">
                 <p class="adress">
@@ -53,6 +54,10 @@
                     (040) 42878 3764<br>
                     sekreteriat@asta.tuhh.de
                 </p>
+                <p class="date">
+                    {% now "l, j. F Y" %}
+                </p>
+
                 <p class="user">
                     {{ user.first_name }} {{ user.last_name }}<br>
                     {{ user.email }}
@@ -61,24 +66,31 @@
 
             <div class="footer">
                 <h2>Quittung</h2>
-                <p>
-                    Am {% now "l, j. F Y" %} wurde {{ deposit.person }} der {{ deposit.key }} ausgehändigt.
-                </p>
-                {% if deposit.person.get_active_deposit %}
-                    <p>
-                        Eine Kaution von {{ deposit.person.get_active_deposit.amount }} {{ deposit.person.get_active_deposit.currency }} ist hinterlegt.
-                    </p>
-                {% else %}
-                    <p>
-                        Es ist keine Kaution hinterlegt.
-                    </p>
-                {% endif %}
-                <br>
-                <svg width="252px" height="2px" viewBox="0 0 252 2" version="1.1" xmlns="http://www.w3.org/2000/svg" >
-                    <line x1="1" y1="1" x2="251" y2="1" id="Line" stroke="black"></line>
-                </svg>
-                <p class="signature">Datum, Unterschrift, Stempel (AStA)</p>
+                <div class="columns">
+                    <div class="column">
+                        <p>
+                            Am {% now "l, j. F Y" %} wurde {{ deposit.person }} der {{ deposit.key }} ausgehändigt.
+                        </p>
+                        {% if deposit.person.get_active_deposit %}
+                            <p>
+                                Eine Kaution von {{ deposit.person.get_active_deposit.amount }} {{ deposit.person.get_active_deposit.currency }} ist hinterlegt.
+                            </p>
+                        {% else %}
+                            <p>
+                                Es ist keine Kaution hinterlegt.
+                            </p>
+                        {% endif %}
+                        <br>
+                        <svg width="252px" height="2px" viewBox="0 0 252 2" version="1.1" xmlns="http://www.w3.org/2000/svg" >
+                            <line x1="1" y1="1" x2="251" y2="1" id="Line" stroke="black"></line>
+                        </svg>
+                        <p class="signature">Datum, Unterschrift, Stempel (AStA)</p>
+                    </div>
+                    <div class="column is-fith">
+                        {% include 'keys/asta_logo.html' %}
+                    </div>
+                </div>
             </div>
-        </div>            
+        </div>
     </page>
 </div>

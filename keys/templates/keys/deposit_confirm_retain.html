@@ -7,49 +7,43 @@
 
 {% block content %}
 <div class="container is-max-desktop">
+    {% if deposit.state == 'in' %}
+        <h1 class="title is-2">Kaution einbehalten</h1>
+        <p>Am {{ deposit.in_datetime|date:"l, d. F Y"}} um {{ deposit.in_datetime |date:"GG:i"}} wurden {{ deposit.amount }} {{ deposit.currency }} von {{ deposit.person }} {{ deposit.get_in_method }} eingezahlt.</p>
+        <p>Diese Kaution einbehalten?</p>
 
-    <div class="content">
-        {% if deposit.state == 'in' %}
-            <h1 class="title is-2">Kaution einbehalten</h1>
-            <p>Am {{ deposit.in_datetime|date:"l, d. F Y"}} um {{ deposit.in_datetime |date:"GG:i"}} wurden {{ deposit.amount }} {{ deposit.currency }} von {{ deposit.person }} {{ deposit.get_in_method }} eingezahlt.</p>
-            <p>Diese Kaution einbehalten?</p>
-
-
-            {% if deposit.comment %}
-                <p><strong>Kommentar:</strong> {{ deposit.comment }}</p>
-            {% endif %}
-
-          	
-            <form method="post" autocomplete="off">
-                <div class="field">
-    			{% csrf_token %}
-
-                <div class="field">
-                    <label class="label is-light" for="{{ form.comment.id_for_label }}">Kommentar:</label>
-                    <div class="control">
-                        {% if not form.comment.errors %}
-                            {{ form.comment |add_class:"textarea has-fixed-size" |attr:"placeholder:Begründung für die Einbehaltung..." |attr:"required"}}
-                        {% else %}
-                            {{ form.comment |add_class:"textarea has-fixed-size"|attr:"required" }}
-                        {% endif %}
-                    </div>
-                    {% for error in form.comment.errors %}
-                        <p class="help is-danger">{{ error }}</p>
-                    {% endfor %}
+        {% if deposit.comment %}
+            <p><strong>Kommentar:</strong> {{ deposit.comment }}</p>
+        {% endif %}
+      	
+        <form method="post" autocomplete="off">
+            <div class="field">
+			{% csrf_token %}
+            <div class="field">
+                <label class="label is-light" for="{{ form.comment.id_for_label }}">Kommentar:</label>
+                <div class="control">
+                    {% if not form.comment.errors %}
+                        {{ form.comment |add_class:"textarea has-fixed-size" |attr:"placeholder:Begründung für die Einbehaltung..." |attr:"required"}}
+                    {% else %}
+                        {{ form.comment |add_class:"textarea has-fixed-size"|attr:"required" }}
+                    {% endif %}
                 </div>
+                {% for error in form.comment.errors %}
+                    <p class="help is-danger">{{ error }}</p>
+                {% endfor %}
+            </div>
 
-    			<span class="buttons is-right">
-    	            <a class="button" href={% url 'keys:deposit-detail' pk_p=deposit.person.id pk_d=deposit.id %}>Abbrechen</a >
-    	            <input class="button is-warning" type="submit" value="Einbehalten">
-    	        </span>
-            </form>
-        {% else %}
+			<span class="buttons is-right">
+	            <a class="button" href={% url 'keys:deposit-detail' pk_p=deposit.person.id pk_d=deposit.id %}>Abbrechen</a >
+	            <input class="button is-warning" type="submit" value="Einbehalten">
+	        </span>
+        </form>
+    {% else %}
         <h1 class="title is-2">Fehler!</h1>
         <p>Kaution nicht eingezahlt!</p>
         <div class="control">
             <a class="button" href={% url 'keys:deposit-detail' pk_p=deposit.person.id pk_d=deposit.id %}>Zurück</a >
         </div>
-        {% endif %}
-    </div>
+    {% endif %}
 </div>
 {% endblock %}

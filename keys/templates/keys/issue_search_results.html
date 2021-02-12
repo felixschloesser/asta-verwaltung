@@ -23,7 +23,7 @@
                 <div class="field has-addons">
                     <div class="control">
                         <form action={% url 'keys:issue-search-results' %} method='get'>
-                            <input class="input" name='q' type="text" placeholder="Person/Schlüsselnr." required>
+                            <input class="input" aria-label="issue-search" name='q' type="text" placeholder="Person/Schlüsselnr." required>
                     </div>
                     <div class="control">
                         <button type='submit' class="button is-info">
@@ -51,9 +51,9 @@
 
                     <tbody>
                     {% for issue in issue_list %}
-                        <tr>
+                        <tr onclick="location.href='{{ issue.get_absolute_url }}'">
                             <td data-label="Schlüssel">
-                                <a href="{{ issue.get_absolute_url }}"> {{ issue.key }}</a>
+                                {{ issue.key }}
                             </td>
                             <td data-label="Person">
                                 {{ issue.person }}

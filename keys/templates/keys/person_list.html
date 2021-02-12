@@ -71,7 +71,7 @@
 
                         <tbody>
                         {% for person in people %}
-                            <tr style="cursor:pointer;" onclick="location.href='{{ person.get_absolute_url }}'">
+                            <tr onclick="location.href='{{ person.get_absolute_url }}'">
                                 <td data-label="Name">
                                     {{ person }}
                                 </td>

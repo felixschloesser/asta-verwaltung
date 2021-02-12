@@ -23,16 +23,25 @@ class GroupManager(models.Manager):
         return [ group.name for group in self.fsr()]
 
     def of_fsr_percent(self):
-        percent = self.of_fsr().count() / self.count() * 100
-        return int(percent)
+        if self.count > 0:
+            percent = self.of_fsr().count() / self.count() * 100
+            return int(percent)
+        else:
+            return 0
 
     def of_ag_percent(self):
-        percent = self.of_ag().count() / self.count() * 100
-        return int(percent)
+        if self.count > 0:
+            percent = self.of_ag().count() / self.count() * 100
+            return int(percent)
+        else:
+            return 0
 
     def of_students_percent(self):
-        percent = self.of_students().count() / self.count() * 100
-        return int(percent)
+        if self.count > 0:
+            percent = self.of_students().count() / self.count() * 100
+            return int(percent)
+        else:
+            return 0
 
 
 class BuildingManager(models.Manager):
@@ -78,21 +87,32 @@ class RoomManager(models.Manager):
 
     # Not Returning QuerrySets
     def of_asta_percent(self):
-        percent = self.of_asta().count() / self.count() * 100
-        return int(percent)
+        if self.count > 0:
+            percent = self.of_asta().count() / self.count() * 100
+            return int(percent)
+        else:
+            return 0
 
     def of_fsr_percent(self):
-        percent = self.of_fsr().count() / self.count() * 100
-        return int(percent)
+        if self.count > 0:
+            percent = self.of_fsr().count() / self.count() * 100
+            return int(percent)
+        else:
+            return 0
 
     def of_ag_percent(self):
-        percent = self.of_ag().count() / self.count() * 100
-        return int(percent)
+        if self.count > 0:
+            percent = self.of_ag().count() / self.count() * 100
+            return int(percent)
+        else:
+            return 0
 
     def of_students_percent(self):
-        percent = self.of_students().count() / self.count() * 100
-        return int(percent)
-
+        if self.count > 0:
+            percent = self.of_students().count() / self.count() * 100
+            return int(percent)
+        else:
+            return 0
 
 class KeyManager(models.Manager):
     def get_queryset(self):
@@ -119,17 +139,25 @@ class KeyManager(models.Manager):
 
     # Not Returning QuerrySets
     def stolen_or_lost_percent(self):
-        percent = self.stolen_or_lost().count() / self.count() * 100
-        return int(percent)
+        if self.count > 0:
+            percent = self.stolen_or_lost().count() / self.count() * 100
+            return int(percent)
+        else:
+            return 0
 
     def currently_issued_percent(self):
-        percent = self.currently_issued().count() / self.count() * 100
-        return int(percent)
+        if self.count > 0:
+            percent = self.currently_issued().count() / self.count() * 100
+            return int(percent)
+        else:
+            return 0
 
     def availible_percent(self):
-        percent = self.availible().count() / self.count() * 100
-        return int(percent)
-
+        if self.count > 0:
+            percent = self.availible().count() / self.count() * 100
+            return int(percent)
+        else:
+            return 0
 
 
 class PersonManager(models.Manager):
@@ -173,12 +201,18 @@ class PersonManager(models.Manager):
 
     # Not Returning QuerrySets
     def paid_deposit_percent(self):
-        percent = self.paid_deposit().count() / self.count() * 100
-        return int(percent)
+        if self.count > 0:
+            percent = self.paid_deposit().count() / self.count() * 100
+            return int(percent)
+        else:
+            return 0
 
     def active_issues_percent(self):
-        percent = self.active_issues().count() / self.count() * 100
-        return int(percent)
+        if self.count > 0:
+            percent = self.active_issues().count() / self.count() * 100
+            return int(percent)
+        else:
+            return 0
 
     def get_person(self, id):
         return self.filter(id__exact=id).get()
@@ -213,9 +247,11 @@ class IssueManager(models.Manager):
 
     # Not returning QuerySet
     def active_percent(self):
-        percent = self.active().count() / self.count() * 100
-        return int(percent)
-
+        if self.count > 0:
+            percent = self.active().count() / self.count() * 100
+            return int(percent)
+        else:
+            return 0
 
 
 

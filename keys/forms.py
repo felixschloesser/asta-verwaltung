@@ -3,6 +3,7 @@ from django.core.exceptions import ValidationError
 from django import forms
 from django.utils import formats, timezone
 
+from .fields import GroupedModelChoiceField
 from .models import Issue, Deposit, Key, Person
 
 import logging
@@ -71,6 +72,11 @@ class DepositReturnForm(forms.ModelForm):
 
 
 class IssueForm(forms.ModelForm):
+    key = GroupedModelChoiceField(
+        queryset=Key.all_keys.not_currently_issued(stolen_or_lost=False), 
+        choices_groupby='locking_system'
+    )
+
     class Meta:
         model= Issue
         fields = ['key',
@@ -81,11 +87,6 @@ class IssueForm(forms.ModelForm):
             'out_date': forms.widgets.DateInput(attrs={'type': 'date'}),
             'comment': forms.Textarea(attrs={'cols': 80, 'rows': 3}),
         }
-
-    def __init__(self, *args, **kwargs):
-        # Restrict the choice of keys to the ones that arent currently issued nor lost
-        super().__init__(*args, **kwargs)
-        self.fields['key'].queryset = Key.all_keys.not_currently_issued(stolen_or_lost=False)
 
     def clean(self):
         cleaned_data = super().clean()

@@ -266,6 +266,11 @@ class Key(models.Model):
     def get_locking_system_method(self):
         return self.locking_system.method
 
+    def get_building(self):
+        doors = self.doors.filter(kind__exact='access').distinct()
+        rooms = [door.room for door in doors]
+        return rooms
+
     get_locking_system_method.short_description = 'Typ'
     get_number_of_doors.short_description = "Anzahl Türen"
 

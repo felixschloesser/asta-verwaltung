@@ -36,6 +36,26 @@
         </div>
     </nav>
 
+    <div class="tabs is-left is-boxed">
+      <ul>
+        <li>
+          <a href={% url 'keys:key-list-all' %}>
+            <span>Alle</span>
+          </a>
+        </li>
+        <li class="is-active">
+          <a href={% url 'keys:key-list-issued' %}>
+            <span>Ausgeliehen</span>
+          </a>
+        </li>
+        <li>
+          <a href={% url 'keys:key-list-lost' %}>
+            <span>Verloren</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
     {% if key_list %}
     <div class="container">
         <div class="b-table">
@@ -44,9 +64,8 @@
                     <thead>
                          <th>Nummer</th>
                          <th>Schließsystem</th>
+                         <th>Verliehen an</th>
                          <th>Räume</th>
-                         <th>Status</th>
-
                     </thead>
 
                     <tbody>
@@ -58,6 +77,9 @@
                             <td data-label="Schließsystem">
                                 {{ key.locking_system }}
                             </td>
+                            <td data-label="Verliehen an">
+                                {{ key.get_current_issue.person }}
+                            </td>
                             <td data-label="Räume">
                                 {% for room in key.get_rooms %}
                                     {{ room }}{% if not forloop.last %}, {% endif %}
@@ -65,20 +87,6 @@
                                     (keine / nur Verbindungstüren)
                                 {% endfor %}
                             </td>
-                            <td data-label="Status">
-                                {% if key.stolen_or_lost %}
-                                    <p class="icon has-text-centered has-text-warning has-tooltip-arrow" data-tooltip="Verloren/Gestohlen">
-                                        <i class="far fa-lg fa-question-circle"></i>
-                                    </p>
-                                {% elif key.get_current_issue %}
-                                    <p class="icon has-text-centered has-text-info has-tooltip-arrow" data-tooltip="Verliehen">
-                                        <i class="far fa-lg fa-times-circle"></i> 
-                                    </p>                                
-                                {% else %}
-                                    <p class="icon has-text-centered has-text-success has-tooltip-arrow" data-tooltip="Verfügbar">
-                                        <i class="far fa-lg fa-check-circle"></i>
-                                    </p>
-                                {% endif %}</td>
                         </tr>
                     {% endfor %}
                     </tbody>

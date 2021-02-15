@@ -1,0 +1,118 @@
+{% extends "keys/base.html" %}
+
+{% block title %}Schlüssel | Schlüsselsystem{% endblock %}
+
+
+{% block additional_css %}
+    {% load static %}
+    <link href="{% static 'fontawesome_free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block content %}
+<div class="container is-max-desktop">
+    <nav class="level">
+        <!-- Left side -->
+        <div class="level-left">
+            <div class="level-item">
+                <h1 class='title is-2'>Schlüssel und Transponder</h1>
+            </div>
+        </div>
+        <!-- Right side -->
+        <div class="level-right">
+            <div class="level-item">
+                <div class="field has-addons">
+                    <div class="control">
+                        <form action={% url 'keys:key-search-results' %} method='get'>
+                            <input class="input" aria-label="Schlüsselsuche" name='q' type="text" placeholder="Schlüsselnr./Modell" required>
+                    </div>
+                    <div class="control">
+                        <button type='submit' class="button is-info">
+                            Suchen
+                        </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="tabs is-left is-boxed">
+      <ul>
+        <li class="is-active">
+          <a href={% url 'keys:key-list-all' %}>
+            <span>Alle</span>
+          </a>
+        </li>
+        <li>
+          <a href={% url 'keys:key-list-issued' %}>
+            <span>Ausgeliehen</span>
+          </a>
+        </li>
+        <li>
+          <a href={% url 'keys:key-list-lost' %}>
+            <span>Verloren</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    {% if key_list %}
+    <div class="container">
+        <div class="b-table">
+            <div class="table-wrapper has-mobile-cards">
+                <table class="table is-fullwidth is-hoverable">
+                    <thead>
+                         <th>Nummer</th>
+                         <th>Schließsystem</th>
+                         <th>Räume</th>
+                         <th>Status</th>
+
+                    </thead>
+
+                    <tbody>
+                    {% for key in key_list %}
+                        <tr onclick="location.href='{{ key.get_absolute_url }}'">
+                            <td data-label="Nummer">
+                                {{ key.number }}
+                            </td>
+                            <td data-label="Schließsystem">
+                                {{ key.locking_system }}
+                            </td>
+                            <td data-label="Räume">
+                                {% for room in key.get_rooms %}
+                                    {{ room }}{% if not forloop.last %}, {% endif %}
+                                {% empty %}
+                                    (keine / nur Verbindungstüren)
+                                {% endfor %}
+                            </td>
+                            <td data-label="Status">
+                                {% if key.stolen_or_lost %}
+                                    <p class="icon has-text-centered has-text-warning has-tooltip-arrow" data-tooltip="Verloren/Gestohlen">
+                                        <i class="far fa-lg fa-question-circle"></i>
+                                    </p>
+                                {% elif key.get_current_issue %}
+                                    <p class="icon has-text-centered has-text-info has-tooltip-arrow" data-tooltip="Verliehen">
+                                        <i class="far fa-lg fa-times-circle"></i> 
+                                    </p>                                
+                                {% else %}
+                                    <p class="icon has-text-centered has-text-success has-tooltip-arrow" data-tooltip="Verfügbar">
+                                        <i class="far fa-lg fa-check-circle"></i>
+                                    </p>
+                                {% endif %}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% else %}
+        <p>Keine Schlüssel gefunden.</p>
+    {% endif %}
+
+    {% if is_paginated %}
+        {% include 'keys/pagination.html' %}
+    {% endif %}
+</div>
+
+{% endblock %}

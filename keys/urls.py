@@ -11,7 +11,11 @@ app_name = 'keys' # Namespace: keys:detail, keys:index
 urlpatterns = [
     path('', views.Home.as_view(), name='home'),
 
-    path('keys/', views.KeyList.as_view(), name='key-list'),
+    path('keys/', lambda r: redirect('keys:key-list-all'), name='key-list'),
+    path('keys/all', views.KeyListAll.as_view(), name='key-list-all'),
+    path('keys/issued', views.KeyListIssued.as_view(), name='key-list-issued'),
+    path('keys/lost', views.KeyListLost.as_view(), name='key-list-lost'),
+
     path('keys/search', views.KeySearchResults.as_view(), name='key-search-results'),
     path('key/<str:pk>', views.KeyDetail.as_view(), name='key-detail'),
     path('key/<str:pk>/lost', views.KeyLost.as_view(), name='key-lost'),

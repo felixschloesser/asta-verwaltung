@@ -43,9 +43,21 @@ class Home(generic.ListView):
 
 
 # Keys
-class KeyList(LoginRequiredMixin, generic.ListView):
+class KeyListAll(LoginRequiredMixin, generic.ListView):
     model = Key
     paginate_by = 20
+    template_name_suffix = '_list_all'
+
+class KeyListIssued(LoginRequiredMixin, generic.ListView):
+    queryset = Key.all_keys.currently_issued()
+    paginate_by = 20
+    template_name_suffix = '_list_issued'
+
+class KeyListLost(LoginRequiredMixin, generic.ListView):
+    queryset = Key.all_keys.stolen_or_lost()
+    paginate_by = 20
+    template_name_suffix = '_list_lost'
+
 
 
 class KeySearchResults(LoginRequiredMixin, generic.ListView):

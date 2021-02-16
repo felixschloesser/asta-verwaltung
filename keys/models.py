@@ -255,6 +255,13 @@ class Key(models.Model):
         except ObjectDoesNotExist:
             return None
 
+    def is_currently_issued(self):
+        issue_set  = self.issues.active()
+        if issue_set:
+            return True
+        else:
+            return False
+
     def get_number_of_doors(self):
         return self.doors.all().count()
 
@@ -274,6 +281,8 @@ class Key(models.Model):
     get_locking_system_method.short_description = 'Typ'
     get_number_of_doors.short_description = "Anzahl Türen"
 
+    is_currently_issued.boolean = True
+    is_currently_issued.short_description = "Ausgeliehen"
 
 
 class LockingSystem(models.Model):
@@ -334,7 +343,7 @@ class StorageLocation(models.Model):
         return self.name
 
     def get_number_of_keys(self):
-        return Key.objects.filter(storage_location__name=self.name).count()
+        return Key.all_keys.filter(storage_location__name=self.name).count()
 
     get_number_of_keys.short_description = "Anzahl Schlüssel"
 

@@ -65,11 +65,12 @@ INSTALLED_APPS = [
     ,
 
     # 3rd party
+    'rest_framework',
     'django_extensions',
     'widget_tweaks',
     'phonenumber_field',
-    'rest_framework',
     'simple_history',
+    'view_breadcrumbs',
     'debug_toolbar',
     'fontawesome-free',
 

@@ -62,7 +62,7 @@
             <label class="label is-light" for="{{ form.comment.id_for_label }}">Kommentar:</label>
             <div class="control">
                 {% if not form.comment.errors %}
-                    {{ form.comment |add_class:"textarea has-fixed-size is-light" |attr:"placeholder:Optionaler Kommentar zur Kaution..." }}
+                    {{ form.comment |add_class:"textarea has-fixed-size is-light" }}
                 {% else %}
                         {{ form.comment |add_class:"textarea has-fixed-size is-danger" }}
                 {% endif %}

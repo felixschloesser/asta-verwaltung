@@ -19,30 +19,30 @@
         <h1 class='title is-2'>Kaution von {{ deposit.person }}</h1>
 
         <div class="content">
+            <p><strong>Betrag:</strong> <span class="tag is-info"><b>{{ deposit.amount }} {{ deposit.currency }}</b></span></p>
             <div class="columns">
                 <div class="column">
-                    <p><strong>Eingezahlt:</strong> <span class="tag is-success "><b>{{ deposit.amount }} {{ deposit.currency }}</b></span> {{ deposit.get_in_method }}</p>
-                    <p><strong>Am:</strong> {{ deposit.in_datetime|date:"l, d. F Y"}} um {{ deposit.in_datetime |date:"G:i"}}</p>
+                    <p><strong>Eingezahlt am:</strong> {{ deposit.in_datetime|date:"l, d. F Y"}} um {{ deposit.in_datetime |date:"G:i"}} <span class="tag is-light"><b>{{ deposit.get_in_method }}</b></span></p>
                 </div>
                 {% if deposit.retained_datetime %} {% comment %}This should stay even if returned{% endcomment %}
                 <div class="divider is-vertical is-right" style="margin-left: 5px;margin-right: 5px;"></div>
+                <hr>
                 <div class="column">
-                    <p><strong>Einbehalten:</strong> <span class="tag is-warning "><b>{{ deposit.amount }} {{ deposit.currency }}</b></span></p>
-                    <p><strong>Am:</strong> {{ deposit.retained_datetime|date:"l, d. F Y"}} um {{ deposit.retained_datetime |date:"G:i"}}</p>
-                    
+                    <p><strong>Einbehalten am:</strong> {{ deposit.retained_datetime|date:"l, d. F Y"}} um {{ deposit.retained_datetime |date:"G:i"}}</p>                    
                 </div>
                 {% endif %}
                 {% if deposit.state == 'out' %}
                 <div class="divider is-vertical is-right" style="margin-left: 5px;margin-right: 5px;"></div>
+                <hr>
                 <div class="column">
-                    <p><strong>Ausgezahlt:</strong> <span class="tag is-info "><b>{{ deposit.amount }} {{ deposit.currency }}</b></span> {{ deposit.get_out_method }}</p>
-                    <p><strong>Am:</strong> {{ deposit.out_datetime|date:"l, d. F Y"}} um {{ deposit.out_datetime |date:"G:i"}}</p>
+                    <p><strong>Ausgezahlt am:</strong> {{ deposit.out_datetime|date:"l, d. F Y"}} um {{ deposit.out_datetime |date:"G:i"}} <span class="tag is-light"><b>{{ deposit.get_out_method }}</b></span></p>
                     
                 </div>
                 {% endif %}
             </div>
 
             {% if deposit.comment %}
+                <hr>
                 <p><strong>Kommentar:</strong> {{ deposit.comment }}</p>
             {% endif %}
         </div>

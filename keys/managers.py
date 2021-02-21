@@ -1,3 +1,5 @@
+from django.utils import timezone
+
 from django.db import models
 
 class GroupManager(models.Manager):
@@ -238,6 +240,12 @@ class IssueManager(models.Manager):
     def get_queryset(self):
         qs = super().get_queryset()
         return qs.select_related('person', 'key', 'key__locking_system')
+
+    def active_today(self, *args, **kwargs):
+        return self.filter(active=True, out_date__exact=timezone.now().date(), *args, **kwargs)
+
+    def active_earlier(self, *args, **kwargs):
+        return self.filter(active=True, out_date__gte=out_date_timezone.now().date(), *args, **kwargs)
 
     def active(self, *args, **kwargs):
         # the method accepts **kwargs, so that it is possible to filter

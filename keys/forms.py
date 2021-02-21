@@ -43,7 +43,7 @@ class DepositCreateForm(forms.ModelForm):
                   'comment']
 
         widgets = {
-            'comment': forms.Textarea(attrs={'cols': 80, 'rows': 3}),
+            'comment': forms.Textarea(attrs={'cols': 80, 'rows': 3, 'placeholder': "Optionaler Kommentar zur Entgegennahme...", 'spellcheck': 'true', 'lang': 'de-DE'}),
         }
 
 
@@ -54,7 +54,7 @@ class DepositRetainForm(forms.ModelForm):
         fields = ['comment']
 
         widgets = {
-            'comment': forms.Textarea(attrs={'cols': 80, 'rows': 3}),
+            'comment': forms.Textarea(attrs={'required':'true', 'cols': 80, 'rows': 3, 'placeholder': "Begründung für die Einbehaltung...", 'spellcheck': 'true', 'lang': 'de-DE'}),
         }
 
 
@@ -66,7 +66,7 @@ class DepositReturnForm(forms.ModelForm):
                   'comment']
 
         widgets = {
-            'comment': forms.Textarea(attrs={'cols': 80, 'rows': 3}),
+            'comment': forms.Textarea(attrs={'cols': 80, 'rows': 3, 'placeholder': "Optionaler Kommentar zur Rückgabe...", 'spellcheck': 'true', 'lang': 'de-DE'}),
         }
 
 

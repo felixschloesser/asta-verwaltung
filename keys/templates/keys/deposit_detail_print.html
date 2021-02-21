@@ -2,43 +2,39 @@
     <page size="A4">
         <div class="letter layout">
             <div class="logo">
-                <div class="asta-logo">
+                <div class="asta_logo">
                     {% include 'keys/asta_logo.html' %}
                 </div>
             </div>
             <div class="head">
-                <p>Allgeiner Studierendenausschuss der TUHH</p>
-                <svg width="162px" height="2px" viewBox="0 0 162 2" version="1.1" xmlns="http://www.w3.org/2000/svg" >
-                    <line x1="1" y1="1" x2="161" y2="1" id="Line" stroke="black"></line>
+                <p class="sender">
+                    Allgemeiner Studierendenausschuss der TUHH
+                </p>
+                <svg width="286px" height="2px" viewBox="0 0 286 2" version="1.1" xmlns="http://www.w3.org/2000/svg" >
+                    <line x1="1" y1="1" x2="285" y2="1" id="Line" stroke="black"></line>
                 </svg>
-                <p>
+                <p class="adress">
                     {{ deposit.person }}, {{ deposit.person.group }}<br>
                     {{ deposit.person.university_email }}<br>
                     {{ deposit.person.phone_number }}<br>
                 </p>
             </div>
             <div class="body">
-                <h1>Schlüsselausgabe</h1>
-                <p>Hiermit bestätige ich, {{ deposit.person }} am {{ deposit.out_date }} folgenden Schlüssel ausgehändigt bekommen zu haben:</p>
-
-                <ul>
-                    <li>{{ deposit.key }}</li>
-                </ul>
-
-                {% if deposit.person.get_active_deposits.count > 1 %}
-                    <p>Ausserdem habe ich noch folgende andere Schlüssel in meinem Besitz:</p>
-                    <ul>
-                        {% for key in deposit.person.get_current_deposits %}
-                            <li>{{ key }}</li>
-                        {% endfor %}
-                    </ul>
+                <h1>Schlüsselkaution</h1>
+                
+                <p>Hiermit bestätige ich, {{ deposit.person }}, am {{ deposit.in_datetime }} eine Kaution von {{ deposit.amount }} {{ deposit.currency }} {{ deposit.get_in_method }} hinterlegt zu haben.</p>
+                {% if deposit.retained_datetime %} {% comment %}This should stay even if returned{% endcomment %}
+                    <p>Am {{ deposit.retained_datetime }} wurde die Kaution von {{ deposit.amount }} {{ deposit.currency }} einbehalten.</p>
+                    <p>Kommentar: <span class="comment">{{ deposit.comment }}</span></p>
+                {% endif %}
+                {% if deposit.state == 'out' %}
+                    <p>Am {{ deposit.out_datetime }} wurde mir die Kaution in Höhe von {{ deposit.amount }} {{ deposit.currency }} von {{ user.first_name }} {{ user.last_name }} {{ deposit.get_in_method }} zurückgegeben.</p>
                 {% endif %}
 
-                {% if deposit.person.get_active_deposit %}
-                    <p>Am {{ deposit.person.get_active_deposit.in_datetime }} wurde eine Kaution von {{ deposit.person.get_active_deposit.amount }} {{ deposit.person.get_active_deposit.currency }} {{ deposit.person.get_active_deposit.get_in_method }} hinterlegt.</p>
-                {% else %}
-                    <p>Es wurde keine Kaution hinterlegt.</p>
+                {% if not deposit.retained_datetime and deposit.comment %}
+                    <p>Kommentar: <span class="comment">{{ deposit.comment }}</span></p>
                 {% endif %}
+                <br>
                 <br>
                 <svg width="162px" height="2px" viewBox="0 0 162 2" version="1.1" xmlns="http://www.w3.org/2000/svg" >
                     <line x1="1" y1="1" x2="161" y2="1" id="Line" stroke="black"></line>
@@ -51,11 +47,11 @@
                     Am Schwarzenberg-Campus 3<br>
                     21075 Hamburg<br>
                     <br>
-                    (040) 42878 3764<br>
+                    (040) 42878 4160<br>
                     sekreteriat@asta.tuhh.de
                 </p>
                 <p class="date">
-                    {% now "l, j. F Y" %}
+                    Hamburg, {% now "j. F Y" %}
                 </p>
 
                 <p class="user">
@@ -64,29 +60,31 @@
                 </p>
             </div>
 
-            <div class="footer">
-                <h2>Quittung</h2>
-                <div class="columns">
-                    <div class="column">
-                        <p>
-                            Am {% now "l, j. F Y" %} wurde {{ deposit.person }} der {{ deposit.key }} ausgehändigt.
-                        </p>
-                        {% if deposit.person.get_active_deposit %}
-                            <p>
-                                Eine Kaution von {{ deposit.person.get_active_deposit.amount }} {{ deposit.person.get_active_deposit.currency }} ist hinterlegt.
-                            </p>
-                        {% else %}
-                            <p>
-                                Es ist keine Kaution hinterlegt.
-                            </p>
-                        {% endif %}
-                        <br>
-                        <svg width="252px" height="2px" viewBox="0 0 252 2" version="1.1" xmlns="http://www.w3.org/2000/svg" >
-                            <line x1="1" y1="1" x2="251" y2="1" id="Line" stroke="black"></line>
-                        </svg>
-                        <p class="signature">Datum, Unterschrift, Stempel (AStA)</p>
-                    </div>
-                    <div class="column is-fith">
+            <div class="reciept">
+                <div class="reciept_text">
+                    <h2>Quittung</h2>
+                    
+                    {% if deposit.state == 'in' %}
+                        <p>{{ deposit.person }}, hat am {{ deposit.in_datetime }} eine Kaution von {{ deposit.amount }} {{ deposit.currency }} {{ deposit.get_in_method }} hinterlegt.</p>
+                    {% endif %}
+
+                    {% if deposit.state == 'retained' %}
+                        <p>Die am {{ deposit.in_datetime }} von {{ deposit.person }} hinterlegte Kaution über {{ deposit.amount }} {{ deposit.currency }} wurde am {{ deposit.retained_datetime }} einbehalten.</p>
+                        <p>Kommentar: <span class="comment">{{ deposit.comment }}</span></p>
+                    {% endif %}
+
+                    {% if deposit.state == 'out' %}
+                        <p>Die am {{ deposit.in_datetime }} von {{ deposit.person }} hinterlegte Kaution über {{ deposit.amount }} {{ deposit.currency }} wurde am {{ deposit.out_datetime }} {{ deposit.get_out_method }} zurückgegeben.</p>
+                    {% endif %}
+                    
+                    <br>
+                    <svg width="252px" height="2px" viewBox="0 0 252 2" version="1.1" xmlns="http://www.w3.org/2000/svg" >
+                        <line x1="1" y1="1" x2="251" y2="1" id="Line" stroke="black"></line>
+                    </svg>
+                    <p class="signature">Unterschrift {{ user.first_name }} {{ user.last_name }}</p>
+                </div>
+                <div class="reciept_logo">
+                    <div class="reciept_asta_logo">
                         {% include 'keys/asta_logo.html' %}
                     </div>
                 </div>

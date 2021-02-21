@@ -406,8 +406,12 @@ class Person(models.Model): # Add a chron job ro delete after a 2 years of not r
     def get_active_issues(self):
         return self.issues.active()
 
-    def get_inactive_issues(self):
-        return self.issues.inactive()
+    def get_active_issues_today(self):
+        return self.issues.active_today()
+
+    def get_inactive_issues_earlier(self):
+        return self.issues.active_earlier()
+
 
     # Tell django-admin to display this as an Boolian
     paid_deposit.boolean = True

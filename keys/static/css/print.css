@@ -23,6 +23,13 @@ li {
     line-height: 1.4rem;
 }
 
+.comment {
+    font-family: Ubuntu;
+    font-weight: 400;
+    line-height: 20px;
+    font-style: italic;
+}
+
 nav, .main, footer {
     display: none;
 }

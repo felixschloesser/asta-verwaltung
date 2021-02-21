@@ -164,6 +164,7 @@ PHONENUMBER_DEFAULT_FORMAT = 'NATIONAL'
 TIME_ZONE = 'Europe/Berlin'
 
 USE_TZ = True
+USE_L10N = True 
 
 # Mail
 EMAIL_HOST = os.getenv('DJANGO_EMAIL_HOST')

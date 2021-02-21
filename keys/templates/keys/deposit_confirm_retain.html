@@ -23,9 +23,9 @@
                 <label class="label is-light" for="{{ form.comment.id_for_label }}">Kommentar:</label>
                 <div class="control">
                     {% if not form.comment.errors %}
-                        {{ form.comment |add_class:"textarea has-fixed-size" |attr:"placeholder:Begründung für die Einbehaltung..." |attr:"required"}}
+                        {{ form.comment |add_class:"textarea has-fixed-size" }}
                     {% else %}
-                        {{ form.comment |add_class:"textarea has-fixed-size"|attr:"required" }}
+                        {{ form.comment |add_class:"textarea has-fixed-size" }}
                     {% endif %}
                 </div>
                 {% for error in form.comment.errors %}

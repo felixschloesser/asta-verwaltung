@@ -16,6 +16,7 @@
         <link rel="stylesheet" media="screen" href="{% static 'css/additional-styles.css' %}">
         {% block additional_css%}{% endblock %}
     </head>
+    
     <body class="is-flex is-flex-direction-column">
         <!-- Navbar-->
         <nav class="navbar is-dark" aria-label="main navigation">
@@ -34,8 +35,8 @@
                 <div class="navbar-menu" id="navMenu">
                     <div class="navbar-start">
                         <a class="navbar-item" href="{% url 'keys:person-list' %}">Personen</a>
-                        <a class="navbar-item" href="{% url 'keys:key-list' %}">Schlüssel</a>
                         <a class="navbar-item" href="{% url 'keys:room-list' %}">Räume</a>
+                        <a class="navbar-item" href="{% url 'keys:key-list' %}">Schlüssel</a>
                         <a class="navbar-item" href="{% url 'keys:issue-list' %}">Ausleihen</a>
                     </div>
                     <div class="navbar-end">

@@ -431,10 +431,9 @@ class IssueNew(SuccessMessageMixin, LoginRequiredMixin, generic.CreateView):
         so that the tempalte can access it.
         """
         context = super().get_context_data(**kwargs)
-        person_id = self.request.GET.get('person','')
-        if person_id:
-            person = Person.all_people.get_person(person_id)
-            context['person'] = person
+        person_id = self.kwargs.get('pk')
+        person = Person.all_people.get_person(person_id)
+        context['person'] = person
         return context
 
     def form_valid(self, form):
@@ -442,7 +441,7 @@ class IssueNew(SuccessMessageMixin, LoginRequiredMixin, generic.CreateView):
         Before validating the form, set active to True and populate the person field using
         the request primary key as a lookup for
         """
-        person_id = self.request.GET.get('person','')
+        person_id = self.kwargs.get('pk')
         self.object = form.save(commit=False)
         self.object.person = Person.all_people.get_person(person_id)
         self.object.active = True
@@ -450,7 +449,10 @@ class IssueNew(SuccessMessageMixin, LoginRequiredMixin, generic.CreateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse_lazy('keys:person-detail',  args=[self.object.person.id])
+        if "another" in self.request.POST:
+            return reverse_lazy('keys:issue-new', args=[self.object.person.id])
+        else:
+            return reverse_lazy('keys:person-detail',  args=[self.object.person.id])
 
 
 

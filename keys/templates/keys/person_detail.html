@@ -4,7 +4,7 @@
 
 {% block additional_css %}
     {% load static %}
-    <link href="{% static 'fontawesome_free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+    <link href={% static 'fontawesome_free/css/all.min.css' %} rel="stylesheet" type="text/css">
 {% endblock %}
 
 {% block content %}
@@ -23,7 +23,7 @@
     <h1 class="title is-2">{{ person.get_full_name }}</h1>
 
     <div class="content">
-        <p class='text'><strong>Gruppe: </strong><a href="{% url 'keys:person-search-results' %}?group={{ person.group|lower}}">{{ person.group }}</a></p>
+        <p class='text'><strong>Gruppe: </strong><a href="{% url 'keys:person-search-results' %}?group={{ person.group }}">{{ person.group }}</a></p>
         <p class='text'><strong>Uni Mail: </strong><a href="mailto:{{ person.university_email }}">{{ person.university_email }}</a></p>
         <p class='text'><strong>Private Mail: </strong><a href="mailto:{{ person.private_email }}">{{ person.private_email }}</a></p>
         <p class='text'><strong>Telefon: </strong>{{ person.phone_number }}</p>
@@ -55,20 +55,62 @@
         <h2 class="subtitle is-4">Aktuelle Ausleihen:</h2>
         <ul>
         {% for issue in person.get_active_issues %}
-            <li>
-                <a href="{% url 'keys:issue-detail' pk=issue.id %}">{% if issue.key.stolen_or_lost %}
-                        <span class="tag is-warning"><b>Verloren</b></span> {% endif %}<strong>{{ issue.key }}</strong></a>:
-                   [{% for room in issue.key.get_rooms %}
-                    <em>{{ room }}</em>
-                        {% if not forloop.last %}, {% endif %}
-                    {% empty %}
-                        keine / nur Verbindungstüren
-                    {% endfor %}]
-            </li>
+            {% spaceless %}
+                <li>
+                    <a href={% url 'keys:issue-detail' pk=issue.id %}>
+                        {% if issue.key.stolen_or_lost %}
+                            <span class="tag is-warning">
+                                <b>Verloren</b>
+                            </span>
+                        {% endif %}
+                        <strong>{{ issue.key }}</strong></a>: [
+                            {% for room in issue.key.get_rooms %}
+                                <em>
+                                    {{ room }}{% if not forloop.last %}{% ifequal forloop.revcounter 2 %} und {% else %}, {% endifequal %}{% else %}{% endif %}
+                                </em>
+                            {% empty %}
+                                <em>
+                                    keine&nbsp;/ nur&nbsp;Verbindungstüren
+                                </em>
+                            {% endfor %}
+                        ]
+                </li>
+                {% endspaceless %}
         {% empty %}
             keine.
         {% endfor %}
         </ul>
+
+        {% if person.get_inactive_issues %}
+            <h2 class="subtitle is-4">Vergangene Ausleihen:</h2>
+            <ul>
+            {% for issue in person.get_inactive_issues %}
+                {% spaceless %}
+                <li>
+                    <a href={% url 'keys:issue-detail' pk=issue.id %}>
+                        {% if issue.key.stolen_or_lost %}
+                            <span class="tag is-warning">
+                                <b>Verloren</b>
+                            </span>
+                        {% endif %}
+                        <strong>{{ issue.key }}</strong></a>: [
+                            {% for room in issue.key.get_rooms %}
+                                <em>
+                                    {{ room }}{% if not forloop.last %}{% ifequal forloop.revcounter 2 %} und {% else %}, {% endifequal %}{% else %}{% endif %}
+                                </em>
+                            {% empty %}
+                                <em>
+                                    keine&nbsp;/ nur&nbsp;Verbindungstüren
+                                </em>
+                            {% endfor %}
+                        ]
+                </li>
+                {% endspaceless %}
+            {% empty %}
+                keine.
+            {% endfor %}
+            </ul>
+        {% endif %}
     </div>
         <nav class="level">
             <div class="level-lelft">
@@ -76,7 +118,7 @@
                     <div class="field is-grouped is-grouped-left
                     ">
                         <p class="control">
-                            <a class="button is-link is-outlined" href="{% url 'keys:person-list' %}">Zurück zur Liste</a>
+                            <a class="button is-link is-outlined" href={% url 'keys:person-list' %}>Zurück zur Liste</a>
                         </p>
                     </div>
                 </div>
@@ -84,7 +126,7 @@
             <div class="level-right">
                 <div class="level-item">
                     <p class="control">
-                        <a class="button is-light has-tooltip-bottom" href="{% url 'keys:person-update' pk=person.id  %}">Kontakt bearbeiten</a>
+                        <a class="button is-light has-tooltip-bottom" href={% url 'keys:person-update' pk=person.id  %}>Kontakt bearbeiten</a>
                     </p>
                 </div>
                 <div class="level-item">
@@ -149,7 +191,7 @@
                 <div class="level-item">
                     <p class="control">
                         {% if keys.availible %}
-                        <a class="button is-primary" href="{% url 'keys:issue-new'  %}?person={{person.id}}">Neue Ausleihe</a>
+                        <a class="button is-primary" href={% url 'keys:issue-new' person.id %}>Neue Ausleihe</a>
                         {% else %}
                         <a class="button is-primary has-tooltip-arrow" data-tooltip="Keine freien Schlüssel verfügbar." disabled>Neue Ausleihe</a>               
                         {% endif %}

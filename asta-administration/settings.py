@@ -70,7 +70,6 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'phonenumber_field',
     'simple_history',
-    'view_breadcrumbs',
     'debug_toolbar',
     'fontawesome-free',
 
@@ -163,10 +162,6 @@ PHONENUMBER_DEFAULT_REGION = 'DE'
 PHONENUMBER_DEFAULT_FORMAT = 'NATIONAL'
 
 TIME_ZONE = 'Europe/Berlin'
-
-USE_I18N = True
-
-USE_L10N = True
 
 USE_TZ = True
 

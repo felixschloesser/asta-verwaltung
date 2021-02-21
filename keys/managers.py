@@ -245,6 +245,12 @@ class IssueManager(models.Manager):
         # i.e: Issue.all_issues.active(insertion_date__gte=datetime.now)
         return self.filter(active=True, *args, **kwargs)
 
+    def inactive(self, *args, **kwargs):
+        # the method accepts **kwargs, so that it is possible to filter
+        # active issues
+        # i.e: Issue.all_issues.active(insertion_date__gte=datetime.now)
+        return self.filter(active=False, *args, **kwargs)
+
     # Not returning QuerySet
     def active_percent(self):
         if self.count() > 0:

@@ -61,9 +61,9 @@ class Building(models.Model):
 
     def __str__(self):
         if self.name:
-            return "{} (Geb. {})".format(self.name, self.identifier)
+            return "{}\xa0(Geb.\xa0{})".format(self.name, self.identifier)
         else:
-            return "Gebäude {}".format(self.identifier)
+            return "Gebäude\xa0{}".format(self.identifier)
 
     def get_rooms(self):
         return Room.all_rooms.filter(building__identifier=self.identifier)
@@ -131,15 +131,15 @@ class Room(models.Model):
 
     def __str__(self):
         if self.name:
-            name_string = "{} ({})".format(self.name, self.number)
+            name_string = "{}\xa0({})".format(self.name, self.number)
         elif self.purpose.name == 'Gremienraum' and self.group.name in Group.all_groups.fsr_list():
-            name_string = "{} ({})".format(self.group, self.number)
+            name_string = "{}\xa0({})".format(self.group, self.number)
         elif self.purpose.name != 'Gremienraum' and self.group.name in Group.all_groups.fsr_list():
-            name_string = "{} {} ({})".format(self.group, self.purpose, self.number)
+            name_string = "{}\xa0{}\xa0({})".format(self.group, self.purpose, self.number)
         elif self.group.name == 'AStA':
-            name_string = "{} {} ({})".format(self.group, self.purpose, self.number)
+            name_string = "{}\xa0{}\xa0({})".format(self.group, self.purpose, self.number)
         elif self.group.name == 'StuPa':
-            name_string = "{} {} ({})".format(self.group, self.purpose, self.number)
+            name_string = "{}\xa0{}\xa0({})".format(self.group, self.purpose, self.number)
         else:
             name_string = "{}{}".format(self.building.identifier, self.number)
 
@@ -184,14 +184,14 @@ class Door(models.Model):
     def __str__(self):
         if self.kind == 'access':
             if self.room.name:
-                return "Zugangstür zum {} ({})".format(self.room.name, self.room.number)
+                return "Zugangstür zum\xa0{}\xa0({})".format(self.room.name, self.room.number)
             else:
-                return "Zugangstür zu {}".format(self.room.get_identifier())
+                return "Zugangstür zu\xa0{}".format(self.room.get_identifier())
         else:
             if self.room.name:
-                return "Verbindungstür zum {} ({})".format(self.room.name, self.room.number)
+                return "Verbindungstür zum\xa0{}\xa0({})".format(self.room.name, self.room.number)
             else:
-                return "Verbindungstür zu {}".format(self.room.get_identifier())
+                return "Verbindungstür zu\xa0{}".format(self.room.get_identifier())
 
     def get_kind(self):
         if self.kind == 'access':
@@ -240,9 +240,9 @@ class Key(models.Model):
 
     def __str__(self):
         if self.locking_system.method == 'transponder':
-            return "Transponder Nr. {}".format(self.number)
+            return "Transponder Nr.\xa0{}".format(self.number)
         else:
-            return "Schlüssel Nr. {}".format(self.number)
+            return "Schlüssel Nr.\xa0{}".format(self.number)
 
     def get_absolute_url(self):
         return reverse('keys:key-detail', args=[str(self.id)])
@@ -309,7 +309,7 @@ class LockingSystem(models.Model):
 
     def __str__(self):
         if self.company:
-            return "{} von {}".format(self.name, self.company)
+            return "{} von\xa0{}".format(self.name, self.company)
         else:
             return self.name
 
@@ -406,6 +406,9 @@ class Person(models.Model): # Add a chron job ro delete after a 2 years of not r
     def get_active_issues(self):
         return self.issues.active()
 
+    def get_inactive_issues(self):
+        return self.issues.inactive()
+
     # Tell django-admin to display this as an Boolian
     paid_deposit.boolean = True
     paid_deposit.short_description = "Kaution"
@@ -487,7 +490,7 @@ class Deposit(models.Model):
         ]
 
     def __str__(self):
-        full_name = "{} {} von {}".format(self.amount, self.currency, self.person.get_full_name())
+        full_name = "{}\xa0{} von\xa0{}".format(self.amount, self.currency, self.person.get_full_name())
         return full_name
 
     # Django makes it unneccecary hard to acces verbose name from template.
@@ -562,11 +565,9 @@ class Issue(models.Model):
         ]
 
     def __str__(self):
-        return "{} an {}".format(self.key, self.person)
+        return "{} an\xa0{}".format(self.key, self.person)
 
     def get_absolute_url(self):
         return reverse('keys:issue-detail', args=[str(self.id)])
-
-
 
 

@@ -6,6 +6,17 @@
 
 {% block content %}
 <div class="container is-max-desktop">
+    {% if messages %}
+        {% for message in messages %}
+        <article class="message is-{{ message.tags }}">
+            <div class="message-body">
+                {{ message }}
+            </div>
+        </article>
+        {% endfor %}
+    {% endif %}
+
+
     <h1 class="title is-2">Neue Ausleihe{% if person %} an {{ person }}{% endif%}</h1>
 
     <form method='post' autocomplete="off">
@@ -71,8 +82,9 @@
 
         <div class="buttons is-right">
             <p class="control">
-                <a class="button is-light" href={% url 'keys:person-detail' pk=person.id %}>Abbrechen</a>
+                <a class="button is-light" href={% url 'keys:person-detail' person.id %}>Abbrechen</a>
                 <input class="button is-primary" type="submit" value="Anlegen">
+                <input class="button is-primary" type="submit" name="another" value="Weiteren Ausleihen">
             </p>
         </div>
     </form>

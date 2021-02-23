@@ -4,7 +4,7 @@ import logging
 
 class CustomOpenidBackend(OIDCAuthenticationBackend):
     def verify_claims(self, claims):
-        verified = super(MyOIDCAB, self).verify_claims(claims)
+        verified = super().verify_claims(claims)
         is_admin = 'vorstand' in claims.get('group', [])
         return verified and is_admin
 

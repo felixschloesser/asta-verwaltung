@@ -20,36 +20,28 @@
                 </p>
             </div>
             <div class="body">
+            
                 <h1>Schlüsselausleihe</h1>
-                <p>Hiermit bestätige ich, {{ issue.person }}, am {{ issue.out_date }} folgenden Schlüssel ausgehändigt bekommen zu haben:</p>
-
-                <ul>
-                    {% for issue in issue.person.get_active_issues_today %}
-                    <li>{{ issue.key }}</li>
-
-                    {% endfor %}
-                </ul>
-
-                {% if issue.person.get_active_issues_earlier.count > 1 %}
-                    <p>Insgesamt befinden sich die folgenden Schlüssel in meinem Besitz:</p>
-                    <ul>
-                        {% for issue in issue.person.get_active_issues_earlier %}
-                            <li>{{ issue.key }}</li>
-                        {% endfor %}
-                    </ul>
-                {% endif %} s
-
-                {% if issue.person.get_active_deposit %}
-                    <p>Am {{ issue.person.get_active_deposit.in_datetime }} wurde eine Kaution von {{ issue.person.get_active_deposit.amount }} {{ issue.person.get_active_deposit.currency }} {{ issue.person.get_active_deposit.get_in_method }} hinterlegt.</p>
-                {% else %}
-                    <p>Es ist keine Kaution hinterlegt.</p>
+                {% if issue.active %}
+                    <p>Hiermit bestätige ich, dass mir der {{ issue.key }} am {{ issue.out_date }} ausgehändigt wurde.</p>
                 {% endif %}
+
+                {% if not issue.active %}
+                    <p>Hiermit bestätige ich, {{ issue.person }}, dass ich den mir am {{ issue.out_date }} ausgeliehenen {{ issue.key }} am {{ issue.in_date }} zurückgegeben habe.</p>
+                {% endif %}
+
+                {% if issue.comment %}
+                    <p>Kommentar: <span class="comment">{{ deposit.comment }}</span></p>
+                {% endif %}
+                
                 <br>
                 <br>
+
                 <svg width="162px" height="2px" viewBox="0 0 162 2" version="1.1" xmlns="http://www.w3.org/2000/svg" >
                     <line x1="1" y1="1" x2="161" y2="1" id="Line" stroke="black"></line>
                 </svg>
                 <p class="signature">Unterschrift {{ issue.person }}</p>
+            
             </div>
             <div class="aside">
                 <p class="adress">
@@ -73,17 +65,12 @@
             <div class="reciept">
                 <div class="reciept_text">
                     <h2>Quittung</h2>
-                    <p>
-                        Am {% now "l, j. F Y" %} wurde {{ issue.person }} der {{ issue.key }} ausgehändigt.
-                    </p>
-                    {% if issue.person.get_active_deposit %}
-                        <p>
-                            Eine Kaution von {{ issue.person.get_active_deposit.amount }} {{ issue.person.get_active_deposit.currency }} ist hinterlegt.
-                        </p>
-                    {% else %}
-                        <p>
-                            Es ist keine Kaution hinterlegt.
-                        </p>
+                    {% if issue.active %}
+                        <p>{{ issue.person }}, wurde am {{ issue.out_date }} der {{ issue.key }} ausgehändigt.</p>
+                    {% endif %}
+
+                    {% if not issue.active %}
+                        <p>{{ issue.person }} hat den ihm am {{ issue.out_date }} ausgehändigten {{ issue.key }} am {{ issue.in_date }} zurückgegeben.</p>
                     {% endif %}
                     <br>
                     <svg width="252px" height="2px" viewBox="0 0 252 2" version="1.1" xmlns="http://www.w3.org/2000/svg" >
@@ -92,6 +79,9 @@
                     <p class="signature">Unterschrift {{ user.first_name }} {{ user.last_name }}</p>
                 </div>
                 <div class="reciept_logo">
+                    <p class="date">
+                        {% now "j. F Y" %}
+                    </p>
                     <div class="reciept_asta_logo">
                         {% include 'keys/asta_logo.html' %}
                     </div>

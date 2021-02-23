@@ -15,6 +15,7 @@ p {
     font-family: Ubuntu;
     font-weight: 400;
     line-height: 20px;
+    margin: 0.3rem;
 }
 li {
     font-family: Ubuntu;
@@ -109,10 +110,16 @@ page {
     text-align: right;
     position: relative;
 }
+
 .aside > .user {
     position: absolute;
     bottom: 0;
     right: 0;
+}
+
+.date {
+    font-size: 10pt;
+    text-align: right;
 }
 
 .reciept {
@@ -128,7 +135,9 @@ page {
 }
 
 .reciept_text {
-     grid-area: reciept_text;
+    grid-area: reciept_text;
+    font-size: 10pt;
+
 }
 
 .reciept_logo {
@@ -138,7 +147,7 @@ page {
 
 .reciept_asta_logo {
     position: absolute;
-    top: 50%;
+    top: 55%;
     left: 50%;
     transform: translate(-50%, -50%);
 }

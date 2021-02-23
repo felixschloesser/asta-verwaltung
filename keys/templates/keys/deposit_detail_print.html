@@ -23,10 +23,12 @@
                 <h1>Schlüsselkaution</h1>
                 
                 <p>Hiermit bestätige ich, {{ deposit.person }}, am {{ deposit.in_datetime }} eine Kaution von {{ deposit.amount }} {{ deposit.currency }} {{ deposit.get_in_method }} hinterlegt zu haben.</p>
+                
                 {% if deposit.retained_datetime %} {% comment %}This should stay even if returned{% endcomment %}
                     <p>Am {{ deposit.retained_datetime }} wurde die Kaution von {{ deposit.amount }} {{ deposit.currency }} einbehalten.</p>
                     <p>Kommentar: <span class="comment">{{ deposit.comment }}</span></p>
                 {% endif %}
+                
                 {% if deposit.state == 'out' %}
                     <p>Am {{ deposit.out_datetime }} wurde mir die Kaution in Höhe von {{ deposit.amount }} {{ deposit.currency }} von {{ user.first_name }} {{ user.last_name }} {{ deposit.get_in_method }} zurückgegeben.</p>
                 {% endif %}
@@ -34,6 +36,7 @@
                 {% if not deposit.retained_datetime and deposit.comment %}
                     <p>Kommentar: <span class="comment">{{ deposit.comment }}</span></p>
                 {% endif %}
+                
                 <br>
                 <br>
                 <svg width="162px" height="2px" viewBox="0 0 162 2" version="1.1" xmlns="http://www.w3.org/2000/svg" >
@@ -84,6 +87,9 @@
                     <p class="signature">Unterschrift {{ user.first_name }} {{ user.last_name }}</p>
                 </div>
                 <div class="reciept_logo">
+                    <p class="date">
+                        {% now "j. F Y" %}
+                    </p>
                     <div class="reciept_asta_logo">
                         {% include 'keys/asta_logo.html' %}
                     </div>

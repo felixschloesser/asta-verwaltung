@@ -1,11 +1,6 @@
 {% extends "keys/base.html" %}
 
-{% block title %}{{ person.get_full_name }} | Schlüsselsystem{% endblock %}
-
-{% block additional_css %}
-    {% load static %}
-    <link href={% static 'fontawesome_free/css/all.min.css' %} rel="stylesheet" type="text/css">
-{% endblock %}
+{% block title %}{{ person.get_full_name }} - Übersicht{% endblock %}
 
 {% block content %}
 <div class="container is-max-desktop">
@@ -61,7 +56,7 @@
                         {% if issue.key.stolen_or_lost %}
                             <span class="tag is-warning">
                                 <b>Verloren</b>
-                            </span>
+                            </span>&nbsp;
                         {% endif %}
                         <strong>{{ issue.key }}</strong></a>: [
                             {% for room in issue.key.get_rooms %}
@@ -82,34 +77,39 @@
         </ul>
 
         {% if person.get_inactive_issues %}
-            <h2 class="subtitle is-4">Vergangene Ausleihen:</h2>
-            <ul>
-            {% for issue in person.get_inactive_issues %}
-                {% spaceless %}
-                <li>
-                    <a href={% url 'keys:issue-detail' pk=issue.id %}>
-                        {% if issue.key.stolen_or_lost %}
-                            <span class="tag is-warning">
-                                <b>Verloren</b>
-                            </span>
-                        {% endif %}
-                        <strong>{{ issue.key }}</strong></a>: [
-                            {% for room in issue.key.get_rooms %}
-                                <em>
-                                    {{ room }}{% if not forloop.last %}{% ifequal forloop.revcounter 2 %} und {% else %}, {% endifequal %}{% else %}{% endif %}
-                                </em>
-                            {% empty %}
-                                <em>
-                                    keine&nbsp;/ nur&nbsp;Verbindungstüren
-                                </em>
-                            {% endfor %}
-                        ]
-                </li>
-                {% endspaceless %}
-            {% empty %}
-                keine.
-            {% endfor %}
-            </ul>
+            <details>
+                <summary>
+                    <span class="title is-5">Vergangene Ausleihen:</span>
+                </summary>
+
+                <ul>
+                {% for issue in person.get_inactive_issues %}
+                    {% spaceless %}
+                    <li>
+                        <a href={% url 'keys:issue-detail' pk=issue.id %}>
+                            {% if issue.key.stolen_or_lost %}
+                                <span class="tag is-warning">
+                                    <b>Verloren</b>
+                                </span>
+                            {% endif %}
+                            <strong>{{ issue.key }}</strong></a>: [
+                                {% for room in issue.key.get_rooms %}
+                                    <em>
+                                        {{ room }}{% if not forloop.last %}{% ifequal forloop.revcounter 2 %} und {% else %}, {% endifequal %}{% else %}{% endif %}
+                                    </em>
+                                {% empty %}
+                                    <em>
+                                        keine&nbsp;/ nur&nbsp;Verbindungstüren
+                                    </em>
+                                {% endfor %}
+                            ]
+                    </li>
+                    {% endspaceless %}
+                {% empty %}
+                    keine.
+                {% endfor %}
+                </ul>
+            </details>
         {% endif %}
     </div>
         <nav class="level">
@@ -124,6 +124,11 @@
                 </div>
             </div>
             <div class="level-right">
+                <div class="level-item">
+                    <p class="control">
+                        <button class="button is-info" onclick="window.print()">Übersicht drucken</button>
+                    </p>
+                </div>
                 <div class="level-item">
                     <p class="control">
                         <a class="button is-light has-tooltip-bottom" href={% url 'keys:person-update' pk=person.id  %}>Kontakt bearbeiten</a>
@@ -202,3 +207,18 @@
     </div>
 </div>
 {% endblock %}
+
+
+<!-- Print -->
+{% block additional_css %}
+    {% load static %}
+    <link href={% static 'fontawesome_free/css/all.min.css' %} rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" media="print" href={% static 'css/print.css' %}>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Ubuntu" />
+{% endblock %}
+
+{% endblock }
+{% block print %}
+    {% include 'keys/person_detail_print.html' %}
+{% endblock %}
+

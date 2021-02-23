@@ -1,0 +1,167 @@
+<div class="print" >
+    <page size="A4">
+        <div class="letter layout">
+            <div class="logo">
+                <div class="asta_logo">
+                    {% include 'keys/asta_logo.html' %}
+                </div>
+            </div>
+            <div class="head">
+                <p class="sender">
+                    Allgemeiner Studierendenausschuss der TUHH
+                </p>
+                <svg width="286px" height="2px" viewBox="0 0 286 2" version="1.1" xmlns="http://www.w3.org/2000/svg" >
+                    <line x1="1" y1="1" x2="285" y2="1" id="Line" stroke="black"></line>
+                </svg>
+                <p class="adress">
+                    {{ person.get_full_name }}, {{ person.group }}<br>
+                    {{ person.university_email }}<br>
+                    {{ person.phone_number }}<br>
+                </p>
+            </div>
+            <div class="body">
+            
+                <h1>Schüsselübersicht</h1>
+
+
+                {% if person.get_active_issues_today %}
+                    <p>Hiermit bestätige ich, dass mir heute die folgenden Schlüssel ausgehändigt wurden:</p>
+                
+                    <ul>
+                        {% for issue in person.get_active_issues_today %}
+                            <li>{{ issue.key }} 
+                                {% if issue.comment %}
+                                    <p>Kommentar: <span class="comment">{{ deposit.comment }}</span></p>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+
+                {% if person.get_inactive_issues_today %}
+                    <p>{% if person.get_active_issues_today %}Ausserdem{% else %}Hiermit{% endif %} bestätige ich heute die folgenden Schlüssel zurückgegeben zu haben:</p>
+                
+                    <ul>
+                        {% for issue in person.get_inactive_issues_today %}
+                            <li>{{ issue.key }} 
+                                {% if issue.comment %}
+                                    <p>Kommentar: <span class="comment">{{ deposit.comment }}</span></p>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+
+                {% if person.get_active_issues_earlier %}
+                    <p>Insgesamt befinden sich noch die folgenden Schlüssel in meinem Besitz:</p>
+                    <ul>
+                        {% for issue in person.get_active_issues_earlier %}
+                            <li>{{ issue.key }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+
+                {% if not person.get_active_issues  %}
+                    <p> 
+                        Ich habe habe zum heutigen Tag keine aktiven Schlüsselausleihen.
+                    </p>
+                {% endif %}
+
+                {% if person.get_active_deposit %}
+                    <p>Am {{ person.get_active_deposit.in_datetime }} habe ich eine Kaution von {{ person.get_active_deposit.amount }} {{ person.get_active_deposit.currency }} {{ person.get_active_deposit.get_in_method }} hinterlegt.</p>
+                {% else %}
+                    <p>Ich habe aktuell keine Kaution hinterlegt.</p>
+                {% endif %}
+                <br>
+                <br>
+                <svg width="162px" height="2px" viewBox="0 0 162 2" version="1.1" xmlns="http://www.w3.org/2000/svg" >
+                    <line x1="1" y1="1" x2="161" y2="1" id="Line" stroke="black"></line>
+                </svg>
+                <p class="signature">Unterschrift {{ person.get_full_name }}</p>
+            
+            </div>
+            <div class="aside">
+                <p class="adress">
+                    AStA der TU Hamburg<br>
+                    Am Schwarzenberg-Campus 3<br>
+                    21075 Hamburg<br>
+                    <br>
+                    (040) 42878 4160<br>
+                    sekreteriat@asta.tuhh.de
+                </p>
+                <p class="date">
+                    Hamburg, {% now "j. F Y" %}
+                </p>
+
+                <p class="user">
+                    {{ user.first_name }} {{ user.last_name }}<br>
+                    {{ user.email }}
+                </p>
+            </div>
+
+            <div class="reciept">
+                <div class="reciept_text">
+                    <h2>Quittung</h2>
+
+                    {% if person.get_active_issues_today and person.get_inactive_issues_today %}
+                        <p> 
+                            {{ person.get_full_name }} hat heute 
+                            {% for issue in person.get_active_issues_today %}
+                                {{ issue.key }}{% if not forloop.last %}{% ifequal forloop.revcounter 2 %} und {% else %}, {% endifequal %}{% else %}{% endif %}
+                            {% endfor %} ausgeliehen und 
+                            {% for issue in person.get_inactive_issues_today %}
+                                {{ issue.key }}{% if not forloop.last %}{% ifequal forloop.revcounter 2 %} und {% else %}, {% endifequal %}{% else %}{% endif %}
+                            {% endfor %} zurückgegeben.
+                        </p>
+
+                    {% elif person.get_active_issues_today %}
+                        <p> 
+                            {{ person.get_full_name }} hat heute 
+                            {% for issue in person.get_active_issues_today %}
+                                {{ issue.key }}{% if not forloop.last %}{% ifequal forloop.revcounter 2 %} und {% else %}, {% endifequal %}{% else %}{% endif %}
+                            {% endfor %} ausgeliehen.
+                        </p>
+                    
+                    {% elif person.get_inactive_issues_today %}
+                        <p> 
+                            {{ person.get_full_name }} hat heute 
+                            {% for issue in person.get_inactive_issues_today %}
+                                {{ issue.key }}{% if not forloop.last %}{% ifequal forloop.revcounter 2 %} und {% else %}, {% endifequal %}{% else %}{% endif %}
+                            {% endfor %} zurückgegeben.
+                        </p>
+
+                    {% elif person.get_active_issues_earlier %}
+                        <p> 
+                            {{ person.get_full_name }} hat 
+                            {% for issue in person.get_active_issues_earlier %}
+                                {{ issue.key }}{% if not forloop.last %}{% ifequal forloop.revcounter 2 %} und {% else %}, {% endifequal %}{% else %}{% endif %}
+                            {% endfor %} ausgeliehen.
+                        </p>
+                    {% else %}
+                        <p> 
+                            {{ person.get_full_name }} hat zum heutigen Tag keine aktiven Schlüsselausleihen.
+                        </p>
+                    {% endif %}
+                    {% if person.get_active_deposit %}
+                        <p>Es ist eine Kaution in Höhe von {{ person.get_active_deposit.amount }} {{ person.get_active_deposit.currency }} hinterlegt.</p>
+                    {% else %}
+                        <p>Er hat keine Kaution hinterlegt.</p>
+                    {% endif %}
+                    <br>
+                    <svg width="252px" height="2px" viewBox="0 0 252 2" version="1.1" xmlns="http://www.w3.org/2000/svg" >
+                        <line x1="1" y1="1" x2="251" y2="1" id="Line" stroke="black"></line>
+                    </svg>
+                    <p class="signature">Unterschrift {{ user.first_name }} {{ user.last_name }}</p>
+                </div>
+                <div class="reciept_logo">
+                    <p class="date">
+                        {% now "j. F Y" %}
+                    </p>
+                    <div class="reciept_asta_logo">
+                        {% include 'keys/asta_logo.html' %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </page>
+</div>

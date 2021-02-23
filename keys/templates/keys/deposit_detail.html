@@ -1,6 +1,6 @@
 {% extends "keys/base.html" %}
 
-{% block title %}Ausgabe | Schlüsselsystem{% endblock %}
+{% block title %}Kaution {{ deposit.get_state }} - {{ deposit.person}}{% endblock %}
 
 
 {% block content %}
@@ -55,7 +55,7 @@
             </div>
             <div class="level-right">
                 <div class="level-item">
-                    <button class="button is-info" onclick="window.print()">Drucken</button>
+                    <button class="button is-info" onclick="window.print()">Bestätigung drucken</button>
                 </div>
                 {% if deposit.state == 'in' %}
                     <div class="level-item">

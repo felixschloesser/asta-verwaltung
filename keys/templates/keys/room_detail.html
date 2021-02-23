@@ -52,7 +52,7 @@
     <nav class="level is-max-desktop noprint">
         <div class="level-left">
             <div class="level-item">
-                <a class="button is-link is-outlined" href="{% url 'keys:room-list' %}">Zurück zur Liste</a>
+                <a class="button is-link is-outlined" href={{ request.META.HTTP_REFERER }}>Zurück</a>
             </div>
         </div>
     </nav>

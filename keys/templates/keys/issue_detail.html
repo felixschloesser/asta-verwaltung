@@ -1,6 +1,6 @@
 {% extends "keys/base.html" %}
 
-{% block title %}Ausleihe {{ issue.person }}{% endblock %}
+{% block title %}Ausleihe {{ issue.person }} {{ issue.key }}{% endblock %}
 
 
 {% block content %}
@@ -44,16 +44,12 @@
     <nav class="level is-max-desktop noprint">
         <div class="level-left">
             <div class="level-item">
-                {% if issue.active %}
-                    <a class="button is-link is-outlined" href={% url 'keys:issue-list-active' %}>Zurück zur Liste</a>
-                {% else %}
-                    <a class="button is-link is-outlined" href={% url 'keys:issue-list-all' %}>Zurück zur Liste</a>
-                {% endif %}
+                <a class="button is-link is-outlined" href={{ request.META.HTTP_REFERER }}>Zurück</a>
             </div>
         </div>
         <div class="level-right">
             <div class="level-item">
-                <button class="button is-info" onclick="window.print()">Drucken</button>
+                <button class="button is-info" onclick="window.print()">Bestätigung drucken</button>
             </div>
 
             {% if not issue.key.stolen_or_lost and issue.active %}

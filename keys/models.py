@@ -409,8 +409,17 @@ class Person(models.Model): # Add a chron job ro delete after a 2 years of not r
     def get_active_issues_today(self):
         return self.issues.active_today()
 
-    def get_inactive_issues_earlier(self):
+    def get_active_issues_earlier(self):
         return self.issues.active_earlier()
+
+    def get_inactive_issues(self):
+        return self.issues.inactive()
+
+    def get_inactive_issues_today(self):
+        return self.issues.inactive_today()
+
+    def get_inactive_issues_earlier(self):
+        return self.issues.inactive_earlier()
 
 
     # Tell django-admin to display this as an Boolian
@@ -509,6 +518,14 @@ class Deposit(models.Model):
             return 'in Bar'
         elif self.out_method == 'bank_transfer':
             return 'durch Überweisung'
+
+    def get_state(self):
+        if self.state == 'in':
+            return 'eingezahlt'
+        elif self.state == 'retained':
+            return 'einbehalten'
+        elif self.state == 'out':
+            return 'ausgezahlt'
 
     def get_absolute_url(self):
         return reverse('keys:deposit-detail', kwargs={'pk_p': self.person.id, 'pk_d': self.id })

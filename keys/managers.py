@@ -241,12 +241,6 @@ class IssueManager(models.Manager):
         qs = super().get_queryset()
         return qs.select_related('person', 'key', 'key__locking_system')
 
-    def active_today(self, *args, **kwargs):
-        return self.filter(active=True, out_date__exact=timezone.now().date(), *args, **kwargs)
-
-    def active_earlier(self, *args, **kwargs):
-        return self.filter(active=True, out_date__gte=out_date_timezone.now().date(), *args, **kwargs)
-
     def active(self, *args, **kwargs):
         # the method accepts **kwargs, so that it is possible to filter
         # active issues
@@ -258,6 +252,19 @@ class IssueManager(models.Manager):
         # active issues
         # i.e: Issue.all_issues.active(insertion_date__gte=datetime.now)
         return self.filter(active=False, *args, **kwargs)
+
+    def active_today(self, *args, **kwargs):
+        return self.filter(active=True, out_date__exact=timezone.now().date(), *args, **kwargs)
+
+    def active_earlier(self, *args, **kwargs):
+        return self.filter(active=True, out_date__lt=timezone.now().date(), *args, **kwargs)
+
+    def inactive_today(self, *args, **kwargs):
+        return self.filter(active=False, in_date__exact=timezone.now().date(), *args, **kwargs)
+
+    def inactive_earlier(self, *args, **kwargs):
+        return self.filter(active=False, in_date__lt=timezone.now().date(), *args, **kwargs)
+
 
     # Not returning QuerySet
     def active_percent(self):

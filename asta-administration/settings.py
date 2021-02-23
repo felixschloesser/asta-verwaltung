@@ -16,7 +16,6 @@ from dotenv import load_dotenv
 
 import logging 
 
-from auth import MyOIDCAB
 
 # Get secrets from .env file
 load_dotenv()
@@ -159,9 +158,10 @@ AUTH_PASSWORD_VALIDATORS = [
 #Gitlab Open ID SigleSingOn (SSO)
 
 #Add 'mozilla_django_oidc' authentication backend
-AUTHENTICATION_BACKENDS = (
-   'MyOIDCAB',
-)
+
+
+
+AUTHENTICATION_BACKENDS = ['asta-administration.auth.CustomOidBackend']
 
 OIDC_RP_CLIENT_ID = os.getenv('OIDC_RP_CLIENT_ID')
 OIDC_RP_CLIENT_SECRET = os.getenv('OIDC_RP_CLIENT_SECRET')
@@ -230,4 +230,5 @@ LOGGING = {
     'mozilla_django_oidc': {
             'handlers': ['console'],
             'level': 'DEBUG',
+    },
 }

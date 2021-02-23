@@ -2,7 +2,7 @@ from mozilla_django_oidc.auth import OIDCAuthenticationBackend
 
 import logging
 
-class MyOIDCAB(OIDCAuthenticationBackend):
+class CustomOpenidBackend(OIDCAuthenticationBackend):
     def verify_claims(self, claims):
         verified = super(MyOIDCAB, self).verify_claims(claims)
         is_admin = 'vorstand' in claims.get('group', [])

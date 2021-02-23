@@ -165,6 +165,7 @@ OIDC_RP_CLIENT_ID = os.getenv('OIDC_RP_CLIENT_ID')
 OIDC_RP_CLIENT_SECRET = os.getenv('OIDC_RP_CLIENT_SECRET')
 
 OIDC_OP_AUTHORIZATION_ENDPOINT = "https://collaborating.tuhh.de/oauth/authorize"
+OIDC_OP_TOKEN_ENDPOINT = "https://collaborating.tuhh.de/oauth/token"
 OIDC_OP_USER_ENDPOINT = "https://collaborating.tuhh.de/oauth/userinfo"
 
 

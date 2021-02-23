@@ -16,6 +16,8 @@ from dotenv import load_dotenv
 
 import logging 
 
+from auth import MyOIDCAB
+
 # Get secrets from .env file
 load_dotenv()
 
@@ -90,6 +92,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'simple_history.middleware.HistoryRequestMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'mozilla_django_oidc.middleware.SessionRefresh',
 ]
 
 ROOT_URLCONF = 'asta-administration.urls'
@@ -153,12 +156,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# Gitlab Open ID SigleSingOn (SSO)
+#Gitlab Open ID SigleSingOn (SSO)
 
-# Add 'mozilla_django_oidc' authentication backend
+#Add 'mozilla_django_oidc' authentication backend
 AUTHENTICATION_BACKENDS = (
-    'mozilla_django_oidc.auth.OIDCAuthenticationBackend',
-    # ...
+   'MyOIDCAB',
 )
 
 OIDC_RP_CLIENT_ID = os.getenv('OIDC_RP_CLIENT_ID')
@@ -173,7 +175,7 @@ OIDC_OP_USER_ENDPOINT = "https://collaborating.tuhh.de/oauth/userinfo"
 
 
 LOGIN_REDIRECT_URL = "https://verwaltung.asta.felixschloesser.de/keys/"
-LOGOUT_REDIRECT_URL = "https://verwaltung.asta.felixschloesser.de/accounts/logout"
+LOGOUT_REDIRECT_URL = "https://verwaltung.asta.felixschloesser.de/"
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
@@ -225,4 +227,7 @@ LOGGING = {
         'handlers': ['console'],
         'level': 'DEBUG',
     },
+    'mozilla_django_oidc': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
 }

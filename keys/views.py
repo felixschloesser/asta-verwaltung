@@ -107,9 +107,10 @@ class KeyLost(SuccessMessageMixin, LoginRequiredMixin, generic.UpdateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        person = self.object.get_current_issue()
-        if person:
-            return reverse_lazy('keys:person-detail',  args=[person.id])
+        issue = self.object.get_current_issue()
+        logging.debug(issue)
+        if issue:
+            return reverse_lazy('keys:person-detail',  args=[issue.person.id])
         else:
             return reverse_lazy('keys:key-detail',  args=[self.object.id])
 

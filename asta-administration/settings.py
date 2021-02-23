@@ -161,7 +161,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 
-AUTHENTICATION_BACKENDS = ['asta-administration.auth.CustomOidBackend']
+AUTHENTICATION_BACKENDS = ['asta-administration.auth.CustomOpenidBackend']
 
 OIDC_RP_CLIENT_ID = os.getenv('OIDC_RP_CLIENT_ID')
 OIDC_RP_CLIENT_SECRET = os.getenv('OIDC_RP_CLIENT_SECRET')

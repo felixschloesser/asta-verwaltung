@@ -168,7 +168,7 @@ OIDC_OP_AUTHORIZATION_ENDPOINT = "https://collaborating.tuhh.de/oauth/authorize"
 OIDC_OP_USER_ENDPOINT = "https://collaborating.tuhh.de/oauth/userinfo"
 
 
-LOGIN_REDIRECT_URL = "https://verwaltung.asta.felixschloesser.de"
+LOGIN_REDIRECT_URL = "https://verwaltung.asta.felixschloesser.de/keys/"
 LOGOUT_REDIRECT_URL = "https://verwaltung.asta.felixschloesser.de/accounts/logout"
 
 # Internationalization

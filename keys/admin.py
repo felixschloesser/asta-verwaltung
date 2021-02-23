@@ -169,9 +169,6 @@ class PersonAdmin(HashIdFieldAdminMixin, admin.ModelAdmin, ExportCsvMixin):
 class GroupAdmin(admin.ModelAdmin, ExportCsvMixin):
     list_display = ['name']
 
-    def has_module_permission(self, request):
-        return False
-
 
 
 @admin.register(Issue)

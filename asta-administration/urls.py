@@ -30,6 +30,7 @@ admin.site.index_title = "Datenbank-Tabellen"
 urlpatterns = [
     path('', lambda r: redirect('/keys/')),
     path('accounts/', include('django.contrib.auth.urls'), name='account'),
+    path('oidc/', include('mozilla_django_oidc.urls')),
 
     path('admin/', admin.site.urls, name='admin'),
 

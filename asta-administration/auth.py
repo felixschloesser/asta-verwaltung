@@ -33,8 +33,12 @@ class CustomOpenidBackend(OIDCAuthenticationBackend):
         """Return object for a newly created user account."""
         email = claims.get('email')
         name = claims.get('name').split(' ')
-        fist_name = name.pop(0)
-        last_name = name.pop()
+        if len(name) >= 2:
+            fist_name = name.pop(0)
+            last_name = name.pop()
+        else:
+            fist_name = name.pop(0)
+
 
         logging.info("Creating debug")
         logging.info(claims)

@@ -140,8 +140,8 @@
 		          			</p>
 		          		</div>
 		          	</div>
-					
-					
+
+
 					<hr class="person">
 					<div class="person divider is-vertical is-right"></div>
 	        		<div class="column person">
@@ -154,10 +154,10 @@
 		          			</p>
 		          		</div>
 		          	</div>
-					
+
 					<hr class="room">
 					<div class="room divider is-vertical is-right"></div>
-	        		
+
 	        		<div class="column room">
 		        		<div class="content">
 		        			<p class="title is-5 mb-2">Räume</p>
@@ -170,13 +170,13 @@
 	        		</div>
 	        	</div>
 	 		</div>
-			
+
 		</div>
 	{% else %}
 	    <h1 class="title">Wilkommen!</h1>
 	    <p class="content">Das hier ist das neue Schlüsselsystem des AStAs.</p>
 	    <p class="content">Bitte melden Sie sich an.</p>
-	    <a class="button is-primary is-right" href="{% url 'login' %}?next=/">Anmelden</a>
+	    <a class="button is-primary is-right" href={% url 'oidc_authentication_init' %}>Anmelden</a>
 	{% endif %}
 
 </div>

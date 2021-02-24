@@ -177,7 +177,7 @@ OIDC_OP_USER_ENDPOINT = "https://collaborating.tuhh.de/oauth/userinfo"
 LOGIN_REDIRECT_URL = "https://verwaltung.asta.felixschloesser.de/keys/"
 LOGIN_REDIRECT_URL_FAILURE = "https://verwaltung.asta.felixschloesser.de/keys/"
 LOGOUT_REDIRECT_URL = "https://verwaltung.asta.felixschloesser.de/keys/"
-
+OIDC_AUTHENTICATION_CALLBACK_URL = "https://verwaltung.asta.felixschloesser.de/oidc/callback/"
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 

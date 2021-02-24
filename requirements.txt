@@ -19,5 +19,5 @@ python-dotenv==0.15.0
 whitenoise==5.2.0
 fontawesome-free==5.15.2
 gunicorn==20.0.4
-django-view-breadcrumbs==0.1.0
 django-view-breadcrumbs==1.1.0
+mozilla-django-oidc==1.2.4

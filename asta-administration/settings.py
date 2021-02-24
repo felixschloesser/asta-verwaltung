@@ -14,7 +14,7 @@ import os, json, re
 from os.path import join, dirname
 from dotenv import load_dotenv
 
-import logging 
+import logging
 
 
 # Get secrets from .env file
@@ -175,6 +175,7 @@ OIDC_OP_USER_ENDPOINT = "https://collaborating.tuhh.de/oauth/userinfo"
 
 
 LOGIN_REDIRECT_URL = "https://verwaltung.asta.felixschloesser.de/keys/"
+LOGIN_REDIRECT_URL_FAILURE = "https://verwaltung.asta.felixschloesser.de/keys/"
 LOGOUT_REDIRECT_URL = "https://verwaltung.asta.felixschloesser.de/keys/"
 
 # Internationalization
@@ -188,7 +189,7 @@ PHONENUMBER_DEFAULT_FORMAT = 'NATIONAL'
 TIME_ZONE = 'Europe/Berlin'
 
 USE_TZ = True
-USE_L10N = True 
+USE_L10N = True
 
 # Mail
 EMAIL_HOST = os.getenv('DJANGO_EMAIL_HOST')
@@ -217,7 +218,7 @@ STATICFILES_STORAGE = os.getenv('DJANGO_STATICFILES_STORAGE')
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
-   
+
     'handlers': {
         'console': {
             'class': 'logging.StreamHandler',

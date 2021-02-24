@@ -175,7 +175,7 @@ OIDC_OP_JWKS_ENDPOINT = "https://collaborating.tuhh.de/oauth/discovery/keys"
 OIDC_OP_AUTHORIZATION_ENDPOINT = "https://collaborating.tuhh.de/oauth/authorize"
 OIDC_OP_TOKEN_ENDPOINT = "https://collaborating.tuhh.de/oauth/token"
 OIDC_OP_USER_ENDPOINT = "https://collaborating.tuhh.de/oauth/userinfo"
-OIDC_RP_SCOPES = "openid profile email read_user read_api"
+OIDC_RP_SCOPES = "openid profile email"
 
 LOGIN_REDIRECT_URL = "https://verwaltung.asta.felixschloesser.de/keys/"
 LOGIN_REDIRECT_URL_FAILURE = "https://verwaltung.asta.felixschloesser.de/keys/"

@@ -40,4 +40,8 @@ class CustomOpenidBackend(OIDCAuthenticationBackend):
         logging.info(claims)
 
         username = self.get_username(claims)
-        return self.UserModel.objects.create_user(username, email, first_name=fist_name, last_name=last_name)
+        return self.UserModel.objects.create_user(username,
+                                                  email,
+                                                  first_name=fist_name,
+                                                  last_name=last_name,
+                                                  is_staff=True)

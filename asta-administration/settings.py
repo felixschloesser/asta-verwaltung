@@ -36,7 +36,7 @@ HASHID_FIELD_SALT = os.getenv('DJANGO_HASHID_FIELD_SALT', 'changeme')
 SIMPLE_HISTORY_REVERT_DISABLED=True
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DJANGO_DEBUG', True) == "True"
+DEBUG = os.getenv('DJANGO_DEBUG', True)
 
 
 ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS','localhost').split(' ')
@@ -177,7 +177,7 @@ OIDC_OP_USER_ENDPOINT = "https://collaborating.tuhh.de/oauth/userinfo"
 LOGIN_REDIRECT_URL = "https://verwaltung.asta.felixschloesser.de/keys/"
 LOGIN_REDIRECT_URL_FAILURE = "https://verwaltung.asta.felixschloesser.de/keys/"
 LOGOUT_REDIRECT_URL = "https://verwaltung.asta.felixschloesser.de/keys/"
-OIDC_AUTHENTICATION_CALLBACK_URL = "https://verwaltung.asta.felixschloesser.de/oidc/callback/"
+OIDC_AUTHENTICATION_CALLBACK_URL = "keys:home"
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 

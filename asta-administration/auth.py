@@ -5,10 +5,13 @@ import logging
 class CustomOpenidBackend(OIDCAuthenticationBackend):
     def verify_claims(self, claims):
         verified = super().verify_claims(claims)
-        logging.debug(claims.get('group', []))
-        print(claims.get('group', []))
+        logging.debug(claims.get('group'))
+        logging.debug(claims)
+        logging.debug(claims.get('read_user'))
+        logging.debug("reading_claims")
         is_admin = 'AStA/Mitglieder/Vorstand' in claims.get('group', [])
-        return verified and is_admin
+        logging.debug(is_admin)
+        return verified and True
 
     def create_user(self, claims):
         """Return object for a newly created user account."""

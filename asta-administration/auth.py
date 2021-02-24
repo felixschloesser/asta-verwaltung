@@ -32,7 +32,7 @@ class CustomOpenidBackend(OIDCAuthenticationBackend):
     def create_user(self, claims):
         """Return object for a newly created user account."""
         email = claims.get('email')
-        name = claims.get('name')
+        name = claims.get('name').split(' ')
         fist_name = name.pop(0)
         last_name = name.pop()
 

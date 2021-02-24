@@ -38,6 +38,7 @@ class CustomOpenidBackend(OIDCAuthenticationBackend):
             last_name = name.pop()
         else:
             fist_name = name.pop(0)
+            last_name = ""
 
 
         logging.info("Creating debug")

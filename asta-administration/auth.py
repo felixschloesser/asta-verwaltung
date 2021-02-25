@@ -143,9 +143,14 @@ class CustomOpenidBackend(OIDCAuthenticationBackend):
     def update_user(self, user, claims):
         """Update existing user with new claims, if necessary save, and return user"""
         user.is_staff = self.is_staff(claims)
+        logging.debug("Is staff: {}".format(user.is_staff))
+
         user.is_superuser = self.is_superuser(claims)
+        logging.debug("Is superuser: {}".format(user.is_superuser))
 
         groups = self.get_groups(claims)
+        logging.debug("Groups: {}".format(groups))
+
         user.groups.set(groups)
 
         return user 

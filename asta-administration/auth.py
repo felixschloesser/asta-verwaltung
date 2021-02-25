@@ -95,7 +95,7 @@ class CustomOpenidBackend(OIDCAuthenticationBackend):
         # Groups as set in GitLab
         superuser_groups = ['asta/mitglieder/it']
         
-        any(group in claimed_groups for group in superuser_groups)
+        is_superuser = any(group in claimed_groups for group in superuser_groups)
 
         return is_superuser 
 
@@ -106,7 +106,7 @@ class CustomOpenidBackend(OIDCAuthenticationBackend):
         # Groups as set in GitLab
         staff_groups = ['asta/mitarbeitende']
 
-        any(group in claimed_groups for group in staff_groups)
+        is_staff = any(group in claimed_groups for group in staff_groups)
 
         return is_staff
 

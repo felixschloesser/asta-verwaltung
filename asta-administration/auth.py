@@ -39,25 +39,25 @@ class CustomOpenidBackend(OIDCAuthenticationBackend):
 
         name = claims.get('name')
 
-        fist_name = None
+        first_name = None
         last_name = None
 
         if name:
             name_list = name.split(' ') # split provided name at spaces
         else:
             logging.info("No name provided, leaving first and last name empty.")
-            return fist_name, last_name
+            return first_name, last_name
 
         if len(name_list) < 2:
             logging.info("Provided name {} was too short, leaving first and last name empty.".format(name))
 
         elif len(name_list) == 2:
-            fist_name = name_list[0] # first provided name
+            first_name = name_list[0] # first provided name
             last_name = name_list[1]  # second provided name
 
         elif len(name_list) > 2:
             # This is not good, but I dont know what else to do for longer names
-            fist_name = name_list[0] # first provided name
+            first_name = name_list[0] # first provided name
             last_name = name_list[-1]  # last provided name
 
         return first_name, last_name

@@ -69,7 +69,7 @@ class CustomOpenidBackend(OIDCAuthenticationBackend):
 
         email = claims.get('email')
 
-        first_name, last_name = get_first_and_last_name(claims)
+        first_name, last_name = self.get_first_and_last_name(claims)
 
         logging.info("Creating user: {}, {}, {}, {}".format(username, email, fist_name, last_name))
 

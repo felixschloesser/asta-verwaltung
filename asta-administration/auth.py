@@ -75,7 +75,7 @@ class CustomOpenidBackend(OIDCAuthenticationBackend):
         # Groups who can access it as set in GitLab
         schlüsselsystem_groups = ['asta/mitarbeitende']        
 
-        if any(group in claimed_groups for group in schlüsselsystem_groups)
+        if any(group in claimed_groups for group in schlüsselsystem_groups):
             # Check if the group "Schlüsselverwaltung" exists in Django
             try:
                 group = Group.objects.filter(name="Schlüsselverwaltung")

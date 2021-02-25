@@ -12,6 +12,7 @@ class CustomOpenidBackend(OIDCAuthenticationBackend):
 
         claimed_groups = claims.get('groups', [])
 
+        # Groups as set in GitLab
         authorized_groups = [
             'asta/mitarbeitende',
             'asta/mitglieder/vorstand',
@@ -25,26 +26,53 @@ class CustomOpenidBackend(OIDCAuthenticationBackend):
 
 
     def get_username(self, claims):
+        # Using the RZ-Kennung from the nickname field as username
         nickname = claims.get('nickname')
         return nickname
 
 
+    def get_first_and_last_name(self, claims):
+        # OpenID just returns a single name string,
+        # but Django would like to have seperate first and last names.
+        # Therefore we assume most names have two parts seperated by spaces
+        # and if the name is longer just use the first and last part.
+
+        name = claims.get('name')
+
+        if not name:
+            fist_name = None
+            last_name = None
+            logging.info("No name provided, leaving first and last name empty.")
+        else:
+            name_list = name.split(' ') # split provided name at spaces
+
+        if len(name_list) < 2:
+            fist_name = None
+            last_name = None
+            logging.info("Provided name {} was too short, leaving first and last name empty.".format(name))
+
+        elif len(name_list) == 2:
+            fist_name = name_list.pop(0) # first provided name
+            last_name = name_list.pop(1)  # second provided name
+
+        elif len(name_list) > 2:
+            # This is not good, but I dont know what else to do for longer names
+            fist_name = name_list.pop(0) # first provided name
+            last_name = name_list.pop()  # last provided name
+
+        return first_name, last_name
+
+
     def create_user(self, claims):
         """Return object for a newly created user account."""
-        email = claims.get('email')
-        name = claims.get('name').split(' ')
-        if len(name) >= 2:
-            fist_name = name.pop(0)
-            last_name = name.pop()
-        else:
-            fist_name = name.pop(0)
-            last_name = ""
-
-
-        logging.info("Creating debug")
-        logging.info(claims)
-
         username = self.get_username(claims)
+
+        email = claims.get('email')
+
+        first_name, last_name = get_first_and_last_name(claims)
+
+        logging.info("Creating user: {}, {}, {}, {}".format(username, email, fist_name, last_name))
+
         return self.UserModel.objects.create_user(username,
                                                   email,
                                                   first_name=fist_name,

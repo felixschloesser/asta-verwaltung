@@ -177,9 +177,9 @@ OIDC_OP_TOKEN_ENDPOINT = "https://collaborating.tuhh.de/oauth/token"
 OIDC_OP_USER_ENDPOINT = "https://collaborating.tuhh.de/oauth/userinfo"
 OIDC_RP_SCOPES = "openid email read_user"
 
-LOGIN_REDIRECT_URL = "https://verwaltung.asta.felixschloesser.de/keys/"
-LOGIN_REDIRECT_URL_FAILURE = "https://verwaltung.asta.felixschloesser.de/keys/"
-LOGOUT_REDIRECT_URL = "https://verwaltung.asta.felixschloesser.de/keys/"
+LOGIN_REDIRECT_URL = "/"
+LOGIN_REDIRECT_URL_FAILURE = "/"
+LOGOUT_REDIRECT_URL = "/"
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 

@@ -52,13 +52,13 @@ class CustomOpenidBackend(OIDCAuthenticationBackend):
             logging.info("Provided name {} was too short, leaving first and last name empty.".format(name))
 
         elif len(name_list) == 2:
-            fist_name = name_list.pop(0) # first provided name
-            last_name = name_list.pop(1)  # second provided name
+            fist_name = name_list[0] # first provided name
+            last_name = name_list[1]  # second provided name
 
         elif len(name_list) > 2:
             # This is not good, but I dont know what else to do for longer names
-            fist_name = name_list.pop(0) # first provided name
-            last_name = name_list.pop()  # last provided name
+            fist_name = name_list[0] # first provided name
+            last_name = name_list[-1]  # last provided name
 
         return first_name, last_name
 

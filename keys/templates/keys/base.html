@@ -63,7 +63,9 @@
                     {% if user.is_authenticated %}
                         <br>
                         <strong>Benutzer:</strong> {{ user.username }} -
-                        <a class="has-text-primary" href={% url 'oidc_logout' %}>Abmelden</a>
+                        <a class="has-text-primary" href="{% url 'logout' %}?next=/">Abmelden</a>
+                    {% endif %}
+
                     {% endif %}
                 </p>
             </div>

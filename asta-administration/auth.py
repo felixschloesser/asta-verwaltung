@@ -153,4 +153,6 @@ class CustomOpenidBackend(OIDCAuthenticationBackend):
 
         user.groups.set(groups)
 
+        user.save()
+
         return user 

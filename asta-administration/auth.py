@@ -62,6 +62,17 @@ class CustomOpenidBackend(OIDCAuthenticationBackend):
 
         return first_name, last_name
 
+    def is_staff(self, claims):
+        claimed_groups = claims.get('groups', [])
+
+        # Groups as set in GitLab
+        staff_groups = [
+            'asta/mitarbeitende',
+            'asta/mitglieder/it',
+        ]
+
+        return any(item in claimed_groups for item in staff_groups)
+  
 
     def create_user(self, claims):
         """Return object for a newly created user account."""
@@ -71,7 +82,9 @@ class CustomOpenidBackend(OIDCAuthenticationBackend):
 
         first_name, last_name = self.get_first_and_last_name(claims)
 
-        logging.info("Creating user: {}, {}, {}, {}".format(username, email, first_name, last_name))
+        is_staff = self.is_staff(claims)
+
+        logging.info("Creating user: {}, {}, {}, {}".format(username, email, first_name, last_name, is_staff))
 
         return self.UserModel.objects.create_user(username,
                                                   email,

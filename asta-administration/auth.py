@@ -119,7 +119,7 @@ class CustomOpenidBackend(OIDCAuthenticationBackend):
 
         first_name, last_name = self.get_first_and_last_name(claims)
 
-        logging.info("Creating user: {}, {}, {}, {}".format(username, email, first_name, last_name, is_staff))
+        logging.info("Creating user: {}, {}, {}, {}".format(username, email, first_name, last_name))
 
         user = self.UserModel.objects.create_user(username,
                                                   email,
@@ -127,9 +127,13 @@ class CustomOpenidBackend(OIDCAuthenticationBackend):
                                                   last_name=last_name)
 
         user.is_staff = self.is_staff(claims)
+        logging.debug("Is staff: {}".format(user.is_staff))
+        
         user.is_superuser = self.is_superuser(claims)
+        logging.debug("Is superuser: {}".format(user.is_superuser))
 
         groups = self.get_groups()
+        logging.debug("Groups: {}".format(groups))
 
         user.groups.set(groups)
 
@@ -138,14 +142,10 @@ class CustomOpenidBackend(OIDCAuthenticationBackend):
 
     def update_user(self, user, claims):
         """Update existing user with new claims, if necessary save, and return user"""
-        is_staff = self.is_staff(claims)
-        is_superuser = self.is_superuser(claims)
+        user.is_staff = self.is_staff(claims)
+        user.is_superuser = iself.is_superuser(claims)
 
         groups = self.get_groups(claims)
-
-        user.is_staff = is_staff
-        user.is_superuser = is_superuser
-
         user.groups.set(groups)
 
         return user 

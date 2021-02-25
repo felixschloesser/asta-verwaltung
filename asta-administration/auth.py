@@ -1,3 +1,6 @@
+from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.models import Group
+
 from mozilla_django_oidc.auth import OIDCAuthenticationBackend
 
 import logging
@@ -20,7 +23,7 @@ class CustomOpenidBackend(OIDCAuthenticationBackend):
         ]
 
         # Return True if any of the groups in the authorized groups list is found in the claimed groups
-        authorized = any(item in claimed_groups for item in authorized_groups)
+        authorized = any(group in claimed_groups for group in authorized_groups)
 
         return verified and authorized
 
@@ -62,17 +65,51 @@ class CustomOpenidBackend(OIDCAuthenticationBackend):
 
         return first_name, last_name
 
+
+    def get_groups(self, claims):
+        claimed_groups = claims.get('groups', [])
+
+        groups = []
+
+        # Group with permission to access the Key Management System
+        # Groups who can access it as set in GitLab
+        schlüsselsystem_groups = ['asta/mitarbeitende']        
+
+        if any(group in claimed_groups for group in schlüsselsystem_groups)
+            # Check if the group "Schlüsselverwaltung" exists in Django
+            try:
+                group = Group.objects.filter(name="Schlüsselverwaltung")
+                groups.append(group)
+                logging.info("Adding 'Schlüsselverwaltung' to the users groups")
+            except ObjectDoesNotExist: 
+                logging.critical("Can't find the group 'Schlüsselverwaltung', add it in the admin first.")
+        else:
+            logging.debug("None of the claimed groups is allowed to access the Schlüsselverwaltung")                    
+
+        return groups
+
+
+    def is_superuser(self, claims):
+        claimed_groups = claims.get('groups', [])
+
+        # Groups as set in GitLab
+        superuser_groups = ['asta/mitglieder/it']
+        
+        any(group in claimed_groups for group in superuser_groups)
+
+        return is_superuser 
+
+
     def is_staff(self, claims):
         claimed_groups = claims.get('groups', [])
 
         # Groups as set in GitLab
-        staff_groups = [
-            'asta/mitarbeitende',
-            'asta/mitglieder/it',
-        ]
+        staff_groups = ['asta/mitarbeitende']
 
-        return any(item in claimed_groups for item in staff_groups)
-  
+        any(group in claimed_groups for group in staff_groups)
+
+        return is_staff
+
 
     def create_user(self, claims):
         """Return object for a newly created user account."""
@@ -82,12 +119,33 @@ class CustomOpenidBackend(OIDCAuthenticationBackend):
 
         first_name, last_name = self.get_first_and_last_name(claims)
 
-        is_staff = self.is_staff(claims)
-
         logging.info("Creating user: {}, {}, {}, {}".format(username, email, first_name, last_name, is_staff))
 
-        return self.UserModel.objects.create_user(username,
+        user = self.UserModel.objects.create_user(username,
                                                   email,
                                                   first_name=first_name,
-                                                  last_name=last_name,
-                                                  is_staff=is_staff)
+                                                  last_name=last_name)
+
+        user.is_staff = self.is_staff(claims)
+        user.is_superuser = self.is_superuser(claims)
+
+        groups = self.get_groups()
+
+        user.groups.set(groups)
+
+        return user
+
+
+    def update_user(self, user, claims):
+        """Update existing user with new claims, if necessary save, and return user"""
+        is_staff = self.is_staff(claims)
+        is_superuser = self.is_superuser(claims)
+
+        groups = self.get_groups(claims)
+
+        user.is_staff = is_staff
+        user.is_superuser = is_superuser
+
+        user.groups.set(groups)
+
+        return user 

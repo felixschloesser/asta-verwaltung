@@ -90,4 +90,4 @@ class CustomOpenidBackend(OIDCAuthenticationBackend):
                                                   email,
                                                   first_name=first_name,
                                                   last_name=last_name,
-                                                  is_staff=True)
+                                                  is_staff=is_staff)

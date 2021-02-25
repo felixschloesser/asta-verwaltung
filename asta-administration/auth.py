@@ -78,13 +78,13 @@ class CustomOpenidBackend(OIDCAuthenticationBackend):
         if any(group in claimed_groups for group in schlüsselsystem_groups):
             # Check if the group "Schlüsselverwaltung" exists in Django
             try:
-                group = Group.objects.filter(name="Schlüsselverwaltung")
-                groups.append(group)
+                group = Group.objects.filter(name="Schlüsselverwaltung").get()
+                groups.append(group.id)
                 logging.info("Adding 'Schlüsselverwaltung' to the users groups")
             except ObjectDoesNotExist: 
                 logging.critical("Can't find the group 'Schlüsselverwaltung', add it in the admin first.")
         else:
-            logging.debug("None of the claimed groups is allowed to access the Schlüsselverwaltung")                    
+            logging.debug("None of the claimed groups is allowed to administer the Schlüsselverwaltung")                    
 
         return groups
 

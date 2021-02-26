@@ -87,15 +87,15 @@
                             </td>
                             <td data-label="Status">
                                 {% if key.stolen_or_lost %}
-                                    <p class="icon has-text-centered has-text-warning has-tooltip-arrow" data-tooltip="Verloren/Gestohlen">
+                                    <p class="icon has-text-centered has-text-warning has-tooltip-arrow" aria-label="Verloren/Gestohlen" data-tooltip="Verloren/Gestohlen">
                                         <i class="far fa-lg fa-question-circle"></i>
                                     </p>
                                 {% elif key.get_current_issue %}
-                                    <p class="icon has-text-centered has-text-info has-tooltip-arrow" data-tooltip="Verliehen">
+                                    <p class="icon has-text-centered has-text-info has-tooltip-arrow" aria-label="Verliehen" data-tooltip="Verliehen">
                                         <i class="far fa-lg fa-times-circle"></i> 
                                     </p>                                
                                 {% else %}
-                                    <p class="icon has-text-centered has-text-success has-tooltip-arrow" data-tooltip="Verfügbar">
+                                    <p class="icon has-text-centered has-text-success has-tooltip-arrow" aria-label="Verfügbar" data-tooltip="Verfügbar">
                                         <i class="far fa-lg fa-check-circle"></i>
                                     </p>
                                 {% endif %}</td>

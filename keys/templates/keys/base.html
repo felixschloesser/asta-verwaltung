@@ -19,10 +19,10 @@
 
     <body class="is-flex is-flex-direction-column">
         <!-- Navbar-->
-        <nav class="navbar is-dark" aria-label="main navigation">
+        <nav class="navbar is-dark" aria-label="Navigationsleiste">
             <div class="container is-max-widescreen safe-nav">
                 <div class="navbar-brand">
-                    <a class="navbar-item logo" href="{% url 'keys:home' %}">
+                    <a class="navbar-item logo" aria-label="Startseite" href="{% url 'keys:home' %}">
                         {% include 'keys/logo.svg' %}
                     </a>
                     <a role="button" class="navbar-burger" data-target="navMenu" aria-label="menu" aria-expanded="false" >
@@ -32,7 +32,7 @@
                         <span aria-hidden="true"></span>
                     </a>
                 </div>
-                <div class="navbar-menu" id="navMenu">
+                <div class="navbar-menu" aria-label="Navigations-Links" id="navMenu">
                     <div class="navbar-start">
                         <a class="navbar-item" href="{% url 'keys:person-list' %}">Personen</a>
                         <a class="navbar-item" href="{% url 'keys:room-list' %}">Räume</a>
@@ -49,22 +49,24 @@
         </nav>
 
         <!--Main -->
-        <section class="section main is-flex-grow-1 safe-body">
+        <section class="section main is-flex-grow-1 safe-body" aria-label="Hauptteil">
             {% block content %}{% endblock %}
         </section>
 
         <!-- Footer -->
-        <footer class="footer safe-body">
+        <footer class="footer safe-body" aria-label="Fußbereich">
             <div class="content has-text-centered">
-                <p>
+                <span aria-label="Lizenzinformationen">
                     <a href="https://asta-tuhh.de/euer_asta/it/">TinTin's </a><strong>Schlüsselverwaltungssystem</strong>. <a href="https://collaborating.tuhh.de/asta/verwaltung">Quelltext</a> unter der
                     <a href="https://www.gnu.org/licenses/agpl-3.0.html">AGPL 3.0</a>.
-
-                    {% if user.is_authenticated %}
-                        <br>
+                </span>
+                {% if user.is_authenticated %}
+                    <br>
+                    <span aria-label="Anmeldestatus">
                         <strong>Benutzer:</strong> {{ user.username }} -
                         <a class="has-text-primary" href="{% url 'logout' %}?next=/">Abmelden</a>
-                    {% endif %}
+                    </span>
+                {% endif %}
                 </p>
             </div>
         </footer>

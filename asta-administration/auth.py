@@ -19,7 +19,7 @@ class CustomOpenidBackend(OIDCAuthenticationBackend):
         authorized_groups = [
             'asta/mitarbeitende',
             'asta/mitglieder/vorstand',
-            'asta/mitglieder/it',
+            'asta/mitglieder/referentinnen/it',
         ]
 
         # Return True if any of the groups in the authorized groups list is found in the claimed groups
@@ -93,7 +93,7 @@ class CustomOpenidBackend(OIDCAuthenticationBackend):
         claimed_groups = claims.get('groups', [])
 
         # Groups as set in GitLab
-        superuser_groups = ['asta/mitglieder/it']
+        superuser_groups = ['asta/mitglieder/referentinnen/it']
         
         is_superuser = any(group in claimed_groups for group in superuser_groups)
 

@@ -42,8 +42,8 @@ class CustomOpenidBackend(OIDCAuthenticationBackend):
 
         name = claims.get('name')
 
-        first_name = None
-        last_name = None
+        first_name = ""
+        last_name = ""
 
         if name:
             name_list = name.split(' ') # split provided name at spaces

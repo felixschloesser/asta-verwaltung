@@ -74,6 +74,7 @@ INSTALLED_APPS = [
     'simple_history',
     'debug_toolbar',
     'fontawesome-free',
+    'gdpr',
 
     # Local
     'keys',

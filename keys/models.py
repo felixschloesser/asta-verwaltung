@@ -14,6 +14,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 from simple_history.models import HistoricalRecords
 from hashid_field import HashidAutoField
 from autoslug import AutoSlugField
+from gdpr.mixins import AnonymizationModel
 
 from .validators import *
 from .managers import *
@@ -349,7 +350,7 @@ class StorageLocation(models.Model):
 
 
 
-class Person(models.Model): # Add a chron job ro delete after a 2 years of not renting?
+class Person(AnonymizationModel): # Add a chron job ro delete after a 2 years of not renting?
     id = HashidAutoField(primary_key=True)
 
     first_name = models.CharField('Vorname', max_length=64)
@@ -538,15 +539,11 @@ class Issue(models.Model):
     person = models.ForeignKey('Person',
                                related_name="issues",
                                verbose_name='Person',
-                               on_delete=models.PROTECT)
-    # limit_key_choices = models.Q(issues__active=True, stolen_or_lost=True)
-    #!BUG duplication https://code.djangoproject.com/ticket/11707
-    # still not fixed in 3.1.5?
+                               on_delete=models.CASCADE)
 
     key = models.ForeignKey('Key', related_name="issues",
                             verbose_name='Schlüssel',
                             on_delete=models.PROTECT)
-                            # limit_choices_to=limit_key_choices)
 
     out_date = models.DateField('Ausgabedatum',
                                 default=timezone.now,

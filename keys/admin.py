@@ -1,5 +1,7 @@
 from django.contrib import admin
 from django.utils.text import slugify
+
+from django.db.models.fields.related import ForeignObjectRel
 from django.http import HttpResponse
 from django import forms
 
@@ -11,24 +13,33 @@ from django.contrib.admin import widgets
 from .models import *
 admin.site.site_header = "Administration"
 
-# Actions
-class ExportCsvMixin:
-    def export_as_csv(self, request, queryset):
+import logging
 
-        meta = self.model._meta
-        field_names = [field.name for field in meta.fields]
+from import_export.admin import ImportExportMixin
 
-        response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename={}.csv'.format(meta)
-        writer = csv.writer(response)
+from import_export import resources, fields, widgets
 
-        writer.writerow(field_names)
-        for obj in queryset:
-            row = writer.writerow([getattr(obj, field) for field in field_names])
 
-        return response
+# Import / Export Ressources
+class KeyResource(resources.ModelResource):
 
-    export_as_csv.short_description = "Ausgewählte als CSV exportieren"
+
+    class Meta:
+        model = Key
+
+
+
+class PersonResource(resources.ModelResource):
+    group = fields.Field(
+        column_name='group',
+        attribute='group',
+        widget=widgets.ForeignKeyWidget(Group, 'name'))   
+
+    class Meta:
+        model = Person
+        fields = ('group', )
+   
+
 
 
 # Mixins
@@ -78,7 +89,7 @@ class PuropseAdmin(admin.ModelAdmin):
 
 
 @admin.register(Room)
-class RoomAdmin(admin.ModelAdmin, ExportCsvMixin):
+class RoomAdmin(admin.ModelAdmin):
 
     def get_locking_system(self, obj):
         return obj.room.locking_system
@@ -87,18 +98,16 @@ class RoomAdmin(admin.ModelAdmin, ExportCsvMixin):
     list_filter = ('building', 'group', 'purpose' )
 
     inlines = [DoorInline]
-    actions = ["export_as_csv"]
 
 
 @admin.register(Building)
-class BuildingAdmin(admin.ModelAdmin, ExportCsvMixin):
+class BuildingAdmin(admin.ModelAdmin):
     #List
     list_display = ('identifier', 'name', 'get_number_of_rooms')
-    actions = ["export_as_csv"]
 
 
 @admin.register(Door)
-class DoorAdmin(admin.ModelAdmin, ExportCsvMixin):
+class DoorAdmin(admin.ModelAdmin):
 
     def has_module_permission(self, request):
         return False
@@ -115,16 +124,14 @@ class DoorAdmin(admin.ModelAdmin, ExportCsvMixin):
     list_editable = ['active']
     list_filter = ('room__building', 'kind', 'locking_system__method')
     list_select_related = ['room__building'] #smaller sql querry
-    actions = ["export_as_csv"]
 
 
 @admin.register(Key)
-class KeyAdmin(admin.ModelAdmin, ExportCsvMixin):
+class KeyAdmin(ImportExportMixin, admin.ModelAdmin):
     # List
     list_display = ('number', 'locking_system', 'get_number_of_doors', 'is_currently_issued')
     list_filter = ('stolen_or_lost', 'storage_location', 'locking_system__method', 'created_at')
     list_select_related = ['locking_system'] #smaller sql query
-    actions = ["export_as_csv"]
 
     search_fields = ['number', 'locking_system__name']
 
@@ -135,15 +142,14 @@ class KeyAdmin(admin.ModelAdmin, ExportCsvMixin):
         return queryset, use_distinct
 
 @admin.register(LockingSystem)
-class LockingSystemAdmin(admin.ModelAdmin, ExportCsvMixin):
+class LockingSystemAdmin(admin.ModelAdmin):
     list_display = ('name', 'company', 'method', 'comment')
 
     list_filter = ['method']
-    actions = ["export_as_csv"]
 
 
 @admin.register(StorageLocation)
-class StorageLocationAdmin(admin.ModelAdmin, ExportCsvMixin):
+class StorageLocationAdmin(admin.ModelAdmin):
 
     def get_location(self, obj):
         return obj.location
@@ -152,27 +158,25 @@ class StorageLocationAdmin(admin.ModelAdmin, ExportCsvMixin):
 
     list_display = ('name', 'get_location', "get_number_of_keys")
     list_filter = [('location__name')]
-    actions = ["export_as_csv"]
 
 
 @admin.register(Person)
-class PersonAdmin(HashIdFieldAdminMixin, admin.ModelAdmin, ExportCsvMixin):
+class PersonAdmin(ImportExportMixin, HashIdFieldAdminMixin, admin.ModelAdmin):
     list_display = ('__str__', 'university_email', 'private_email', 'phone_number', 'paid_deposit')
     list_filter = ('group', 'deposits__amount', 'updated_at')
     search_fields = ['first_name', 'last_name']
 
     inlines = [DepositInline]
-    actions = ["export_as_csv"]
 
 
 @admin.register(Group)
-class GroupAdmin(admin.ModelAdmin, ExportCsvMixin):
+class GroupAdmin(admin.ModelAdmin):
     list_display = ['name']
 
 
 
 @admin.register(Issue)
-class IssueAdmin(admin.ModelAdmin, ExportCsvMixin):
+class IssueAdmin(admin.ModelAdmin):
     autocomplete_fields = ['person', 'key']
 
     date_hierarchy = 'updated_at'
@@ -180,7 +184,6 @@ class IssueAdmin(admin.ModelAdmin, ExportCsvMixin):
     list_filter = ['active', 'out_date', 'updated_at']
     
     search_fields = ['person__first_name', 'person__last_name', 'key__number']
-    actions = ["export_as_csv"]
 
 
 

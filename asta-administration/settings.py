@@ -74,6 +74,7 @@ INSTALLED_APPS = [
     'simple_history',
     'debug_toolbar',
     'fontawesome-free',
+    'import_export',
 
     # Local
     'keys',

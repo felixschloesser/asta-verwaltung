@@ -442,7 +442,7 @@ class Deposit(models.Model):
 
     state = models.CharField('Status', max_length=8, choices=state_choices, default='in')
 
-    person = models.ForeignKey('Person', related_name='deposits', verbose_name='Person', on_delete=models.PROTECT)
+    person = models.ForeignKey('Person', related_name='deposits', verbose_name='Person', on_delete=models.CASCADE)
     amount = models.DecimalField('Betrag', max_digits=5, decimal_places=2, default=50, 
                                            validators=[amount_is_not_negative_and_reasonable], blank=True)
 
@@ -538,7 +538,7 @@ class Issue(models.Model):
     person = models.ForeignKey('Person',
                                related_name="issues",
                                verbose_name='Person',
-                               on_delete=models.PROTECT)
+                               on_delete=models.CASCADE)
     # limit_key_choices = models.Q(issues__active=True, stolen_or_lost=True)
     #!BUG duplication https://code.djangoproject.com/ticket/11707
     # still not fixed in 3.1.5?

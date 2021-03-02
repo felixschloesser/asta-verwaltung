@@ -13,7 +13,7 @@ class KeyViewSet(viewsets.ReadOnlyModelViewSet):
     """
     A simple ViewSet for listing or retrieving keys.
     """
-    queryset = Key.all_keys
+    queryset = Key.objects
     serializer_class = KeySerializer
     permission_classes = [IsAuthenticated]
 
@@ -22,6 +22,6 @@ class PersonViewSet(viewsets.ReadOnlyModelViewSet):
     """
     A simple ViewSet for listing or retrieving People.
     """
-    queryset = Person.all_people
+    queryset = Person.objects
     serializer_class = PersonSerializer
     permission_classes = [IsAuthenticated]

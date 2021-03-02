@@ -23,7 +23,7 @@ from django.shortcuts import redirect
 
 admin.site.enable_nav_sidebar = False
 admin.site.site_header = "Administration"
-admin.site.site_title = "Backend"
+admin.site.site_title = "Administration"
 admin.site.index_title = "Datenbank-Tabellen"
 
 

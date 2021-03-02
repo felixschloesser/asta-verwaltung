@@ -73,7 +73,7 @@ class DepositReturnForm(forms.ModelForm):
 
 class IssueForm(forms.ModelForm):
     key = GroupedModelChoiceField(
-        queryset=Key.all_keys.not_currently_issued(stolen_or_lost=False), 
+        queryset=Key.objects.not_currently_issued(stolen_or_lost=False), 
         choices_groupby='locking_system',
         label="Schlüssel"
     )

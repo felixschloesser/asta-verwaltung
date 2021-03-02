@@ -5,41 +5,15 @@ from django.db.models.fields.related import ForeignObjectRel
 from django.http import HttpResponse
 from django import forms
 
-import csv
-
 from simple_history.admin import SimpleHistoryAdmin
-from django.contrib.admin import widgets
+from import_export.admin import ImportExportMixin
 
 from .models import *
+from .resources import PersonResource, KeyResource
+
 admin.site.site_header = "Administration"
 
 import logging
-
-from import_export.admin import ImportExportMixin
-
-from import_export import resources, fields, widgets
-
-
-# Import / Export Ressources
-class KeyResource(resources.ModelResource):
-
-
-    class Meta:
-        model = Key
-
-
-
-class PersonResource(resources.ModelResource):
-    group = fields.Field(
-        column_name='group',
-        attribute='group',
-        widget=widgets.ForeignKeyWidget(Group, 'name'))   
-
-    class Meta:
-        model = Person
-        fields = ('group', )
-   
-
 
 
 # Mixins
@@ -168,6 +142,7 @@ class PersonAdmin(ImportExportMixin, HashIdFieldAdminMixin, admin.ModelAdmin):
 
     inlines = [DepositInline]
 
+    resource_class = PersonResource
 
 @admin.register(Group)
 class GroupAdmin(admin.ModelAdmin):

@@ -23,7 +23,7 @@ def index_view(request):
 
 
 class Home(generic.ListView):
-    queryset = Issue.all_issues.active()
+    queryset = Issue.objects.active()
     ordering = ['-updated_at']
     paginate_by = 5
     context_object_name = 'issues'
@@ -34,9 +34,9 @@ class Home(generic.ListView):
         Add all people, all keys and all rooms to the view so we can display statisics
         """
         context = super().get_context_data(**kwargs)
-        context["people"] = Person.all_people
-        context["keys"] = Key.all_keys
-        context["rooms"] = Room.all_rooms
+        context["people"] = Person.objects
+        context["keys"] = Key.objects
+        context["rooms"] = Room.objects
 
         return context
 
@@ -49,12 +49,12 @@ class KeyListAll(LoginRequiredMixin, generic.ListView):
     template_name_suffix = '_list_all'
 
 class KeyListIssued(LoginRequiredMixin, generic.ListView):
-    queryset = Key.all_keys.currently_issued()
+    queryset = Key.objects.currently_issued()
     paginate_by = 20
     template_name_suffix = '_list_issued'
 
 class KeyListLost(LoginRequiredMixin, generic.ListView):
-    queryset = Key.all_keys.stolen_or_lost()
+    queryset = Key.objects.stolen_or_lost()
     paginate_by = 20
     template_name_suffix = '_list_lost'
 
@@ -69,18 +69,18 @@ class KeySearchResults(LoginRequiredMixin, generic.ListView):
         # of the keys where matching the search query in the get request
         storage_location_query_parameter = self.request.GET.get('storage_location')
         if storage_location_query_parameter:
-            key_list = Key.all_keys.filter(storage_location__name__icontains=storage_location_query_parameter)
+            key_list = Key.objects.filter(storage_location__name__icontains=storage_location_query_parameter)
 
             return key_list
 
         search_query_parameter = self.request.GET.get('q')
         if search_query_parameter:
-            key_list = Key.all_keys.filter(models.Q(number__startswith=search_query_parameter) |
+            key_list = Key.objects.filter(models.Q(number__startswith=search_query_parameter) |
                                            models.Q(locking_system__name__icontains=search_query_parameter) |
                                            models.Q(locking_system__company__icontains=search_query_parameter)
                                           )
         else:
-            key_list = Key.all_keys.none()
+            key_list = Key.objects.none()
         return key_list
 
 
@@ -137,7 +137,7 @@ class KeyFound(SuccessMessageMixin, LoginRequiredMixin, generic.UpdateView):
 # People
 class PersonList(LoginRequiredMixin, generic.ListView):
     context_object_name = 'people'
-    queryset = Person.all_people.order_by('created_at').reverse()
+    queryset = Person.objects.order_by('created_at').reverse()
     paginate_by = 30
 
 
@@ -158,24 +158,24 @@ class PersonSearchResults(LoginRequiredMixin, generic.ListView):
         # in the get request
         group_query_parameter = self.request.GET.get('group')
         if group_query_parameter == 'FSR':
-            room_list = Person.all_people.of_fsr()
+            room_list = Person.objects.of_fsr()
 
             return room_list
 
         if group_query_parameter:
-            room_list = Person.all_people.of_group(group_query_parameter)
+            room_list = Person.objects.of_group(group_query_parameter)
 
             return room_list
 
         search_query_parameter = self.request.GET.get('q')
         if search_query_parameter:
-            person_list = Person.all_people.filter(models.Q(first_name__istartswith=search_query_parameter) |
+            person_list = Person.objects.filter(models.Q(first_name__istartswith=search_query_parameter) |
                                                    models.Q(last_name__istartswith=search_query_parameter) |
                                                    models.Q(university_email__icontains=search_query_parameter) |
                                                    models.Q(group__name__istartswith=search_query_parameter)
                                                   )
         else:
-            person_list = Person.all_people.none()
+            person_list = Person.objects.none()
 
         return person_list
 
@@ -241,7 +241,7 @@ class DepositCreate(DepositMixin, SuccessMessageMixin, LoginRequiredMixin, gener
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         pk = self.kwargs.get('pk')
-        person = Person.all_people.filter(pk=pk).get()
+        person = Person.objects.filter(pk=pk).get()
         context["person"] = person
         return context
 
@@ -251,7 +251,7 @@ class DepositCreate(DepositMixin, SuccessMessageMixin, LoginRequiredMixin, gener
         """
         self.object = form.save(commit=False)
         pk = self.kwargs.get('pk')
-        self.object.person = Person.all_people.filter(pk=pk).get()
+        self.object.person = Person.objects.filter(pk=pk).get()
         self.object.in_datetime = timezone.now()
         self.object.save()
         logging.debug("Polulated the forms person field. with pk: {}".format(pk))
@@ -328,17 +328,17 @@ class RoomSearchResults(LoginRequiredMixin, generic.ListView):
         # of the rooms match the search query in the get request
         query = self.request.GET.get('building')
         if query:
-            room_list = Room.all_rooms.filter(building__identifier__exact=query)
+            room_list = Room.objects.filter(building__identifier__exact=query)
 
             return room_list
 
         query = self.request.GET.get('group')
         if query == "FSR":
-            room_list = Room.all_rooms.of_fsr()
+            room_list = Room.objects.of_fsr()
 
             return room_list
         if query:
-            room_list = Room.all_rooms.of_group(query)
+            room_list = Room.objects.of_group(query)
 
             return room_list
 
@@ -346,7 +346,7 @@ class RoomSearchResults(LoginRequiredMixin, generic.ListView):
 
         query = self.request.GET.get('q')
         if query:
-            room_list = Room.all_rooms.filter(models.Q(number__icontains=query) |
+            room_list = Room.objects.filter(models.Q(number__icontains=query) |
                                               models.Q(name__icontains=query) |
                                               models.Q(purpose__name__icontains=query) |
                                               models.Q(building__name__istartswith=query) |
@@ -354,7 +354,7 @@ class RoomSearchResults(LoginRequiredMixin, generic.ListView):
                                               models.Q(group__name__istartswith=query)
                                              )
         else:
-            room_list = Person.all_people.none()
+            room_list = Person.objects.none()
 
         return room_list
 
@@ -369,7 +369,7 @@ class RoomDetail(LoginRequiredMixin, generic.DetailView):
         context = super().get_context_data(**kwargs)
         room_slug = self.kwargs.get('slug')
         logging.debug(room_slug)
-        relevant_issues = Issue.all_issues.active().filter(key__doors__room__slug__exact=room_slug,
+        relevant_issues = Issue.objects.active().filter(key__doors__room__slug__exact=room_slug,
                                                            key__doors__kind__exact='access'
                                                           )
         context['issues'] = relevant_issues
@@ -388,7 +388,7 @@ class IssueListAll(LoginRequiredMixin, generic.ListView):
 
 
 class IssueListActive(LoginRequiredMixin, generic.ListView):
-    queryset = Issue.all_issues.active()
+    queryset = Issue.objects.active()
     paginate_by = 20
     template_name_suffix ='_list_active'
 
@@ -404,7 +404,7 @@ class IssueSearchResults(LoginRequiredMixin, generic.ListView):
         # of the Issues where matching the search query in the get request
         query = self.request.GET.get('q','')
 
-        issue_list = Issue.all_issues.filter(models.Q(person__first_name__icontains=query) |
+        issue_list = Issue.objects.filter(models.Q(person__first_name__icontains=query) |
                                              models.Q(person__last_name__icontains=query) |
                                              models.Q(key__number__startswith=query),
                                             )
@@ -429,7 +429,7 @@ class IssueNew(SuccessMessageMixin, LoginRequiredMixin, generic.CreateView):
         """
         context = super().get_context_data(**kwargs)
         person_id = self.kwargs.get('pk')
-        person = Person.all_people.get_person(person_id)
+        person = Person.objects.get_person(person_id)
         context['person'] = person
         return context
 
@@ -440,7 +440,7 @@ class IssueNew(SuccessMessageMixin, LoginRequiredMixin, generic.CreateView):
         """
         person_id = self.kwargs.get('pk')
         self.object = form.save(commit=False)
-        self.object.person = Person.all_people.get_person(person_id)
+        self.object.person = Person.objects.get_person(person_id)
         self.object.active = True
         self.object.save()
         return super().form_valid(form)

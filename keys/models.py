@@ -10,6 +10,8 @@ from django.contrib.postgres.fields import (
     RangeOperators,
 )
 
+from django_extensions.validators import NoWhitespaceValidator, NoControlCharactersValidator
+
 from phonenumber_field.modelfields import PhoneNumberField
 from simple_history.models import HistoricalRecords
 from hashid_field import HashidAutoField
@@ -33,7 +35,7 @@ class Group(models.Model):
     created_at = models.DateTimeField('Erstellungszeitpunkt', auto_now_add=True)
     updated_at = models.DateTimeField('Aktualisierungszeitpunkt', auto_now=True)
 
-    all_groups = GroupManager()
+    objects = GroupManager()
 
     class Meta:
         verbose_name = "Gruppe"
@@ -51,7 +53,7 @@ class Building(models.Model):
     created_at = models.DateTimeField('Erstellungszeitpunkt', auto_now_add=True)
     updated_at = models.DateTimeField('Aktualisierungszeitpunkt', auto_now=True)
 
-    all_buildings = BuildingManager()
+    objects = BuildingManager()
 
     class Meta:
         verbose_name = "Gebäude"
@@ -66,11 +68,11 @@ class Building(models.Model):
             return "Gebäude\xa0{}".format(self.identifier)
 
     def get_rooms(self):
-        return Room.all_rooms.filter(building__identifier=self.identifier)
+        return Room.objects.filter(building__identifier=self.identifier)
 
 
     def get_number_of_rooms(self):
-        return Room.all_rooms.filter(building__identifier=self.identifier).count()
+        return Room.objects.filter(building__identifier=self.identifier).count()
 
     get_number_of_rooms.short_description = "Anzahl Räume"
 
@@ -117,7 +119,7 @@ class Room(models.Model):
     created_at = models.DateTimeField('Erstellungszeitpunkt', auto_now_add=True)
     updated_at = models.DateTimeField('Aktualisierungszeitpunkt', auto_now=True)
 
-    all_rooms = RoomManager()
+    objects = RoomManager()
 
     class Meta:
         verbose_name = "Raum"
@@ -132,9 +134,9 @@ class Room(models.Model):
     def __str__(self):
         if self.name:
             name_string = "{}\xa0({})".format(self.name, self.number)
-        elif self.purpose.name == 'Gremienraum' and self.group.name in Group.all_groups.fsr_list():
+        elif self.purpose.name == 'Gremienraum' and self.group.name in Group.objects.fsr_list():
             name_string = "{}\xa0({})".format(self.group, self.number)
-        elif self.purpose.name != 'Gremienraum' and self.group.name in Group.all_groups.fsr_list():
+        elif self.purpose.name != 'Gremienraum' and self.group.name in Group.objects.fsr_list():
             name_string = "{}\xa0{}\xa0({})".format(self.group, self.purpose, self.number)
         elif self.group.name == 'AStA':
             name_string = "{}\xa0{}\xa0({})".format(self.group, self.purpose, self.number)
@@ -221,7 +223,7 @@ class Key(models.Model):
     created_at = models.DateTimeField('Erstellungszeitpunkt', auto_now_add=True)
     updated_at = models.DateTimeField('Aktualisierungszeitpunkt', auto_now=True)
 
-    all_keys = KeyManager() # Custom manager to make methods accessible
+    objects = KeyManager() # Custom manager to make methods accessible
 
     class Meta:
         verbose_name = "Schlüssel"
@@ -343,7 +345,7 @@ class StorageLocation(models.Model):
         return self.name
 
     def get_number_of_keys(self):
-        return Key.all_keys.filter(storage_location__name=self.name).count()
+        return Key.objects.filter(storage_location__name=self.name).count()
 
     get_number_of_keys.short_description = "Anzahl Schlüssel"
 
@@ -352,9 +354,9 @@ class StorageLocation(models.Model):
 class Person(models.Model): # Add a chron job ro delete after a 2 years of not renting?
     id = HashidAutoField(primary_key=True)
 
-    first_name = models.CharField('Vorname', max_length=64)
-    last_name = models.CharField('Nachname', max_length=64)
-    university_email = models.EmailField('Uni-Mail', unique=True, validators=[validate_university_mail])
+    first_name = models.CharField('Vorname', max_length=64, validators=[NoControlCharactersValidator, NoWhitespaceValidator])
+    last_name = models.CharField('Nachname', max_length=64, validators=[NoControlCharactersValidator, NoWhitespaceValidator])
+    university_email = models.EmailField('Uni Mail', unique=True, validators=[validate_university_mail])
     private_email = models.EmailField('Private Mail', unique=True)
     phone_number = PhoneNumberField('Telefon', unique=True)
     group = models.ForeignKey('Group', related_name='people', verbose_name='Gruppe', on_delete=models.PROTECT, null=True)
@@ -362,7 +364,7 @@ class Person(models.Model): # Add a chron job ro delete after a 2 years of not r
     created_at = models.DateTimeField('Erstellungszeitpunkt', auto_now_add=True)
     updated_at = models.DateTimeField('Aktualisierungszeitpunkt', auto_now=True)
 
-    all_people = PersonManager()
+    objects = PersonManager()
 
     class Meta:
         verbose_name = "Person"
@@ -461,14 +463,14 @@ class Deposit(models.Model):
                                                                  validators=[present_or_max_3_days_ago])
     out_method = models.CharField('Auszahlungsmittel', max_length=64, choices=method_choices, null=True)
 
-    comment = models.CharField('Kommentar', max_length=500, null=True, blank=True)
+    comment = models.CharField('Kommentar', max_length=500, null=True, blank=True, validators=[NoControlCharactersValidator, NoWhitespaceValidator])
 
 
     created_at = models.DateTimeField('Erstellungszeitpunkt', auto_now_add=True)
     updated_at = models.DateTimeField('Aktualisierungszeitpunkt', auto_now=True)
 
 
-    all_deposits = DepositManager()
+    objects = DepositManager()
 
     class Meta:
         verbose_name = "Kaution"
@@ -554,12 +556,12 @@ class Issue(models.Model):
     in_date = models.DateField('Rückgabedatum',
                                 null=True, blank=True,
                                 validators=[present_or_max_10_days_ago])
-    comment = models.CharField('Kommentar', max_length=500, null=True, blank=True)
+    comment = models.CharField('Kommentar', max_length=500, null=True, blank=True, validators=[NoControlCharactersValidator, NoWhitespaceValidator])
 
     created_at = models.DateTimeField('Erstellungszeitpunkt', auto_now_add=True)
     updated_at = models.DateTimeField('Aktualisierungszeitpunkt', auto_now=True)
 
-    all_issues = IssueManager()
+    objects = IssueManager()
 
     id = HashidAutoField(primary_key=True)
 

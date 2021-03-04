@@ -4,61 +4,6 @@ body {
 	min-height: -webkit-fill-available;
 }
 
-@font-face {
-  	font-family: "UbuntuBold";
-  	src: 
-  		url(/static/fonts/ubuntu-bold.woff) format("woff");
-   	font-weight: normal;
-  	font-style: normal;
-}
-
-@font-face {
-	font-family: "OpenSansRegular";
-		src: url(/static/fonts/open-sans-regular.woff) format("woff");
-    font-weight: normal;
-   	font-style: normal;
-}
-
-
-@font-face {
-	font-family: "OpenSansItalic";
-		src: url(/static/fonts/open-sans-italic.woff) format("woff");
-    font-weight: normal;
-   	font-style: normal;
-}
-
-@font-face {
-	font-family: "OpenSansSemiBold";
-		src: url(/static/fonts/open-sans-semi-bold.woff) format("woff");
-    font-weight: normal;
-   	font-style: normal;
-}
-
-
-h1, h2, h3, h4, h5 {
-	font-family: "UbuntuBold", sans-serif;
-	font-weight: normal;
-    font-style: normal;
-}
-
-body, button, input, optgroup, select, textarea {
-	font-family: 'OpenSansRegular', sans-serif;
-    font-weight: normal;
-    font-style: normal;
-}
-
-em {
-   font-family: 'OpenSansItalic', sans-serif;
-   font-weight: normal;
-   font-style: normal;
-}
-
-strong {
-   font-family: 'OpenSansSemiBold', sans-serif;
-   font-weight: normal;
-   font-style: normal;
-}
-
 
 /* Table rows show clickable cursor*/
 table > tbody > tr {

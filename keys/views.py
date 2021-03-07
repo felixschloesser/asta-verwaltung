@@ -200,10 +200,10 @@ class PersonCreate(SuccessMessageMixin, LoginRequiredMixin, generic.CreateView):
 
 class PersonDetail(LoginRequiredMixin, generic.DetailView):
     model = Person
-  
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        keys = Key.all_keys
+        keys = Key.objects
         context["keys"] = keys
         return context
 
@@ -220,7 +220,7 @@ class PersonUpdate(SuccessMessageMixin, LoginRequiredMixin, generic.UpdateView):
 
 #  Deposit
 
-class DepositMixin:    
+class DepositMixin:
     def get_success_url(self):
         return reverse_lazy('keys:person-detail',  args=[self.object.person.id])
 
@@ -364,8 +364,8 @@ class RoomDetail(LoginRequiredMixin, generic.DetailView):
     model = Room
 
     def get_context_data(self, **kwargs):
-        # Add all Issues of keys that have access to this room as a seperate 
-        # context 
+        # Add all Issues of keys that have access to this room as a seperate
+        # context
         context = super().get_context_data(**kwargs)
         room_slug = self.kwargs.get('slug')
         logging.debug(room_slug)

@@ -1,57 +1,46 @@
 {% extends "keys/base_minimal.html" %}
 
+{% load widget_tweaks %}
+
+{% block additional_css %}
+    {% load static %}
+    <link href="{% static 'fontawesome_free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+
 {% block title %}Login | Schlüsselsystem{% endblock %}
 
-{% load widget_tweaks %}
 {% block content %}
     <div class="container is-max-desktop">
-
-        <div class="block">
-        <h1 class="title">Anmelden</h1>
-
-        {% if form.errors %}
-        <article class="message is-danger">
-                <div class="message-body">
-                    <p>Benutznername und Passwort stimmen nicht überein, bitte versuch es nochmal.</p>
-                </div>
-        </article>
-
-        {% endif %}
-
-        {% if next %}
-            {% if user.is_authenticated %}
-                <p>Leider hat Ihr Konto keinen Zugang zu dieser Seite. Um fortzufahren,
-             melden Sie sich mit einem Konto an, das Zugang hat.</p>
-            {% else %}
-                <p>Bitte melden Sie sich an um diese Seite zu sehen.</p>
+        <div class="block content">
+            <h1 class="title is-2">Anmeldung mit RZ-Kennung</h1>
+                    
+            {% if next %}
+                {% if user.is_authenticated %}
+                    <p>Leider hat Ihr Konto keinen Zugang zu dieser Seite. Um fortzufahren,
+                 melden Sie sich mit einem Konto an, das Zugang hat.</p>
+                {% else %}
+                    <p>Bitte melden Sie sich an um diese Seite zu sehen.</p>
+                {% endif %}
             {% endif %}
-        {% endif %}
-        </div>
-
-        <form method="post" action="{% url 'login' %}">
-        {% csrf_token %}
-        <div class="field">
-            <label class="label">{{ form.username.label_tag }}</label>
-            <div class="control">
-                {{ form.username|add_class:"input" }}
+            <p>
+                Im nächsten Schritt werden sie auf die Gitlab-Instanz der TU-Hamburg weitergeleitet. Dort melden sie sich mit Ihrer RZ-Kennung an.
+                Beim ersten Mal werden Sie aufgefordert werden diese Anwendung zu Authorisieren.
+            </p>
+            <p>
+                Nach erfolgreicher Anmeldung werden Sie auf dieser Seite zurückgeleitet.
+            </p>
+            <div class="buttons is-right">
+                <a class="button is-outlined" href={{ request.META.HTTP_REFERER }}>Zurück</a>
+                <a class="button is-primary" href={% url 'oidc_authentication_init' %}>
+                    <span class="icon">
+                        <i class="fab fa-gitlab"></i>
+                    </span>
+                    <span>
+                        Anmelden
+                    </span>
+                </a>
             </div>
         </div>
-
-        <div class="field">
-            <label class="label">{{ form.password.label_tag }}</label>
-            <div class="control">
-                {{ form.password|add_class:"input" }}
-            </div>
-                <p class="help"><a href="{% url 'password_reset' %}">Passwort vergesssen?</a></p>
-
-        </div>
-        <div class="field">
-            <input class="button is-primary" type="submit" value="Anmelden">
-            <input type="hidden" name="next" value="{{ next }}">
-        </div>
-
-
-        </form>
     </div>
 
 {% endblock %}

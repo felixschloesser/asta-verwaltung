@@ -1,4 +1,4 @@
-a<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="de">
     <head>
         {% load static %}
@@ -41,7 +41,9 @@ a<!DOCTYPE html>
                     </div>
                     <div class="navbar-end">
                         <div class="navbar-item">
-                            <a class="button admin-button is-light is-outlined" id="admin-button" href="{% url 'admin:index' %}">Administration</a>
+                            {% if user.is_authenticated %}
+                                <a class="button admin-button is-light is-outlined" id="admin-button" href="{% url 'admin:index' %}">Administration</a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>

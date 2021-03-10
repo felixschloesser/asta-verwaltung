@@ -6,10 +6,10 @@ from django.http import HttpResponse
 from django import forms
 
 from simple_history.admin import SimpleHistoryAdmin
-from import_export.admin import ImportExportMixin
+from import_export.admin import ImportExportMixin, ExportMixin
 
 from .models import *
-from .resources import PersonResource, KeyResource
+from .resources import PersonResource, KeyResource, IssueResource
 
 admin.site.site_header = "Administration"
 
@@ -41,6 +41,7 @@ class DoorInline(admin.TabularInline):
     extra = 0
 
 
+
 class DepositInline(admin.TabularInline):
     model = Deposit
     extra = 0
@@ -51,6 +52,8 @@ class DepositInline(admin.TabularInline):
         else:
             return []
 
+
+
 # Model Admins
 @admin.register(Purpose)
 class PuropseAdmin(admin.ModelAdmin):
@@ -59,7 +62,6 @@ class PuropseAdmin(admin.ModelAdmin):
 
     list_display = ['name']
  
-
 
 
 @admin.register(Room)
@@ -74,10 +76,12 @@ class RoomAdmin(admin.ModelAdmin):
     inlines = [DoorInline]
 
 
+
 @admin.register(Building)
 class BuildingAdmin(admin.ModelAdmin):
     #List
     list_display = ('identifier', 'name', 'get_number_of_rooms')
+
 
 
 @admin.register(Door)
@@ -100,8 +104,9 @@ class DoorAdmin(admin.ModelAdmin):
     list_select_related = ['room__building'] #smaller sql querry
 
 
+
 @admin.register(Key)
-class KeyAdmin(ImportExportMixin, admin.ModelAdmin):
+class KeyAdmin(ExportMixin, admin.ModelAdmin):
     # List
     list_display = ('number', 'locking_system', 'get_number_of_doors', 'is_currently_issued')
     list_filter = ('stolen_or_lost', 'storage_location', 'locking_system__method', 'created_at')
@@ -109,8 +114,10 @@ class KeyAdmin(ImportExportMixin, admin.ModelAdmin):
 
     search_fields = ['number', 'locking_system__name']
 
+    resource_class = KeyResource
+
     def get_search_results(self, request, queryset, search_term):
-        queryset=Key.all_keys.not_currently_issued(stolen_or_lost=False)
+        queryset=Key.objects.not_currently_issued(stolen_or_lost=False)
         queryset, use_distinct = super().get_search_results(request, queryset, search_term)
 
         return queryset, use_distinct
@@ -120,6 +127,7 @@ class LockingSystemAdmin(admin.ModelAdmin):
     list_display = ('name', 'company', 'method', 'comment')
 
     list_filter = ['method']
+
 
 
 @admin.register(StorageLocation)
@@ -134,6 +142,7 @@ class StorageLocationAdmin(admin.ModelAdmin):
     list_filter = [('location__name')]
 
 
+
 @admin.register(Person)
 class PersonAdmin(ImportExportMixin, HashIdFieldAdminMixin, admin.ModelAdmin):
     list_display = ('__str__', 'university_email', 'private_email', 'phone_number', 'paid_deposit')
@@ -144,6 +153,8 @@ class PersonAdmin(ImportExportMixin, HashIdFieldAdminMixin, admin.ModelAdmin):
 
     resource_class = PersonResource
 
+
+
 @admin.register(Group)
 class GroupAdmin(admin.ModelAdmin):
     list_display = ['name']
@@ -151,7 +162,7 @@ class GroupAdmin(admin.ModelAdmin):
 
 
 @admin.register(Issue)
-class IssueAdmin(admin.ModelAdmin):
+class IssueAdmin(ExportMixin, admin.ModelAdmin):
     autocomplete_fields = ['person', 'key']
 
     date_hierarchy = 'updated_at'
@@ -160,6 +171,7 @@ class IssueAdmin(admin.ModelAdmin):
     
     search_fields = ['person__first_name', 'person__last_name', 'key__number']
 
+    resource_class = IssueResource
 
 
 

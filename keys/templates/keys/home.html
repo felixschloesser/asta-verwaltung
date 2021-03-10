@@ -1,5 +1,11 @@
 {% extends "keys/base.html" %}
 
+{% block additional_css %}
+    {% load static %}
+    <link href="{% static 'fontawesome_free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+
 {% block title %}Dashboard | Schlüsselsystem{% endblock %}
 
 
@@ -174,11 +180,30 @@
 			</div>
 		</div>
 	{% else %}
-		<div class="container is-max-desktop">
-		    <h1 class="title">Wilkommen!</h1>
+		<div class="container is-max-desktop content">
+		    <h1 class="title is-2">Wilkommen!</h1>
 		    <p class="content">Das hier ist das neue Schlüsselsystem des AStAs.</p>
-		    <p class="content">Bitte melden Sie sich an.</p>
-		    <a class="button is-primary is-right" href={% url 'oidc_authentication_init' %}>Anmelden</a>
+
+		    <div class="box has-background-light mt-6">
+			    <h2 class="subtitle">Anmeldung mit RZ&#8209;Kennung</h2>
+			    <p>
+	                Im nächsten Schritt werden Sie zur Gitlab-Instanz der TU-Hamburg weitergeleitet. Dort melden sie sich mit Ihrer Rechenzentrums-Kennung an.
+	                Beim ersten Mal werden Sie aufgefordert werden diese Anwendung zu Authorisieren.
+	            </p>
+	            <p>
+	                Nach erfolgreicher Anmeldung werden Sie auf dieser Seite zurückgeleitet.
+	            </p>
+	            <div class="buttons is-right mt-6">
+	                <a class="button is-medium is-primary" href={% url 'oidc_authentication_init' %}>
+	                    <span class="icon">
+	                        <i class="fab fa-gitlab fa-lg"></i>
+	                    </span>
+	                    <span>
+	                        Anmelden
+	                    </span>
+	                </a>
+	            </div>
+	        </div>
 		</div>
 	{% endif %}
 

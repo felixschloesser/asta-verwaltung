@@ -73,7 +73,7 @@ class CustomOpenidBackend(OIDCAuthenticationBackend):
 
         # Group with permission to access the Key Management System
         # Groups who can access it as set in GitLab
-        schlüsselsystem_groups = ['asta/mitarbeitende']        
+        schlüsselsystem_groups = ['asta/mitarbeitende']
 
         if any(group in claimed_groups for group in schlüsselsystem_groups):
             # Check if the group "Schlüsselverwaltung" exists in Django
@@ -81,10 +81,10 @@ class CustomOpenidBackend(OIDCAuthenticationBackend):
                 group = Group.objects.filter(name="Schlüsselverwaltung").get()
                 groups.append(group.id)
                 logging.info("Adding 'Schlüsselverwaltung' to the users groups")
-            except ObjectDoesNotExist: 
+            except ObjectDoesNotExist:
                 logging.critical("Can't find the group 'Schlüsselverwaltung', add it in the admin first.")
         else:
-            logging.debug("None of the claimed groups is allowed to administer the Schlüsselverwaltung")                    
+            logging.debug("None of the claimed groups is allowed to administer the Schlüsselverwaltung")
 
         return groups
 
@@ -94,10 +94,10 @@ class CustomOpenidBackend(OIDCAuthenticationBackend):
 
         # Groups as set in GitLab
         superuser_groups = ['asta/mitglieder/referentinnen/it']
-        
+
         is_superuser = any(group in claimed_groups for group in superuser_groups)
 
-        return is_superuser 
+        return is_superuser
 
 
     def is_staff(self, claims):
@@ -128,11 +128,11 @@ class CustomOpenidBackend(OIDCAuthenticationBackend):
 
         user.is_staff = self.is_staff(claims)
         logging.debug("Is staff: {}".format(user.is_staff))
-        
+
         user.is_superuser = self.is_superuser(claims)
         logging.debug("Is superuser: {}".format(user.is_superuser))
 
-        groups = self.get_groups()
+        groups = self.get_groups(claims)
         logging.debug("Groups: {}".format(groups))
 
         user.groups.set(groups)
@@ -155,4 +155,4 @@ class CustomOpenidBackend(OIDCAuthenticationBackend):
 
         user.save()
 
-        return user 
+        return user

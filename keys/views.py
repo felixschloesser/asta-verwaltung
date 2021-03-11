@@ -156,26 +156,25 @@ class PersonSearchResults(LoginRequiredMixin, generic.ListView):
         # Alter the queryset of the list view, so that it only contains the entries
         # of the people where first or last name of a person match the search query
         # in the get request
+
+        # Start with all people
+        person_list = Person.objects.all()
+
+
         group_query_parameter = self.request.GET.get('group')
         if group_query_parameter == 'FSR':
-            room_list = Person.objects.of_fsr()
-
-            return room_list
+            person_list = person_list & Person.objects.of_fsr()
 
         if group_query_parameter:
-            room_list = Person.objects.of_group(group_query_parameter)
-
-            return room_list
+            person_list = person_list & Person.objects.of_group(group_query_parameter)
 
         search_query_parameter = self.request.GET.get('q')
         if search_query_parameter:
-            person_list = Person.objects.filter(models.Q(first_name__istartswith=search_query_parameter) |
+            person_list = person_list & Person.objects.filter(models.Q(first_name__istartswith=search_query_parameter) |
                                                    models.Q(last_name__istartswith=search_query_parameter) |
                                                    models.Q(university_email__icontains=search_query_parameter) |
                                                    models.Q(group__name__istartswith=search_query_parameter)
                                                   )
-        else:
-            person_list = Person.objects.none()
 
         return person_list
 
@@ -194,6 +193,9 @@ class PersonCreate(SuccessMessageMixin, LoginRequiredMixin, generic.CreateView):
         self.object.university_email = self.object.university_email.lower()
         self.object.private_email = self.object.private_email.lower()
         self.object.save()
+
+        logging.info("Created new Person: {}".format(self.object))
+
         return super().form_valid(form)
 
 
@@ -254,6 +256,8 @@ class DepositCreate(DepositMixin, SuccessMessageMixin, LoginRequiredMixin, gener
         self.object.person = Person.objects.filter(pk=pk).get()
         self.object.in_datetime = timezone.now()
         self.object.save()
+        logging.info("Created Deposit: {}".format(self.object))
+
         logging.debug("Polulated the forms person field. with pk: {}".format(pk))
         logging.debug("Polulated the in_datetime field. with {}".format(timezone.now()))
         return super().form_valid(form)
@@ -275,7 +279,9 @@ class DepositRetain(DepositMixin, SuccessMessageMixin, LoginRequiredMixin, gener
         self.object.state = 'retained'
         self.object.retained_datetime = timezone.now()
         self.object.save()
-        logging.debug("Polulated the forms person field.")
+        logging.info("Retained Deposit: {}".format(self.object))
+
+        logging.debug("Set the object state to 'retained'")
         return super().form_valid(form)
 
 
@@ -297,6 +303,8 @@ class DepositReturn(DepositMixin, SuccessMessageMixin, LoginRequiredMixin, gener
         self.object.state = 'out'
         self.object.out_datetime = timezone.now()
         self.object.save()
+        logging.info("Returned Deposit: {}".format(self.object))
+
         return super().form_valid(form)
 
 
@@ -324,38 +332,42 @@ class RoomSearchResults(LoginRequiredMixin, generic.ListView):
     template_name_suffix = '_search_results'
 
     def get_queryset(self):
-        # Alter the queryset of the list view, so that it only contains the entries
-        # of the rooms match the search query in the get request
-        query = self.request.GET.get('building')
-        if query:
-            room_list = Room.objects.filter(building__identifier__exact=query)
-
-            return room_list
-
-        query = self.request.GET.get('group')
-        if query == "FSR":
-            room_list = Room.objects.of_fsr()
-
-            return room_list
-        if query:
-            room_list = Room.objects.of_group(query)
-
-            return room_list
+        """
+        Alter the queryset of the list view, so that it only contains the entries
+        of the rooms match the search query in the get request
+        """
+        # Creating a empty room list
+        room_list = Room.objects.all()
+        logging.debug(room_list)
 
 
+        # Only Search for Rooms inside a specified building
+        building_query = self.request.GET.get('building')
+        if building_query:
+            room_list = room_list & Room.objects.filter(building__identifier__exact=building_query)
 
-        query = self.request.GET.get('q')
-        if query:
-            room_list = Room.objects.filter(models.Q(number__icontains=query) |
-                                              models.Q(name__icontains=query) |
-                                              models.Q(purpose__name__icontains=query) |
-                                              models.Q(building__name__istartswith=query) |
-                                              models.Q(building__identifier__istartswith=query) |
-                                              models.Q(group__name__istartswith=query)
-                                             )
-        else:
-            room_list = Person.objects.none()
+        # Only Search for Rooms of the specified group
+        group_query = self.request.GET.get('group')
 
+        if group_query == "FSR":
+            # All Rooms which belong to a FSR
+            room_list = room_list & Room.objects.of_fsr()
+
+        elif group_query:
+            room_list = room_list & Room.objects.of_group(group_query)
+
+        # General Search Querys
+        search_query = self.request.GET.get('q')
+        if search_query:
+            room_list = room_list & Room.objects.filter(models.Q(number__icontains=search_query) |
+                                            models.Q(name__icontains=search_query) |
+                                            models.Q(purpose__name__icontains=search_query) |
+                                            models.Q(building__name__istartswith=search_query) |
+                                            models.Q(building__identifier__istartswith=search_query) |
+                                            models.Q(group__name__istartswith=search_query)
+                                           )
+
+        logging.debug(room_list)
         return room_list
 
 

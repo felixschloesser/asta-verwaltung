@@ -14,6 +14,10 @@
                         Raumsuche: <em>{{ request.GET.q }}</em>
                     {% elif request.GET.group %}
                         Raumgruppe: <em>{{ request.GET.group }}</em>
+                    {% elif request.GET.building %}
+                        Gebäude {{ request.GET.building }}
+                    {% elif request.GET.purpose %}
+                        Raumzweck: {{ request.GET.purpose }}
                     {% else %}
                         Raumsuche
                     {% endif %}</h1>

@@ -4,6 +4,10 @@ body {
 	min-height: -webkit-fill-available;
 }
 
+/* Dont show printing stuff on screens*/
+.print {
+    display: none;
+}
 
 /* Table rows show clickable cursor*/
 table > tbody > tr {
@@ -42,7 +46,41 @@ table > tbody > tr {
 }
 
 
-@media (max-width: 1024px) {
+/* Adjusting padding for mobile devices with a "notch" */
+.safe-nav {
+ 	padding-left: max(0px, env(safe-area-inset-left));
+    padding-right: max(0px, env(safe-area-inset-right));
+}
+
+/* Fixing Navbar behavior*/
+.navbar-brand > .logo {
+	margin-left: 0px;
+}
+
+
+.safe-body {
+ 	padding-left: max(32px, env(safe-area-inset-left));
+    padding-right: max(32px, env(safe-area-inset-right));
+}
+
+
+
+
+
+
+@media screen and (max-width: 1215px) {
+	.safe-nav {
+ 		padding-left: max(0px, env(safe-area-inset-left));
+    	padding-right: max(0px, env(safe-area-inset-right));
+	}
+}
+
+@media screen and (max-width: 1023px) {
+	.safe-nav {
+ 		padding-left: max(12px, env(safe-area-inset-left));
+    	padding-right: max(12px, env(safe-area-inset-right));
+	}
+
 	.grid-container {
 		grid-template-columns: 1fr 1fr;
 		grid-template-rows: 1fr auto auto;
@@ -54,7 +92,12 @@ table > tbody > tr {
 	}
 }
 
-@media (max-width: 769px) {
+@media screen and (max-width: 769px) {
+	.safe-nav {
+		padding-left: max(0px, env(safe-area-inset-left));
+		padding-right: max(0px, env(safe-area-inset-right));
+	}
+
 	.grid-container .columns {
 		display: flex;
 	}
@@ -66,76 +109,25 @@ table > tbody > tr {
   	.grid-container .statistics .room {
   		display: none;
   	}
-  	
-}
-
-@media (max-width: 640px) {
-		.grid-container {
-			grid-template-columns: 1fr;
-			grid-template-rows: auto;
-			border-radius: 60px 0;
-
-	    grid-template-areas:
-	      'issues'
-	      'shortcuts'
-	      'person-search'
-	      'key-search'
-	      'statistics';
-  	}
-}
-
-
-/* Adjusting padding for mobile devices with a "notch" */
-.safe-nav {
- 	padding-left: max(12px, env(safe-area-inset-left));
-    padding-right: max(12px, env(safe-area-inset-right));
-    padding-right: 12px
-
-}
-
-/* Fixing Navbar behavior*/
-.navbar-brand > .logo {
-	margin-left: 0px;
-}
-
-
-.navbar-end > .navbar-item {
-	padding-right: 0px;
-	margin-right: 0px;
-}
-
-
-@media screen and (min-width: 758px) and (max-width: 1023px) {
-	.navbar-brand > .logo {
-		padding-left: 12px !important;
-	}
-	.navbar-end > .navbar-item {
-		padding-right: 12px !important;
-	}
-}
-
-@media screen and (max-width: 768px) {
-	.navbar-brand > .logo {
-		padding-left: 12px !important;
-	}
-	.navbar-end > .navbar-item {
-		padding-right: 12px !important;
-	}
-	.safe-nav {
-		padding: 0px !important;
-	}
 
 	.level-item {
 		margin-bottom: 0.75rem;
 	}
 }
 
-.safe-body {
- 	padding-left: max(32px, env(safe-area-inset-left));
-    padding-right: max(32px, env(safe-area-inset-right));
-}
 
-/* Dont show printing stuff on screens*/
-.print {
-    display: none;
+@media screen and (max-width: 640px) {
+	
+	.grid-container {
+		grid-template-columns: 1fr;
+		grid-template-rows: auto;
+		border-radius: 60px 0;
+
+    grid-template-areas:
+      'issues'
+      'shortcuts'
+      'person-search'
+      'key-search'
+      'statistics';
+		}
 }

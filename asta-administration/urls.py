@@ -33,6 +33,8 @@ urlpatterns = [
     path('oidc/', include('mozilla_django_oidc.urls'), name='oidc'),
 
     path('admin/', admin.site.urls, name='admin'),
+    path('admin/log_viewer/', include('log_viewer.urls')),
+
 
     path('api/', include('api.urls'), name='api'),
     path('keys/', include('keys.urls'), name='keys'),

@@ -361,6 +361,8 @@ class Person(models.Model): # Add a chron job ro delete after a 2 years of not r
     phone_number = PhoneNumberField('Telefon', unique=True)
     group = models.ForeignKey('Group', related_name='people', verbose_name='Gruppe', on_delete=models.PROTECT, null=True)
 
+    history = HistoricalRecords()
+
     created_at = models.DateTimeField('Erstellungszeitpunkt', auto_now_add=True)
     updated_at = models.DateTimeField('Aktualisierungszeitpunkt', auto_now=True)
 
@@ -443,27 +445,23 @@ class Deposit(models.Model):
                       ('bank_transfer', 'Überweisung')]
 
     state = models.CharField('Status', max_length=8, choices=state_choices, default='in')
-
     person = models.ForeignKey('Person', related_name='deposits', verbose_name='Person', on_delete=models.CASCADE)
     amount = models.DecimalField('Betrag', max_digits=5, decimal_places=2, default=50, 
                                            validators=[amount_is_not_negative_and_reasonable], blank=True)
-
     currency = models.CharField('Währung', max_length=3, choices=currency_choices, default='EUR')
-
+    comment = models.CharField('Kommentar', max_length=500, null=True, blank=True, validators=[NoControlCharactersValidator, NoWhitespaceValidator])
 
     in_datetime = models.DateTimeField('Einzahlungszeitpunkt', default=timezone.now, 
                                                                validators=[present_or_max_3_days_ago])
-    in_method = models.CharField('Einzahlungsmittel', max_length=64, choices=method_choices, default='cash')
-    
+    in_method = models.CharField('Einzahlungsmittel', max_length=64, choices=method_choices, default='cash')    
     
     retained_datetime = models.DateTimeField('Einbehaltungszeitpunkt', null=True, 
                                                                        validators=[present_or_max_3_days_ago])
-
     out_datetime = models.DateTimeField('Rückzahlungszeitpunkt', null=True, 
                                                                  validators=[present_or_max_3_days_ago])
     out_method = models.CharField('Auszahlungsmittel', max_length=64, choices=method_choices, null=True)
 
-    comment = models.CharField('Kommentar', max_length=500, null=True, blank=True, validators=[NoControlCharactersValidator, NoWhitespaceValidator])
+    history = HistoricalRecords()
 
 
     created_at = models.DateTimeField('Erstellungszeitpunkt', auto_now_add=True)
@@ -560,6 +558,8 @@ class Issue(models.Model):
 
     created_at = models.DateTimeField('Erstellungszeitpunkt', auto_now_add=True)
     updated_at = models.DateTimeField('Aktualisierungszeitpunkt', auto_now=True)
+
+    history = HistoricalRecords()
 
     objects = IssueManager()
 

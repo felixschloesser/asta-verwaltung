@@ -18,10 +18,7 @@ import logging
 
 # Mixins
 class HashIdFieldAdminMixin:
-    def _decode_id(self, model, object_id):
-        decoded_id = str(model(id=0).id.decode(object_id))
-
-        return decoded_id
+ 
 
     def history_view(self, request, object_id, extra_context=None):
         decoded_id = self._decode_id(self.model, object_id)
@@ -42,7 +39,7 @@ class DoorInline(admin.TabularInline):
 
 
 
-class DepositInline(admin.TabularInline):
+class DepositInline(admin.TabularInline, HashIdFieldAdminMixin):
     model = Deposit
     extra = 0
 
@@ -143,7 +140,6 @@ class StorageLocationAdmin(admin.ModelAdmin):
 
 
 
-@admin.register(Person)
 class PersonAdmin(ImportExportMixin, HashIdFieldAdminMixin, admin.ModelAdmin):
     list_display = ('__str__', 'university_email', 'private_email', 'phone_number', 'paid_deposit')
     list_filter = ('group', 'deposits__amount', 'updated_at')
@@ -161,8 +157,7 @@ class GroupAdmin(admin.ModelAdmin):
 
 
 
-@admin.register(Issue)
-class IssueAdmin(ExportMixin, admin.ModelAdmin):
+class IssueAdmin(ExportMixin, HashIdFieldAdminMixin, admin.ModelAdmin):
     autocomplete_fields = ['person', 'key']
 
     date_hierarchy = 'updated_at'
@@ -176,14 +171,7 @@ class IssueAdmin(ExportMixin, admin.ModelAdmin):
 
 
 
-# admin.site.register(Deposit, SimpleHistoryAdmin)
-# Waiting for fix: admin.site.register(Person, SimpleHistoryAdmin)
-# admin.site.register(StorageLocation, SimpleHistoryAdmin)
-# admin.site.register(LockingSystem, SimpleHistoryAdmin)
-# admin.site.register(Key, SimpleHistoryAdmin)
-# admin.site.register(Door, SimpleHistoryAdmin)
-# admin.site.register(Group, SimpleHistoryAdmin)
-# admin.site.register(Building, SimpleHistoryAdmin)
-# admin.site.register(Room, SimpleHistoryAdmin)
-# admin.site.register(Purpose, SimpleHistoryAdmin)
+admin.site.register(Deposit, SimpleHistoryAdmin)
+admin.site.register(Person, SimpleHistoryAdmin)
+admin.site.register(Issue, SimpleHistoryAdmin)
 

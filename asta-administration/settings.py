@@ -75,6 +75,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'fontawesome-free',
     'import_export',
+    'log_viewer',
 
     # Local
     'keys',

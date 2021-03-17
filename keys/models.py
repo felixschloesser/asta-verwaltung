@@ -404,7 +404,14 @@ class Person(models.Model): # Add a chron job ro delete after a 2 years of not r
             return False
 
     def get_active_deposit(self):
-        return self.deposits.active().get()
+        if hasattr(self, 'deposits'):
+            deposits = self.deposits.active()
+            # check if empty
+            if len(deposits) == 1:
+                deposit = deposits.get()
+                return deposit
+        else:
+            return None
 
 
     def get_active_issues(self):

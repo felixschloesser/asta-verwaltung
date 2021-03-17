@@ -165,7 +165,15 @@ class KeyManager(models.Manager):
 class PersonManager(models.Manager):
     def get_queryset(self):
         qs = super().get_queryset()
-        return qs.select_related('group').prefetch_related('issues')
+
+        # Mark People as 'inactive' after one Year, dont show them anymore,to be deleted regularly.
+        updated_less_then_one_year_ago = models.Q(updated_at__gte=timezone.now()-timezone.timedelta(days=1))
+        older_but_still_active_deposit = models.Q(updated_at__lte=timezone.now()-timezone.timedelta(days=1), deposits__state__exact='in')
+        older_but_still_active_issue = models.Q(updated_at__lte=timezone.now()-timezone.timedelta(days=1), issues__active__exact=True)
+
+        only_active_people = qs.filter(updated_less_then_one_year_ago | older_but_still_active_deposit | older_but_still_active_issue).distinct()
+
+        return only_active_people.select_related('group').prefetch_related('issues')
 
     # Returning QuerrySets
     def paid_deposit(self, *args, **kwargs):
@@ -225,7 +233,6 @@ class DepositManager(models.Manager):
     def get_queryset(self):
         qs = super().get_queryset()
         return qs.select_related('person')
-
 
     def active(self, *args, **kwargs):
         # the method accepts **kwargs, so that it is possible to filter

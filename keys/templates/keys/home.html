@@ -8,6 +8,13 @@
 
 {% block title %}Dashboard | Schlüsselsystem{% endblock %}
 
+{%block navbar_items %}
+    <a class="navbar-item" href="{% url 'keys:person-list' %}">Personen</a>
+    <a class="navbar-item" href="{% url 'keys:room-list' %}">Räume</a>
+    <a class="navbar-item" href="{% url 'keys:key-list' %}">Schlüssel</a>
+    <a class="navbar-item" href="{% url 'keys:issue-list' %}">Ausleihen</a>
+{% endblock %}
+
 
 {% block content %}
 	{% if user.is_authenticated %}

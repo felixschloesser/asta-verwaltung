@@ -34,10 +34,8 @@
                 </div>
                 <div class="navbar-menu" aria-label="Navigations-Links" id="navMenu">
                     <div class="navbar-start">
-                        <a class="navbar-item" href="{% url 'keys:person-list' %}">Personen</a>
-                        <a class="navbar-item" href="{% url 'keys:room-list' %}">Räume</a>
-                        <a class="navbar-item" href="{% url 'keys:key-list' %}">Schlüssel</a>
-                        <a class="navbar-item" href="{% url 'keys:issue-list' %}">Ausleihen</a>
+                        {%block navbar_items %}
+                        {% endblock %}
                     </div>
                     <div class="navbar-end">
                         <div class="navbar-item">

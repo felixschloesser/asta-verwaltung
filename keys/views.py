@@ -92,9 +92,12 @@ class KeyDetail(LoginRequiredMixin, generic.DetailView):
 
 class KeyLost(SuccessMessageMixin, LoginRequiredMixin, generic.UpdateView):
     model = Key
+    form_class = KeyLostForm
     template_name_suffix ='_lost'
-    fields = ['stolen_or_lost']
     success_message = "Als gestolen/verloren gemeldet."
+    widgets = {
+            'comment': forms.Textarea(attrs={'cols': 80, 'rows': 3, 'placeholder': "Optionaler Kommentar zur Entgegennahme...", 'spellcheck': 'true', 'lang': 'de-DE'}),
+        }
 
     def form_valid(self, form):
         """
@@ -118,9 +121,12 @@ class KeyLost(SuccessMessageMixin, LoginRequiredMixin, generic.UpdateView):
 
 class KeyFound(SuccessMessageMixin, LoginRequiredMixin, generic.UpdateView):
     model = Key
+    form_class = KeyFoundForm
     template_name_suffix ='_found'
-    fields = ['stolen_or_lost']
     success_message = "Nicht mehr als gestolen/verloren gemeldet."
+    widgets = {
+            'comment': forms.Textarea(attrs={'cols': 80, 'rows': 3, 'placeholder': "Optionaler Kommentar zur Entgegennahme...", 'spellcheck': 'true', 'lang': 'de-DE'}),
+        }
 
     def form_valid(self, form):
         """

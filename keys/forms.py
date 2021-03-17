@@ -71,6 +71,26 @@ class DepositReturnForm(forms.ModelForm):
 
 
 
+class KeyLostForm(forms.ModelForm):
+    class Meta:
+        model = Key
+        fields = ['stolen_or_lost',
+                  'comment']
+        widgets = {
+            'comment': forms.Textarea(attrs={'cols': 80, 'rows': 3, 'placeholder': "Optionaler Kommentar zur Verlust...", 'spellcheck': 'true', 'lang': 'de-DE'}),
+        }
+
+
+class KeyFoundForm(forms.ModelForm):
+    class Meta:
+        model = Key
+        fields = ['stolen_or_lost',
+                  'comment']
+        widgets = {
+            'comment': forms.Textarea(attrs={'cols': 80, 'rows': 3, 'placeholder': "Optionaler Kommentar zur Wiederauftauchen...", 'spellcheck': 'true', 'lang': 'de-DE'}),
+        }
+
+
 class IssueForm(forms.ModelForm):
     key = GroupedModelChoiceField(
         queryset=Key.objects.not_currently_issued(stolen_or_lost=False), 

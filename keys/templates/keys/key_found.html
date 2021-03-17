@@ -2,6 +2,7 @@
 
 {% block title %}Gefunden | {{ key }} | Schlüsselsystem{% endblock %}
 
+{% load widget_tweaks %}
 
 {% block content %}
 <div class="container is-max-desktop">
@@ -13,12 +14,25 @@
         <p>Den Schlüssel nun als nicht mehr Verloren/Gestohlen melden?</p>
 
         <form method="post">{% csrf_token %}
-            <div class="control">
+            <div class="field">
+            {% csrf_token %}
+            <div class="field">
+                <label class="label is-light" for="{{ form.comment.id_for_label }}">Kommentar:</label>
+                <div class="control">
+                    {% if not form.comment.errors %}
+                        {{ form.comment |add_class:"textarea has-fixed-size" }}
+                    {% else %}
+                        {{ form.comment |add_class:"textarea has-fixed-size" }}
+                    {% endif %}
+                </div>
+                {% for error in form.comment.errors %}
+                    <p class="help is-danger">{{ error }}</p>
+                {% endfor %}
             </div>
-        <span class="buttons is-right">
-            <a class="button" href={% url 'keys:key-detail' pk=key.id %}>Abbrechen</a >
-            <input class="button is-primary" type="submit" value="Gefunden">
-        </span>
+            <span class="buttons is-right">
+                <a class="button" href={% url 'keys:key-detail' pk=key.id %}>Abbrechen</a >
+                <input class="button is-primary" type="submit" value="Gefunden">
+            </span>
         </form>
     </div>
 </div>

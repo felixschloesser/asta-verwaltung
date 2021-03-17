@@ -12,7 +12,7 @@
 {% block content %}
     <div class="container is-max-desktop">
         <div class="block content">
-            <h1 class="title is-2">Anmeldung Erforderlich</h1>
+            <h1 class="title is-2">Anmeldung erforderlich</h1>
                     
             {% if next %}
                 {% if user.is_authenticated %}
@@ -29,7 +29,7 @@
                 Nach erfolgreicher Anmeldung werden Sie auf dieser Seite zurückgeleitet.
             </p>
             <div class="buttons is-right">
-                <a class="button is-outlined" href={{ request.META.HTTP_REFERER }}>Zurück</a>
+                <a class="button is-outlined" href={% url 'keys:home' %}>Zurück</a>
                 <a class="button is-primary" href={% url 'oidc_authentication_init' %}>
                     <span class="icon">
                         <i class="fab fa-gitlab"></i>

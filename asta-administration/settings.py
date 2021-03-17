@@ -36,7 +36,7 @@ HASHID_FIELD_SALT = os.getenv('DJANGO_HASHID_FIELD_SALT', 'changeme')
 SIMPLE_HISTORY_REVERT_DISABLED=True
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DJANGO_DEBUG', True)
+DEBUG = os.getenv('DJANGO_DEBUG', False)
 
 
 ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS','localhost').split(' ')

@@ -62,6 +62,8 @@ class CustomOpenidBackend(OIDCAuthenticationBackend):
             # This is not good, but I dont know what else to do for longer names
             first_name = name_list[0] # first provided name
             last_name = name_list[-1]  # last provided name
+            logging.info("Provided name {} was too long, naïvly using the first and last name provided name.".format(name))
+
 
         return first_name, last_name
 
@@ -82,9 +84,9 @@ class CustomOpenidBackend(OIDCAuthenticationBackend):
                 groups.append(group.id)
                 logging.info("Adding 'Schlüsselverwaltung' to the users groups")
             except ObjectDoesNotExist:
-                logging.critical("Can't find the group 'Schlüsselverwaltung', add it in the admin first.")
+                logging.critical("Can't find the group 'Schlüsselverwaltung', create it in the admin first.")
         else:
-            logging.debug("None of the claimed groups is allowed to administer the Schlüsselverwaltung")
+            logging.debug("None of the claimed of groups is allowed to administer the Schlüsselverwaltung")
 
         return groups
 
@@ -119,12 +121,12 @@ class CustomOpenidBackend(OIDCAuthenticationBackend):
 
         first_name, last_name = self.get_first_and_last_name(claims)
 
-        logging.info("Creating user: {}, {}, {}, {}".format(username, email, first_name, last_name))
-
         user = self.UserModel.objects.create_user(username,
                                                   email,
                                                   first_name=first_name,
                                                   last_name=last_name)
+        logging.info("Created User: {}".format(username))
+        logging.debug("User Params: {}, {}, {}, {}".format(username, email, first_name, last_name))
 
         user.is_staff = self.is_staff(claims)
         logging.debug("Is staff: {}".format(user.is_staff))
@@ -136,6 +138,7 @@ class CustomOpenidBackend(OIDCAuthenticationBackend):
         logging.debug("Groups: {}".format(groups))
 
         user.groups.set(groups)
+        logging.info("User {} is in groups: {}".format(username, groups))
 
         return user
 
@@ -154,5 +157,6 @@ class CustomOpenidBackend(OIDCAuthenticationBackend):
         user.groups.set(groups)
 
         user.save()
+        logging.info("User {} is now in groups: {}".format(user.username, groups))
 
         return user

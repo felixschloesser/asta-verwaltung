@@ -23,11 +23,13 @@ class PersonForm(forms.ModelForm):
         university_email = cleaned_data.get("university_email")
         private_email = cleaned_data.get("private_email")
 
-        logging.debug("MAIL CLEAN")
-        logging.debug("{} - {}".format(university_email, private_email))
+        logging.debug("Checking if mail adresses are not identical...")
+        logging.debug("{}, {}".format(university_email, private_email))
 
         if university_email == private_email:
-            msg = "Private und Universitäts Mail dürfen nicht indentisch sein."
+            logging.warning("university_email and private_email can't be identical")
+            
+            msg = "Private- und Unimail dürfen nicht indentisch sein."
             self.add_error('university_email', "")
             self.add_error('private_email', "Bitte wählen Sie eine andere Mailadresse." )
             raise ValidationError(msg, "mails-not-identical")
@@ -112,12 +114,11 @@ class IssueForm(forms.ModelForm):
     def clean(self):
         cleaned_data = super().clean()
         key = cleaned_data.get("key")
-        logging.debug("Cleaned Key: {}".format(key))
-        if key:
-            if key.get_current_issue():
+        if key and key.get_current_issue():
                 raise ValidationError(("Schlüssel ist momentan \
                                         an {} verliehen".format(key.get_current_issue().person)),
                                         code='key-not-returned')
+                logging.warning("Key {} already issued to".format(key, get_current_issue().person))
       
 
 
@@ -139,9 +140,12 @@ class IssueReturnForm(forms.ModelForm):
         out_date = self.instance.out_date
 
         if not in_date:
+            logging.warning("out_date is required.")
             raise ValidationError(('Bitte das Rückgabedatum angeben.'), code='required')
 
         if in_date < out_date:
+            logging.warning("in_date needs to be before out_date")
             formated_date = formats.date_format(out_date)
             msg = 'Rückgabedatum muss nach dem {} (Ausgabedatum) liegen.'.format(formated_date)
             self.add_error('in_date', msg)
+

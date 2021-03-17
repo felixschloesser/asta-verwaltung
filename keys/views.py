@@ -48,10 +48,12 @@ class KeyListAll(LoginRequiredMixin, generic.ListView):
     paginate_by = 20
     template_name_suffix = '_list_all'
 
+
 class KeyListIssued(LoginRequiredMixin, generic.ListView):
     queryset = Key.objects.currently_issued()
     paginate_by = 20
     template_name_suffix = '_list_issued'
+
 
 class KeyListLost(LoginRequiredMixin, generic.ListView):
     queryset = Key.objects.stolen_or_lost()
@@ -96,7 +98,11 @@ class KeyLost(SuccessMessageMixin, LoginRequiredMixin, generic.UpdateView):
     template_name_suffix ='_lost'
     success_message = "Als gestolen/verloren gemeldet."
     widgets = {
-            'comment': forms.Textarea(attrs={'cols': 80, 'rows': 3, 'placeholder': "Optionaler Kommentar zur Entgegennahme...", 'spellcheck': 'true', 'lang': 'de-DE'}),
+            'comment': forms.Textarea(attrs={'cols': 80,
+                                             'rows': 3,
+                                             'placeholder': "Optionaler Kommentar zur Entgegennahme...",
+                                             'spellcheck': 'true',
+                                             'lang': 'de-DE'}),
         }
 
     def form_valid(self, form):
@@ -107,6 +113,8 @@ class KeyLost(SuccessMessageMixin, LoginRequiredMixin, generic.UpdateView):
         self.object = form.save(commit=False)
         self.object.stolen_or_lost = True
         self.object.save()
+
+        logging.info('Lost key: {}'.format(self.object))
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -125,7 +133,11 @@ class KeyFound(SuccessMessageMixin, LoginRequiredMixin, generic.UpdateView):
     template_name_suffix ='_found'
     success_message = "Nicht mehr als gestolen/verloren gemeldet."
     widgets = {
-            'comment': forms.Textarea(attrs={'cols': 80, 'rows': 3, 'placeholder': "Optionaler Kommentar zur Entgegennahme...", 'spellcheck': 'true', 'lang': 'de-DE'}),
+            'comment': forms.Textarea(attrs={'cols': 80,
+                                             'rows': 3,
+                                             'placeholder': "Optionaler Kommentar zur Entgegennahme...", 
+                                             'spellcheck': 'true',
+                                             'lang': 'de-DE'}),
         }
 
     def form_valid(self, form):
@@ -136,6 +148,7 @@ class KeyFound(SuccessMessageMixin, LoginRequiredMixin, generic.UpdateView):
         self.object = form.save(commit=False)
         self.object.stolen_or_lost = False
         self.object.save()
+        logging.info('Found key: {}'.format(self.object))
         return super().form_valid(form)
 
 
@@ -177,10 +190,10 @@ class PersonSearchResults(LoginRequiredMixin, generic.ListView):
         search_query_parameter = self.request.GET.get('q')
         if search_query_parameter:
             person_list = person_list & Person.objects.filter(models.Q(first_name__istartswith=search_query_parameter) |
-                                                   models.Q(last_name__istartswith=search_query_parameter) |
-                                                   models.Q(university_email__icontains=search_query_parameter) |
-                                                   models.Q(group__name__istartswith=search_query_parameter)
-                                                  )
+                                                              models.Q(last_name__istartswith=search_query_parameter) |
+                                                              models.Q(university_email__icontains=search_query_parameter) |
+                                                              models.Q(group__name__istartswith=search_query_parameter)
+                                                             )
 
         return person_list
 
@@ -223,6 +236,13 @@ class PersonUpdate(SuccessMessageMixin, LoginRequiredMixin, generic.UpdateView):
     template_name_suffix = '_update_form'
     success_message = "%(first_name)s %(last_name)s erfolgreich aktualisiert."
 
+    def form_valid(self, form):
+        """
+        Only here for Logging CRUD actions
+        """
+        self.object = form.save(commit=False)
+        logging.info('Updated Person: {}'.format(self.object))
+        return super().form_valid(form)
 
 
 
@@ -264,8 +284,8 @@ class DepositCreate(DepositMixin, SuccessMessageMixin, LoginRequiredMixin, gener
         self.object.save()
         logging.info("Created Deposit: {}".format(self.object))
 
-        logging.debug("Polulated the forms person field. with pk: {}".format(pk))
-        logging.debug("Polulated the in_datetime field. with {}".format(timezone.now()))
+        logging.debug("Polulated the 'person' field with pk: {}".format(pk))
+        logging.debug("Polulated the 'in_datetime' field with {}".format(timezone.now()))
         return super().form_valid(form)
 
 
@@ -287,7 +307,7 @@ class DepositRetain(DepositMixin, SuccessMessageMixin, LoginRequiredMixin, gener
         self.object.save()
         logging.info("Retained Deposit: {}".format(self.object))
 
-        logging.debug("Set the object state to 'retained'")
+        logging.debug("Setting the state to: 'retained'")
         return super().form_valid(form)
 
 
@@ -304,13 +324,13 @@ class DepositReturn(DepositMixin, SuccessMessageMixin, LoginRequiredMixin, gener
         """
         Before validating the form, set active to False, the amount to 0 and note the out datetime
         """
-        logging.debug('validating')
         self.object = form.save(commit=False)
         self.object.state = 'out'
         self.object.out_datetime = timezone.now()
         self.object.save()
         logging.info("Returned Deposit: {}".format(self.object))
-
+        logging.debug("Setting the state to: 'out'")
+        logging.debug("Popluating the out_datetime with the current time: {}".format(datetime.now()))
         return super().form_valid(form)
 
 
@@ -318,6 +338,14 @@ class DepositReturn(DepositMixin, SuccessMessageMixin, LoginRequiredMixin, gener
 class DepositDelete(DepositMixin, LoginRequiredMixin, generic.DeleteView):
     model = Deposit
     pk_url_kwarg = 'pk_d'
+
+    def form_valid(self, form):
+        """
+        Only here for Logging CRUD actions
+        """
+        self.object = form.save(commit=False)
+        logging.info('Deleted Deposit: {}'.format(self.object))
+        return super().form_valid(form)
 
 
 # Rooms
@@ -461,6 +489,7 @@ class IssueNew(SuccessMessageMixin, LoginRequiredMixin, generic.CreateView):
         self.object.person = Person.objects.get_person(person_id)
         self.object.active = True
         self.object.save()
+        logging.info("New Issue: {}".format(self.object))
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -485,7 +514,8 @@ class IssueReturn(SuccessMessageMixin, LoginRequiredMixin, generic.UpdateView):
         self.object = form.save(commit=False)
         self.object.active = False
         self.object.save()
-        logging.debug("Before validating the form, set active to False")
+        logging.debug("Setting active to 'False'")
+        logging.info("Returned Issue: {}".format(self.object))
         return super().form_valid(form)
 
     def get_success_url(self):

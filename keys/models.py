@@ -201,6 +201,7 @@ class Door(models.Model):
         elif self.kind == 'connecting':
             return "Verbindungstür"
         else:
+            logging.error("Invalid door type: {}".format(self.kind))
             raise ValueError("Invalid door type")
 
 
@@ -250,16 +251,22 @@ class Key(models.Model):
         return reverse('keys:key-detail', args=[str(self.id)])
 
     def get_current_issue(self):
-        issue_set  = self.issues.active()
-        try:
+        """ 
+        If the key is currently issued, return the issue instance, 
+        otherwise return Null.
+        """
+        if self.issues.active():
             issue = issue_set.get()
             return issue
-        except ObjectDoesNotExist:
+        else:
             return None
 
     def is_currently_issued(self):
-        issue_set  = self.issues.active()
-        if issue_set:
+        """ 
+        If the key is currently issued, return True, 
+        otherwise return False. Used in admin.
+        """
+        if self.issues.active():
             return True
         else:
             return False
@@ -280,6 +287,7 @@ class Key(models.Model):
         rooms = [door.room for door in doors]
         return rooms
 
+    # Provide short_discription/translation and meta information for django admin.
     get_locking_system_method.short_description = 'Typ'
     get_number_of_doors.short_description = "Anzahl Türen"
 
@@ -297,6 +305,7 @@ class LockingSystem(models.Model):
                                        default=('mechanical', 'mechanisch'))
     company = models.CharField('Firma', max_length=32, unique=True, blank=True, null=True)
     comment = models.CharField('Kommentar', max_length=500, blank=True, null=True)
+    
     created_at = models.DateTimeField('Erstellungszeitpunkt', auto_now_add=True)
     updated_at = models.DateTimeField('Aktualisierungszeitpunkt', auto_now=True)
 
@@ -316,7 +325,10 @@ class LockingSystem(models.Model):
             return self.name
 
     def get_method(self):
-        # No good way to access verbose name :(
+        """
+        Sadly Django does not seem to provide a good way 
+        to access the fields verbose name.
+        """
         if self.method == 'mechanical':
             return "mechanisch"
 
@@ -326,6 +338,7 @@ class LockingSystem(models.Model):
         elif self.method == 'transponder':
             return "Transponder"
         else:
+            logging.error("Unknown locking-system method: {}".format(self.method))
             raise ValueError("Unkown locking-system mehod")
 
 
@@ -333,6 +346,7 @@ class LockingSystem(models.Model):
 class StorageLocation(models.Model):
     name = models.CharField("Name", max_length=32)
     location = models.ForeignKey("room", related_name='storage_locations', verbose_name='Ort', on_delete=models.CASCADE)
+    
     created_at = models.DateTimeField('Erstellungszeitpunkt', auto_now_add=True)
     updated_at = models.DateTimeField('Aktualisierungszeitpunkt', auto_now=True)
 
@@ -347,6 +361,7 @@ class StorageLocation(models.Model):
     def get_number_of_keys(self):
         return Key.objects.filter(storage_location__name=self.name).count()
 
+    # Provide short_discription/translation for django admin.
     get_number_of_keys.short_description = "Anzahl Schlüssel"
 
 
@@ -354,8 +369,10 @@ class StorageLocation(models.Model):
 class Person(models.Model): # Add a chron job ro delete after a 2 years of not renting?
     id = HashidAutoField(primary_key=True)
 
-    first_name = models.CharField('Vorname', max_length=64, validators=[NoControlCharactersValidator, NoWhitespaceValidator])
-    last_name = models.CharField('Nachname', max_length=64, validators=[NoControlCharactersValidator, NoWhitespaceValidator])
+    first_name = models.CharField('Vorname', max_length=64, validators=[NoControlCharactersValidator,
+                                                                        NoWhitespaceValidator])
+    last_name = models.CharField('Nachname', max_length=64, validators=[NoControlCharactersValidator,
+                                                                        NoWhitespaceValidator])
     university_email = models.EmailField('Uni Mail', unique=True, validators=[validate_university_mail])
     private_email = models.EmailField('Private Mail', unique=True)
     phone_number = PhoneNumberField('Telefon', unique=True)
@@ -397,6 +414,10 @@ class Person(models.Model): # Add a chron job ro delete after a 2 years of not r
         return "{} {}".format(self.first_name, self.last_name)
 
     def paid_deposit(self):
+        """
+        Check if the person model has an related field 'deposit',
+        if yes return True if not False.
+        """
         if hasattr(self, 'deposits'):
             if self.deposits.active():
                 return True
@@ -404,12 +425,20 @@ class Person(models.Model): # Add a chron job ro delete after a 2 years of not r
             return False
 
     def get_active_deposit(self):
+        """
+        Check if the person model has an related field 'deposit',
+        if yes make sure there's only one active at the moment,
+        then get the object out of the queryset amd return it.
+        """
         if hasattr(self, 'deposits'):
             deposits = self.deposits.active()
             # check if empty
             if len(deposits) == 1:
                 deposit = deposits.get()
                 return deposit
+            else:
+                logging.error("Person has more than one active deposit: {}".format(self.deposits.active()))
+                raise ValueError("Person has more than one active deposit")
         else:
             return None
 
@@ -484,6 +513,7 @@ class Deposit(models.Model):
 
         constraints = [
             models.CheckConstraint(
+                # Make sure that the data attached to each state is consistend
                 name='state_consistancy',
                 check=models.Q(state='in', out_datetime__isnull=True,
                                            out_method__isnull=True,
@@ -546,14 +576,13 @@ class Issue(models.Model):
                                related_name="issues",
                                verbose_name='Person',
                                on_delete=models.CASCADE)
-    # limit_key_choices = models.Q(issues__active=True, stolen_or_lost=True)
-    #!BUG duplication https://code.djangoproject.com/ticket/11707
-    # still not fixed in 3.1.5?
 
     key = models.ForeignKey('Key', related_name="issues",
                             verbose_name='Schlüssel',
                             on_delete=models.PROTECT)
-                            # limit_choices_to=limit_key_choices)
+                            # limit_choices_to= models.Q(issues__active=True, stolen_or_lost=True)
+                            # BUG in django: https://code.djangoproject.com/ticket/11707
+                            # Workadround: overwritten __init__ of IssueForm.
 
     out_date = models.DateField('Ausgabedatum',
                                 default=timezone.now,
@@ -584,6 +613,8 @@ class Issue(models.Model):
                 condition=models.Q(active=True),
             ),
             models.CheckConstraint(
+                # make sure the state is consistend with regards to the indate.
+                # only inactive Issues may have a in_datetime.
                 name='active_issue_no_in_date',
                 check=models.Q(active=True, in_date__isnull=True) | \
                       models.Q(active=False, in_date__isnull=False)

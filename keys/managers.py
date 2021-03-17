@@ -25,6 +25,7 @@ class GroupManager(models.Manager):
         return [ group.name for group in self.fsr()]
 
     def of_fsr_percent(self):
+        # only used for statistics
         if self.count() > 0:
             percent = self.of_fsr().count() / self.count() * 100
             return int(percent)
@@ -32,6 +33,7 @@ class GroupManager(models.Manager):
             return 0
 
     def of_ag_percent(self):
+        # only used for statistics
         if self.count() > 0:
             percent = self.of_ag().count() / self.count() * 100
             return int(percent)
@@ -39,6 +41,7 @@ class GroupManager(models.Manager):
             return 0
 
     def of_students_percent(self):
+        # only used for statistics
         if self.count() > 0:
             percent = self.of_students().count() / self.count() * 100
             return int(percent)
@@ -89,6 +92,7 @@ class RoomManager(models.Manager):
 
     # Not Returning QuerrySets
     def of_asta_percent(self):
+        # only used for statistics
         if self.count() > 0:
             percent = self.of_asta().count() / self.count() * 100
             return int(percent)
@@ -96,6 +100,7 @@ class RoomManager(models.Manager):
             return 0
 
     def of_fsr_percent(self):
+        # only used for statistics
         if self.count() > 0:
             percent = self.of_fsr().count() / self.count() * 100
             return int(percent)
@@ -103,6 +108,7 @@ class RoomManager(models.Manager):
             return 0
 
     def of_ag_percent(self):
+        # only used for statistics
         if self.count() > 0:
             percent = self.of_ag().count() / self.count() * 100
             return int(percent)
@@ -110,11 +116,14 @@ class RoomManager(models.Manager):
             return 0
 
     def of_students_percent(self):
+        # only used for statistics
         if self.count() > 0:
             percent = self.of_students().count() / self.count() * 100
             return int(percent)
         else:
             return 0
+
+
 
 class KeyManager(models.Manager):
     def get_queryset(self):
@@ -141,6 +150,7 @@ class KeyManager(models.Manager):
 
     # Not Returning QuerrySets
     def stolen_or_lost_percent(self):
+        # only used for statistics
         if self.count() > 0:
             percent = self.stolen_or_lost().count() / self.count() * 100
             return int(percent)
@@ -148,6 +158,7 @@ class KeyManager(models.Manager):
             return 0
 
     def currently_issued_percent(self):
+        # only used for statistics
         if self.count() > 0:
             percent = self.currently_issued().count() / self.count() * 100
             return int(percent)
@@ -155,6 +166,7 @@ class KeyManager(models.Manager):
             return 0
 
     def availible_percent(self):
+        # only used for statistics
         if self.count() > 0:
             percent = self.availible().count() / self.count() * 100
             return int(percent)
@@ -165,13 +177,16 @@ class KeyManager(models.Manager):
 class PersonManager(models.Manager):
     def get_queryset(self):
         qs = super().get_queryset()
-
-        # Mark People as 'inactive' after one Year, dont show them anymore,to be deleted regularly.
+        # Soft delete after one Year, dont show them anymore, to be deleted regularly.
         updated_less_then_one_year_ago = models.Q(updated_at__gte=timezone.now()-timezone.timedelta(days=356))
-        older_but_still_active_deposit = models.Q(updated_at__lte=timezone.now()-timezone.timedelta(days=356), deposits__state__exact='in')
-        older_but_still_active_issue = models.Q(updated_at__lte=timezone.now()-timezone.timedelta(days=356), issues__active__exact=True)
+        older_but_has_active_deposit = models.Q(updated_at__lte=timezone.now()-timezone.timedelta(days=356),
+                                                deposits__state__exact='in')
+        older_but_has_active_issue = models.Q(updated_at__lte=timezone.now()-timezone.timedelta(days=356),
+                                              issues__active__exact=True)
 
-        only_active_people = qs.filter(updated_less_then_one_year_ago | older_but_still_active_deposit | older_but_still_active_issue).distinct()
+        only_active_people = qs.filter(updated_less_then_one_year_ago | 
+                                       older_but_has_active_deposit |
+                                       older_but_has_active_issue).distinct()
 
         return only_active_people.select_related('group').prefetch_related('issues')
 
@@ -180,6 +195,7 @@ class PersonManager(models.Manager):
         return self.filter(deposits__state__exact='in').filter(*args, **kwargs)
 
     def not_paid_deposit(self, *args, **kwargs):
+        # equivalent to including the ones with state 'out' and 'retained'.
         return self.exclude(deposits__state__exact='in').filter(*args, **kwargs)
 
 
@@ -211,6 +227,7 @@ class PersonManager(models.Manager):
 
     # Not Returning QuerrySets
     def paid_deposit_percent(self):
+        # only used for statistics
         if self.count() > 0:
             percent = self.paid_deposit().count() / self.count() * 100
             return int(percent)
@@ -218,6 +235,7 @@ class PersonManager(models.Manager):
             return 0
 
     def active_issues_percent(self):
+        # only used for statistics
         if self.count() > 0:
             percent = self.active_issues().count() / self.count() * 100
             return int(percent)

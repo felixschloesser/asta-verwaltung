@@ -167,9 +167,9 @@ class PersonManager(models.Manager):
         qs = super().get_queryset()
 
         # Mark People as 'inactive' after one Year, dont show them anymore,to be deleted regularly.
-        updated_less_then_one_year_ago = models.Q(updated_at__gte=timezone.now()-timezone.timedelta(days=1))
-        older_but_still_active_deposit = models.Q(updated_at__lte=timezone.now()-timezone.timedelta(days=1), deposits__state__exact='in')
-        older_but_still_active_issue = models.Q(updated_at__lte=timezone.now()-timezone.timedelta(days=1), issues__active__exact=True)
+        updated_less_then_one_year_ago = models.Q(updated_at__gte=timezone.now()-timezone.timedelta(days=356))
+        older_but_still_active_deposit = models.Q(updated_at__lte=timezone.now()-timezone.timedelta(days=356), deposits__state__exact='in')
+        older_but_still_active_issue = models.Q(updated_at__lte=timezone.now()-timezone.timedelta(days=356), issues__active__exact=True)
 
         only_active_people = qs.filter(updated_less_then_one_year_ago | older_but_still_active_deposit | older_but_still_active_issue).distinct()
 

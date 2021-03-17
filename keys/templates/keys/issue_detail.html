@@ -27,7 +27,7 @@
 
     <div class="content">
         {% if issue.key.stolen_or_lost %}
-            <p><strong>Status:</strong> <span class="tag is-danger"><b>verloren oder gestohlen</b></span></p>
+            <p><strong>Status:</strong> <span class="tag is-warning"><b>verloren oder gestohlen</b></span></p>
         {% endif %}
 
         <p><strong>An:</strong> <a href={% url 'keys:person-detail' pk=issue.person.id %}>{{ issue.person }}, {{ issue.person.group }}</a></p>
@@ -51,7 +51,7 @@
     <nav class="level is-max-desktop noprint">
         <div class="level-left">
             <div class="level-item">
-                <a class="button is-link is-outlined" href={{ request.META.HTTP_REFERER }}>Zurück</a>
+                <a class="button" href={{ request.META.HTTP_REFERER }}>Zurück</a>
             </div>
         </div>
         <div class="level-right">

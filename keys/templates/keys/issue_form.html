@@ -80,12 +80,20 @@
             {% endfor %}
         </div>
 
-        <div class="buttons is-right">
-            <p class="control">
-                <a class="button is-light" href={% url 'keys:person-detail' person.id %}>Abbrechen</a>
-                <input class="button is-primary" type="submit" name="another" value="Weitere Schlüssel ausleihen">
-                <input class="button is-primary" type="submit" value="Anlegen">
-            </p>
+        <div class="level">
+            <div class="level-left">
+                <div class="level-item">
+                    <a class="button" href={% url 'keys:person-detail' person.id %}>Abbrechen</a>
+                </div>
+            </div>
+            <div class="level-right">
+                <div class="level-item">
+                    <input class="button is-primary is-outlined" type="submit" name="another" value="Weitere Schlüssel ausleihen">
+                </div>
+                <div class="level-item">
+                    <input class="button is-primary" type="submit" value="Anlegen">
+                </div>
+            </div>
         </div>
     </form>
 

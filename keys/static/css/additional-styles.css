@@ -124,6 +124,10 @@ table > tbody > tr {
 	.safe-nav {
 		padding: 0px !important;
 	}
+
+	.level-item {
+		margin-bottom: 0.75rem;
+	}
 }
 
 .safe-body {

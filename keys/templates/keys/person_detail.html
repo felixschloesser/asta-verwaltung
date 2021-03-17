@@ -22,8 +22,27 @@
     {% endif %}
 
 
-    <h1 class="title is-2">{{ person.get_full_name }}</h1>
-
+    <div class="level">
+        <div class="level-right">
+            <div class="level-item">
+                <h1 class="title is-2">{{ person.get_full_name }}</h1>
+            </div>
+        </div>
+        <div class="level-right">
+            <div class="level-item">
+                <p class="control">
+                    <button class="button is-info" onclick="window.print()">
+                        <span class="icon">
+                            <i class="fas fa-print"></i>
+                        </span>
+                        <span>
+                            <p>Übersicht drucken</p>
+                        </span>
+                    </button>
+                </p>
+            </div>
+        </div>
+    </div>
     <div class="content">
         <p class='text'><strong>Gruppe: </strong><a href="{% url 'keys:person-search-results' %}?group={{ person.group }}">{{ person.group }}</a></p>
         <p class='text'><strong>Uni Mail: </strong><a href="mailto:{{ person.university_email }}">{{ person.university_email }}</a></p>
@@ -44,7 +63,7 @@
             {% elif deposit.state == 'retained' %}
                 <a href={% url 'keys:deposit-detail' pk_p=person.id pk_d=deposit.id %}><span class="tag is-warning"><b>Einbehalten</b></span></a>
             {% elif deposit.state == 'out' %}
-                <a href={% url 'keys:deposit-detail' pk_p=person.id pk_d=deposit.id %}><span class="tag is-info"><b>Zurückerhalten</b></span></a>
+                <a href={% url 'keys:deposit-detail' pk_p=person.id pk_d=deposit.id %}><span class="tag is-light"><b>Zurückerhalten</b></span></a>
             {% else %}
                 <a href={% url 'keys:deposit-detail' pk_p=person.id pk_d=deposit.id %}><span class="tag is-danger"><b>Fehler!</b></span></a>
             {% endif %}
@@ -97,7 +116,7 @@
                             {% if issue.key.stolen_or_lost %}
                                 <span class="tag is-warning">
                                     <b>Verloren</b>
-                                </span>
+                                </span>&nbsp;
                             {% endif %}
                             <strong>{{ issue.key }}</strong></a>: [
                                 {% for room in issue.key.get_rooms %}
@@ -121,11 +140,11 @@
     </div>
         <nav class="level">
             <div class="level-lelft">
-                <div class="level-item py-3">
+                <div class="level-item py-4">
                     <div class="field is-grouped is-grouped-left
                     ">
                         <p class="control">
-                            <a class="button is-link is-outlined" href={% url 'keys:person-list' %}>Zurück zur Liste</a>
+                            <a class="button" href={% url 'keys:person-list' %}>Zurück zur Liste</a>
                         </p>
                     </div>
                 </div>
@@ -133,12 +152,7 @@
             <div class="level-right">
                 <div class="level-item">
                     <p class="control">
-                        <button class="button is-info" onclick="window.print()">Übersicht drucken</button>
-                    </p>
-                </div>
-                <div class="level-item">
-                    <p class="control">
-                        <a class="button is-light has-tooltip-bottom" href={% url 'keys:person-update' pk=person.id  %}>Kontakt bearbeiten</a>
+                        <a class="button is-light" href={% url 'keys:person-update' pk=person.id  %}>Kontakt bearbeiten</a>
                     </p>
                 </div>
                 <div class="level-item">
@@ -176,7 +190,7 @@
                             </div>
                             <div class="dropdown-menu" id="dropdown-menu" role="menu">
                                 <div class="dropdown-content has-background-warning">
-                                    <a href={% url 'keys:deposit-return' pk_p=person.id pk_d=person.get_active_deposit.id %} class="dropdown-item has-background-warning has-tooltip-right has-tooltip-arrow" data-tooltip="Noch offene ausleihen">
+                                    <a href={% url 'keys:deposit-return' pk_p=person.id pk_d=person.get_active_deposit.id %} class="dropdown-item has-background-warning has-tooltip-top has-tooltip-arrow" data-tooltip="Noch offene ausleihen">
                                         Zurückgeben
                                     </a>
                                     <hr class="dropdown-divider">

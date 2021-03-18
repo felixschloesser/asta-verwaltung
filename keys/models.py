@@ -255,10 +255,12 @@ class Key(models.Model):
         If the key is currently issued, return the issue instance, 
         otherwise return Null.
         """
-        if self.issues.active():
+        issue_set = self.issues.active()
+        if issue_set:
             issue = issue_set.get()
             return issue
         else:
+            logging.error("Key not currently Issued")
             return None
 
     def is_currently_issued(self):
@@ -433,11 +435,15 @@ class Person(models.Model): # Add a chron job ro delete after a 2 years of not r
         if hasattr(self, 'deposits'):
             deposits = self.deposits.active()
             # check if empty
-            if len(deposits) == 1:
+            if len(deposits) == 0:
+                return None
+
+            elif len(deposits) == 1:
                 deposit = deposits.get()
                 return deposit
+            
             else:
-                logging.error("Person has more than one active deposit: {}".format(self.deposits.active()))
+                logging.error("Person has {} active deposit: {}".format(len(deposits), deposits))
                 raise ValueError("Person has more than one active deposit")
         else:
             return None

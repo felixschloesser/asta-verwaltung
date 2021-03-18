@@ -114,7 +114,7 @@ class KeyLost(SuccessMessageMixin, LoginRequiredMixin, generic.UpdateView):
         self.object.stolen_or_lost = True
         self.object.save()
 
-        logging.info('Lost key: {}'.format(self.object))
+        logging.info('Lost: {}'.format(self.object))
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -148,7 +148,7 @@ class KeyFound(SuccessMessageMixin, LoginRequiredMixin, generic.UpdateView):
         self.object = form.save(commit=False)
         self.object.stolen_or_lost = False
         self.object.save()
-        logging.info('Found key: {}'.format(self.object))
+        logging.info('Found: {}'.format(self.object))
         return super().form_valid(form)
 
 
@@ -330,7 +330,7 @@ class DepositReturn(DepositMixin, SuccessMessageMixin, LoginRequiredMixin, gener
         self.object.save()
         logging.info("Returned Deposit: {}".format(self.object))
         logging.debug("Setting the state to: 'out'")
-        logging.debug("Popluating the out_datetime with the current time: {}".format(datetime.now()))
+        logging.debug("Popluating the out_datetime with the current time: {}".format(timezone.now()))
         return super().form_valid(form)
 
 

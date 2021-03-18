@@ -215,13 +215,13 @@ STATICFILES_STORAGE = os.getenv('DJANGO_STATICFILES_STORAGE')
 # Logging Configuration
 
 # Clear prev config
-#LOGGING_CONFIG = None
-#LOGLEVEL = os.getenv('DJANGO_LOGLEVEL', 'debug').upper()
+# LOGGING_CONFIG = None
+# LOGLEVEL = os.getenv('DJANGO_LOGLEVEL', 'debug').upper()
 
 # Logging
 LOGGING = {
     'version': 1,
-    'disable_existing_loggers': False,
+    'disable_existing_loggers': True,
 
     'handlers': {
         'console': {
@@ -230,7 +230,7 @@ LOGGING = {
     },
     'root': {
         'handlers': ['console'],
-        'level': 'DEBUG',
+        'level': 'INFO',
     },
     'mozilla_django_oidc': {
             'handlers': ['console'],

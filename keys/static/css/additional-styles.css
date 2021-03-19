@@ -64,8 +64,10 @@ table > tbody > tr {
 }
 
 
-
-
+/* Made dropdown buttons accessible */
+.dropdown.is-hoverable:focus-within .dropdown-menu{
+    display: block;
+}
 
 
 @media screen and (max-width: 1215px) {

@@ -190,11 +190,11 @@
                             </div>
                             <div class="dropdown-menu" id="dropdown-menu" role="menu">
                                 <div class="dropdown-content has-background-warning">
-                                    <a href={% url 'keys:deposit-return' pk_p=person.id pk_d=person.get_active_deposit.id %} class="dropdown-item has-background-warning has-tooltip-top has-tooltip-arrow" data-tooltip="Noch offene ausleihen">
+                                    <a tabindex="0" href={% url 'keys:deposit-return' pk_p=person.id pk_d=person.get_active_deposit.id %} class="dropdown-item has-background-warning has-tooltip-top has-tooltip-arrow" data-tooltip="Noch offene ausleihen">
                                         Zurückgeben
                                     </a>
                                     <hr class="dropdown-divider">
-                                    <a href={% url 'keys:deposit-retain' pk_p=person.id pk_d=person.get_active_deposit.id %} class="dropdown-item has-background-warning">
+                                    <a tabindex="0" href={% url 'keys:deposit-retain' pk_p=person.id pk_d=person.get_active_deposit.id %} class="dropdown-item has-background-warning">
                                         Einbehalten
                                     </a>
                                 </div>

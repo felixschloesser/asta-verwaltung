@@ -83,7 +83,7 @@
 
                     <tbody>
                     {% for issue in issue_list %}
-                        <tr onclick="location.href='{{ issue.get_absolute_url }}'">
+                        <tr onclick="location.href='{{ issue.get_absolute_url }}'" tabindex="0">
                        
                             <td data-label="Person">
                                 {{ issue.person }}

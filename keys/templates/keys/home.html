@@ -37,7 +37,7 @@
 				                    </thead>
 				                <tbody>
 				                    {% for issue in issues %}
-				                        <tr onclick="location.href='{{ issue.get_absolute_url }}'">
+				                        <tr onclick="location.href='{{ issue.get_absolute_url }}'" tabindex="0">
 				                            <td>
 				                                {{ issue.key }}
 				                            </td>

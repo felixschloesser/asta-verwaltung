@@ -78,7 +78,7 @@
 
                     <tbody>
                     {% for key in key_list %}
-                        <tr onclick="location.href='{{ key.get_absolute_url }}'">
+                        <tr onclick="location.href='{{ key.get_absolute_url }}'" tabindex="0">
                             <td data-label="Nummer">
                                 {{ key.number }}
                             </td>

@@ -77,7 +77,7 @@
 
                                     <tbody>
                                     {% for person in group.people.all %}
-                                        <tr onclick="location.href='{{ person.get_absolute_url }}'">
+                                        <tr onclick="location.href='{{ person.get_absolute_url }}'" tabindex="0">
                                             <td data-label="Name">
                                                 {{ person }}
                                             </td>

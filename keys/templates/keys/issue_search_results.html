@@ -58,9 +58,9 @@
 
                     <tbody>
                     {% for issue in issue_list %}
-                        <tr onclick="location.href='{{ issue.get_absolute_url }}'">
+                        <tr data-href={{ issue.get_absolute_url }} tabindex="0">
                             <td data-label="Schlüssel">
-                                {{ issue.key }}
+                                <a class="subtitle is-6" href={{ issue.get_absolute_url }} tabindex="-1">{{ issue.key }}</a>
                             </td>
                             <td data-label="Person">
                                 {{ issue.person }}

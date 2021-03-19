@@ -74,22 +74,18 @@
             <div class="table-wrapper has-mobile-cards">
                 <table class="table is-fullwidth is-hoverable">
                     <thead>
-                         <th>Person</th>
                          <th>Schlüssel</th>
                          <th>Räume</th>
+                         <th>Person</th>
                          <th>Ausleihdatum</th>
 
                     </thead>
 
                     <tbody>
                     {% for issue in issue_list %}
-                        <tr onclick="location.href='{{ issue.get_absolute_url }}'" tabindex="0">
-                       
-                            <td data-label="Person">
-                                {{ issue.person }}
-                            </td>
+                        <tr data-href={{ issue.get_absolute_url }} tabindex="0">
                             <td data-label="Schlüssel">
-                                {{ issue.key }}
+                                <a class="subtitle is-6" href={{ issue.get_absolute_url }} tabindex="-1">{{ issue.key }}</a>
                             </td>
                             <td data-label="Räume">
                                 {% for room in issue.key.get_rooms %}
@@ -97,10 +93,13 @@
                                 {% empty%}keine / nur Verbindungstüren
                                 {% endfor %}
                             </td>
+                            <td data-label="Person">
+                                {{ issue.person }}
+                            </td>
                             <td data-label="Ausleihdatum">
                                 {{ issue.out_date }}
                             </td>
-                            
+
                         </tr>
                     {% endfor %}
                     </tbody>

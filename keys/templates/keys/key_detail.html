@@ -21,20 +21,14 @@
         {% endfor %}
     {% endif %}
 
-    <h1 class='title is-2'>
-        {% if key.locking_system.method == 'transponder' %}
-            Transponder
-        {% else %}
-            Schüssel
-        {% endif %}Nr. {{ key.number }}</h1>
+    <h1 class='title is-2'>{{ key }}</h1>
 
     <div class="content">
-        {% if key.stolen_or_lost %}
-            <p><strong>Status:</strong> <span class="tag is-warning"><b>verloren oder gestohlen</b></span></p>
-        {% endif %}
-
         {% if key.get_current_issue %}
             <p><strong>Verliehen:</strong> Am <a href="{% url 'keys:issue-detail' pk=key.get_current_issue.id %}">{{ key.get_current_issue.out_date }} an {{ key.get_current_issue.person }}</a></p>
+        {% endif %}
+        {% if key.stolen_or_lost %}
+            <p><strong>Status:</strong> <span class="tag is-warning"><b>verloren oder gestohlen</b></span></p>
         {% endif %}
         <p><strong>Schließverfahren:</strong> <span class="tag is-light"><strong>{{ key.locking_system.get_method }}</strong></span></p>
         <p><strong>Schließsystem:</strong> {{ key.locking_system }}</p>
@@ -53,6 +47,7 @@
         {% if key.comment %}
             <p><strong>Kommentar:</strong> {{ key.comment }}</p>
         {% endif %}
+
     </div>
 
     <nav class="level is-max-desktop">

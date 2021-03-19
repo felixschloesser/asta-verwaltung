@@ -16,10 +16,8 @@ from dotenv import load_dotenv
 
 import logging
 
-
 # Get secrets from .env file
 load_dotenv()
-
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -215,6 +213,7 @@ STATICFILES_STORAGE = os.getenv('DJANGO_STATICFILES_STORAGE')
 # Logging Configuration
 
 # Clear prev config
+
 # LOGGING_CONFIG = None
 # LOGLEVEL = os.getenv('DJANGO_LOGLEVEL', 'debug').upper()
 

@@ -72,9 +72,9 @@
 
                                     <tbody>
                                     {% for room in group.rooms.all %}
-                                        <tr onclick="location.href='{{ room.get_absolute_url }}'" tabindex="0">
+                                        <tr data-href={{ room.get_absolute_url }} tabindex="0">
                                             <td data-label="Raum">
-                                                {{ room }}
+                                                <a class="subtitle is-6" href={{ room.get_absolute_url }} tabindex="-1">{{ room }}</a>
                                             </td>
                                             <td data-label="Zweck">
                                                 {{ room.purpose }}

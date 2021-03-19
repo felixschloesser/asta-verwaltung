@@ -21,7 +21,7 @@
         <!-- Left side -->
         <div class="level-left">
             <div class="level-item">
-                <h1 class='title is-2'>Schlüssel und Transponder</h1>
+                <h1 class='title is-2'>Schlüssel</h1>
             </div>
         </div>
         <!-- Right side -->
@@ -78,16 +78,16 @@
 
                     <tbody>
                     {% for key in key_list %}
-                        <tr onclick="location.href='{{ key.get_absolute_url }}'" tabindex="0">
+                        <tr data-href={{ key.get_absolute_url }} tabindex="0">
                             <td data-label="Nummer">
-                                {{ key.number }}
+                                <a class="subtitle is-6" href={{ key.get_absolute_url }} tabindex="-1">{{ key.number }}</a>
                             </td>
                             <td data-label="Schließsystem">
                                 {{ key.locking_system }}
                             </td>
                             <td data-label="Räume">
                                 {% for room in key.get_rooms %}
-                                    {{ room }}{% if not forloop.last %}, {% endif %}
+                                    {{ room.get_identifier }}{% if not forloop.last %}, {% endif %}
                                 {% empty %}
                                     (keine / nur Verbindungstüren)
                                 {% endfor %}
@@ -99,8 +99,8 @@
                                     </p>
                                 {% elif key.get_current_issue %}
                                     <p class="icon has-text-centered has-text-info has-tooltip-arrow" aria-label="Verliehen" data-tooltip="Verliehen">
-                                        <i class="far fa-lg fa-times-circle"></i> 
-                                    </p>                                
+                                        <i class="far fa-lg fa-times-circle"></i>
+                                    </p>
                                 {% else %}
                                     <p class="icon has-text-centered has-text-success has-tooltip-arrow" aria-label="Verfügbar" data-tooltip="Verfügbar">
                                         <i class="far fa-lg fa-check-circle"></i>

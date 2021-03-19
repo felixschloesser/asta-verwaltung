@@ -64,9 +64,9 @@
 
                     <tbody>
                     {% for key in key_list %}
-                        <tr style="cursor:pointer;" onclick="location.href='{{ key.get_absolute_url }}'">
+                        <tr data-href={{ key.get_absolute_url }} tabindex="0">
                             <td data-label="Nummer">
-                                {{ key.number }}
+                                <a class="subtitle is-6" href={{ key.get_absolute_url }} tabindex="-1">{{ key.number }}</a>
                             </td>
                             <td data-label="Schließsystem">
                                 {{ key.locking_system }}
@@ -83,8 +83,8 @@
                                     </span>
                                 {% elif key.get_current_issue %}
                                     <span class="icon has-text-info has-tooltip-arrow" data-tooltip="Verliehen">
-                                        <i class="far fa-lg fa-times-circle"></i> 
-                                    </span>                                
+                                        <i class="far fa-lg fa-times-circle"></i>
+                                    </span>
                                 {% else %}
                                     <span class="icon has-text-success has-tooltip-arrow" data-tooltip="Verfügbar">
                                         <i class="far fa-lg fa-check-circle"></i>

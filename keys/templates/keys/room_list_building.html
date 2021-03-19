@@ -74,9 +74,9 @@
 
                                     <tbody>
                                     {% for room in building.get_rooms %}
-                                        <tr onclick="location.href='{{ room.get_absolute_url }}'" tabindex="0">
+                                        <tr data-href={{ room.get_absolute_url }} tabindex="0">
                                             <td data-label="Raum">
-                                                {{ room.get_short_name }}
+                                                <a class="subtitle is-6" href={{ room.get_absolute_url }} tabindex="-1">{{ room.get_short_name }}</a>
                                             </td>
                                             <td data-label="Zweck">
                                                 {{ room.purpose }}

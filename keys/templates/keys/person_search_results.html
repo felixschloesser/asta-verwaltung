@@ -61,9 +61,9 @@
 
                         <tbody>
                         {% for person in person_list %}
-                            <tr onclick="location.href='{{ person.get_absolute_url }}'" tabindex="0">
+                            <tr data-href={{ person.get_absolute_url }} tabindex="0">
                                 <td data-label="Name">
-                                    {{ person }}
+                                    <a class="subtitle is-6" href={{ person.get_absolute_url }} tabindex="-1">{{ person }}</a>
                                 </td>
                                 <td data-label="Uni-Mail">
                                     {{ person.university_email }}

@@ -77,9 +77,9 @@
 
                                     <tbody>
                                     {% for person in group.people.all %}
-                                        <tr onclick="location.href='{{ person.get_absolute_url }}'" tabindex="0">
+                                        <tr data-href={{ person.get_absolute_url }} tabindex="0">
                                             <td data-label="Name">
-                                                {{ person }}
+                                                <a class="subtitle is-6" href={{ person.get_absolute_url }} tabindex="-1">{{ person }}</a>
                                             </td>
                                             <td data-label="Kaution">
                                                 {% if person.paid_deposit %}
@@ -88,8 +88,8 @@
                                                     </p>
                                                 {% else %}
                                                     <p class="icon has-text-grey has-tooltip-arrow" aria-label="nicht bezahlt" data-tooltip="Nicht bezahlt">
-                                                        <i class="far fa-lg fa-times-circle"></i> 
-                                                    </p> 
+                                                        <i class="far fa-lg fa-times-circle"></i>
+                                                    </p>
                                                 {% endif %}
                                             </td>
                                         </tr>

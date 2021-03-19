@@ -37,11 +37,12 @@
 				                    </thead>
 				                <tbody>
 				                    {% for issue in issues %}
-				                        <tr onclick="location.href='{{ issue.get_absolute_url }}'" tabindex="0">
+				                        <tr data-href={{ issue.get_absolute_url }} tabindex="0">
 				                            <td>
-				                                {{ issue.key }}
+				                                <a class="subtitle is-6" href={{ issue.get_absolute_url }} tabindex="-1">{{ issue.key }}</a>
 				                            </td>
 				                            <td>
+
 				                                {{ issue.person }}
 				                            </td>
 				                        </tr>

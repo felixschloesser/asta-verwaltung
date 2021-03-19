@@ -17,12 +17,15 @@ document.addEventListener('DOMContentLoaded', () => {
         // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
         el.classList.toggle('is-active');
         $target.classList.toggle('is-active');
+
+
+        // Invert the color of the Admin Button
+        const $adminButton = document.getElementById('admin-button');
+        $adminButton.classList.toggle('is-dark');
       });
     });
 
-    // Invert the color of the Admin Button
-    const $adminButton = document.getElementById('admin-button');
-    $adminButton.classList.toggle('is-dark');
+
   }
 
 

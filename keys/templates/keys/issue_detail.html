@@ -56,7 +56,7 @@
         </div>
         <div class="level-right">
             <div class="level-item">
-                <button class="button is-info" onclick="window.print()">Bestätigung drucken</button>
+                <button class="button is-info" id="print">Bestätigung drucken</button>
             </div>
 
             {% if not issue.key.stolen_or_lost and issue.active %}

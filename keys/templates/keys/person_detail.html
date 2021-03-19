@@ -31,7 +31,7 @@
         <div class="level-right">
             <div class="level-item">
                 <p class="control">
-                    <button class="button is-info" onclick="window.print()">
+                    <button class="button is-info" id="print">
                         <span class="icon">
                             <i class="fas fa-print"></i>
                         </span>
@@ -49,7 +49,7 @@
         <p class='text'><strong>Private Mail: </strong><a href="mailto:{{ person.private_email }}">{{ person.private_email }}</a></p>
         <p class='text'><strong>Telefon: </strong>{{ person.phone_number }}</p>
         <p class='text'>
-            <strong> 
+            <strong>
                 {% if person.deposits.count <= 1 %}
                     Kaution:
                 {% else %}
@@ -219,7 +219,7 @@
                         {% if keys.availible %}
                         <a class="button is-primary" href={% url 'keys:issue-new' person.id %}>Neue Ausleihe</a>
                         {% else %}
-                        <a class="button is-primary has-tooltip-arrow" data-tooltip="Keine freien Schlüssel verfügbar." disabled>Neue Ausleihe</a>               
+                        <a class="button is-primary has-tooltip-arrow" data-tooltip="Keine freien Schlüssel verfügbar." disabled>Neue Ausleihe</a>
                         {% endif %}
                     </p>
                 </div>

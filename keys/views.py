@@ -135,7 +135,7 @@ class KeyFound(SuccessMessageMixin, LoginRequiredMixin, generic.UpdateView):
     widgets = {
             'comment': forms.Textarea(attrs={'cols': 80,
                                              'rows': 3,
-                                             'placeholder': "Optionaler Kommentar zur Entgegennahme...", 
+                                             'placeholder': "Optionaler Kommentar zur Entgegennahme...",
                                              'spellcheck': 'true',
                                              'lang': 'de-DE'}),
         }

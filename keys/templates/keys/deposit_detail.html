@@ -84,7 +84,8 @@
 {% block additional_css %}
     {% load static %}
     <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link rel="stylesheet" media="print" href="{% static 'css/print.css' %}">
+    <link href="{% static 'css/print.css' %}" rel="stylesheet" media="print">
+    <link href="{% static 'fontawesome_free/css/all.min.css' %}" rel="stylesheet" media="screen" type="text/css">
     <link href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 {% endblock %}
 

@@ -14,19 +14,19 @@
         <div class="block content">
             <h1 class="title is-2">Anmeldung erforderlich</h1>
                     
-            {% if next %}
-                {% if user.is_authenticated %}
-                    <p>
-                        Leider hat Ihr Konto keinen Zugang zu dieser Seite. Um fortzufahren, melden Sie sich mit einem Konto an, das Zugang hat.
-                    </p>
-                {% endif %}
-            {% endif %}
+            {% if user.is_authenticated %}
+                <p>
+                    Es scheint, als hätte Ihr Konto keinen Zugang zu dieser Seite.
+                    Wenn Sie glauben, dass es sich hierbei um einen Fehler handelt, wenden Sie sich bitte an das Rerferat für IT oder versuchen Sie es später erneut.
+                </p>
+            {% else %}
             <p>
                 Im nächsten Schritt werden sie auf die Gitlab-Instanz der TU-Hamburg weitergeleitet. Dort melden sie sich mit Ihrer Rechenzentrums-Kennung an.
                 Beim ersten Mal werden Sie aufgefordert werden diese Anwendung zu Authorisieren.
             </p>
+            {% endif %}
             <p>
-                Nach erfolgreicher Anmeldung werden Sie auf dieser Seite zurückgeleitet.
+                Nach erfolgreicher Anmeldung werden Sie auf die Startseite zurückgeleitet.
             </p>
             <div class="buttons is-right">
                 <a class="button is-outlined" href={% url 'keys:home' %}>Zurück</a>

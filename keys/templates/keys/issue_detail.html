@@ -1,6 +1,6 @@
 {% extends "keys/base.html" %}
 
-{% block title %}Ausleihe {{ issue.person }} {{ issue.key }}{% endblock %}
+{% block title %}Ausleihe {{ issue.key }} | Schlüsselsystem{% endblock %}
 
 {%block navbar_items %}
     <a class="navbar-item" href="{% url 'keys:person-list' %}">Personen</a>

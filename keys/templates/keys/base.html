@@ -19,7 +19,7 @@
 
     <body class="is-flex is-flex-direction-column">
         <!-- Navbar-->
-        <nav class="navbar is-dark" aria-label="Navigationsleiste">
+        <nav class="navbar is-dark" role="navigation" aria-label="Navigationsleiste">
             <div class="container is-max-widescreen safe-nav">
                 <div class="navbar-brand">
                     <a class="navbar-item logo" aria-label="Startseite" href="{% url 'keys:home' %}">
@@ -54,21 +54,19 @@
         </section>
 
         <!-- Footer -->
-        <footer class="footer safe-body" aria-label="Fußbereich">
-            <div class="content has-text-centered">
-                <span aria-label="Lizenzinformationen">
-                    <a href="https://asta-tuhh.de/euer_asta/it/">TinTin's </a><strong>Schlüsselverwaltungssystem</strong>. <a href="https://collaborating.tuhh.de/asta/verwaltung">Quelltext</a> unter der
-                    <a href="https://www.gnu.org/licenses/agpl-3.0.html">AGPL 3.0</a>.
-                </span>
-                {% if user.is_authenticated %}
-                    <br>
-                    <span aria-label="Anmeldestatus">
-                        <strong>Benutzer:</strong> {{ user.username }} -
-                        <a class="has-text-primary" href="{% url 'logout' %}?next=/">Abmelden</a>
-                    </span>
-                {% endif %}
-                </p>
+        <footer class="footer safe-body content has-text-centered" aria-label="Fußbereich">
+            {% spaceless %}
+            <div aria-label="Lizenzinformationen">
+                <a href="https://asta-tuhh.de/euer_asta/it/">TinTin's </a><strong>Schlüsselverwaltungssystem</strong>. <a href="https://collaborating.tuhh.de/asta/verwaltung">Quelltext</a> unter der
+                <a href="https://www.gnu.org/licenses/agpl-3.0.html" rel="license">AGPL 3.0</a>.
             </div>
+            {% if user.is_authenticated %}
+                <span aria-label="Anmeldestatus">
+                    <strong>Benutzer:</strong> {{ user.username }} -
+                    <a class="has-text-primary" href="{% url 'logout' %}?next=/">Abmelden</a>
+                </span>
+            {% endif %}
+            {% endspaceless %}
         </footer>
 
         <!-- Print-->

@@ -31,7 +31,7 @@
                     <p><strong>Eingezahlt am:</strong> {{ deposit.in_datetime|date:"l, d. F Y"}} um {{ deposit.in_datetime |date:"G:i"}} <span class="tag is-light"><b>{{ deposit.get_in_method }}</b></span></p>
                 </div>
                 {% if deposit.retained_datetime %} {% comment %}This should stay even if returned{% endcomment %}
-                <div class="divider is-vertical is-right" style="margin-left: 5px;margin-right: 5px;"></div>
+                <div class="divider is-vertical is-right"></div>
                 <hr>
                 <div class="column">
                     <p><strong>Einbehalten am:</strong> {{ deposit.retained_datetime|date:"l, d. F Y"}} um {{ deposit.retained_datetime |date:"G:i"}}</p>
@@ -83,7 +83,14 @@
 <!-- Print -->
 {% block additional_css %}
     {% load static %}
-    <link rel="stylesheet" media="print" href="{% static 'css/print.css' %}">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="{% static 'css/print.css' %}" rel="stylesheet" media="print">
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block additional_js %}
+    {% load static %}
+    <script src={% static 'js/print.js' %} type="text/javascript"></script>
 {% endblock %}
 
 {% block print %}

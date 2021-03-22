@@ -21,22 +21,22 @@
             </div>
             <div class="body">
                 <h1>Schlüsselkaution</h1>
-                
+
                 <p>Hiermit bestätige ich, {{ deposit.person }}, am {{ deposit.in_datetime }} eine Kaution von {{ deposit.amount }} {{ deposit.currency }} {{ deposit.get_in_method }} hinterlegt zu haben.</p>
-                
+
                 {% if deposit.retained_datetime %} {% comment %}This should stay even if returned{% endcomment %}
                     <p>Am {{ deposit.retained_datetime }} wurde die Kaution von {{ deposit.amount }} {{ deposit.currency }} einbehalten.</p>
                     <p>Kommentar: <span class="comment">{{ deposit.comment }}</span></p>
                 {% endif %}
-                
+
                 {% if deposit.state == 'out' %}
                     <p>Am {{ deposit.out_datetime }} wurde mir die Kaution in Höhe von {{ deposit.amount }} {{ deposit.currency }} von {{ user.first_name }} {{ user.last_name }} {{ deposit.get_in_method }} zurückgegeben.</p>
                 {% endif %}
 
                 {% if not deposit.retained_datetime and deposit.comment %}
-                    <p>Kommentar: <span class="comment">{{ deposit.comment }}</span></p>
+                    <h3>Kommentar: <span class="comment">{{ deposit.comment }}</span></p>
                 {% endif %}
-                
+
                 <br>
                 <br>
                 <svg width="162px" height="2px" viewBox="0 0 162 2" version="1.1" xmlns="http://www.w3.org/2000/svg" >
@@ -66,7 +66,7 @@
             <div class="reciept">
                 <div class="reciept_text">
                     <h2>Quittung</h2>
-                    
+
                     {% if deposit.state == 'in' %}
                         <p>{{ deposit.person }}, hat am {{ deposit.in_datetime }} eine Kaution von {{ deposit.amount }} {{ deposit.currency }} {{ deposit.get_in_method }} hinterlegt.</p>
                     {% endif %}
@@ -79,7 +79,7 @@
                     {% if deposit.state == 'out' %}
                         <p>Die am {{ deposit.in_datetime }} von {{ deposit.person }} hinterlegte Kaution über {{ deposit.amount }} {{ deposit.currency }} wurde am {{ deposit.out_datetime }} {{ deposit.get_out_method }} zurückgegeben.</p>
                     {% endif %}
-                    
+
                     <br>
                     <svg width="252px" height="2px" viewBox="0 0 252 2" version="1.1" xmlns="http://www.w3.org/2000/svg" >
                         <line x1="1" y1="1" x2="251" y2="1" id="Line" stroke="black"></line>

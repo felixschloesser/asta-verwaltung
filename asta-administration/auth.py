@@ -19,7 +19,7 @@ class CustomOpenidBackend(OIDCAuthenticationBackend):
         authorized_groups = [
             'asta/mitarbeitende',
             'asta/mitglieder/vorstand',
-            'asta/mitglieder/referentinnen/it',
+            'asta/mitglieder/referate/it',
         ]
 
         # Return True if any of the groups in the authorized groups list is found in the claimed groups
@@ -84,7 +84,7 @@ class CustomOpenidBackend(OIDCAuthenticationBackend):
                 groups.append(group.id)
                 logging.info("Adding 'Schlüsselverwaltung' to the users groups")
             except ObjectDoesNotExist:
-                logging.critical("Can't find the group 'Schlüsselverwaltung', create it in the admin first.")
+                logging.critical("Can't find the group 'Schlüsselverwaltung', create it in the django admin first.")
         else:
             logging.debug("None of the claimed of groups is allowed to administer the Schlüsselverwaltung")
 
@@ -95,7 +95,7 @@ class CustomOpenidBackend(OIDCAuthenticationBackend):
         claimed_groups = claims.get('groups', [])
 
         # Groups as set in GitLab
-        superuser_groups = ['asta/mitglieder/referentinnen/it']
+        superuser_groups = ['asta/mitglieder/referate/it']
 
         is_superuser = any(group in claimed_groups for group in superuser_groups)
 

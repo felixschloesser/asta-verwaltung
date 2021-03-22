@@ -299,7 +299,8 @@ class DepositRetain(DepositMixin, SuccessMessageMixin, LoginRequiredMixin, gener
 
     def form_valid(self, form):
         """
-        Before validating the form, populate the person field using the request primary key as a lookup for
+        Before validating the form, set the state to 'retained' and
+        insert the current time as the Retained Datetime.
         """
         self.object = form.save(commit=False)
         self.object.state = 'retained'
@@ -322,7 +323,8 @@ class DepositReturn(DepositMixin, SuccessMessageMixin, LoginRequiredMixin, gener
 
     def form_valid(self, form):
         """
-        Before validating the form, set active to False, the amount to 0 and note the out datetime
+        Before validating the form, set the state to 'out' and
+        insert the current time as the 'out'-Datetime.
         """
         self.object = form.save(commit=False)
         self.object.state = 'out'

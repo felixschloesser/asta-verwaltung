@@ -3,8 +3,9 @@ from django.core.exceptions import ValidationError
 from django import forms
 from django.utils import formats, timezone
 
-from .fields import GroupedModelChoiceField
 from .models import Issue, Deposit, Key, Person
+from .fields import GroupedModelChoiceField
+from .widgets import Datalist
 
 import logging
 
@@ -94,10 +95,10 @@ class KeyFoundForm(forms.ModelForm):
 
 
 class IssueForm(forms.ModelForm):
-    key = GroupedModelChoiceField(
+    key = forms.ModelChoiceField(
         queryset=Key.objects.not_currently_issued(stolen_or_lost=False), 
-        choices_groupby='locking_system',
-        label="Schlüssel"
+        label="Schlüssel",
+        widget = Datalist(attrs={'required':'required'})
     )
 
     class Meta:
@@ -113,6 +114,7 @@ class IssueForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
+        logging.debug(cleaned_data)
         key = cleaned_data.get("key")
         if key and key.get_current_issue():
                 raise ValidationError(("Schlüssel ist momentan \

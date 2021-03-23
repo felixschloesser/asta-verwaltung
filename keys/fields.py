@@ -4,7 +4,6 @@ from operator import attrgetter
 
 from django.forms.models import ModelChoiceIterator, ModelChoiceField
 
-
 class GroupedModelChoiceIterator(ModelChoiceIterator):
     def __init__(self, field, groupby):
         self.groupby = groupby
@@ -29,3 +28,5 @@ class GroupedModelChoiceField(ModelChoiceField):
             raise TypeError('choices_groupby must either be a str or a callable accepting a single argument')
         self.iterator = partial(GroupedModelChoiceIterator, groupby=choices_groupby)
         super().__init__(*args, **kwargs)
+    
+

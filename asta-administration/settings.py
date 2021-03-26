@@ -160,11 +160,15 @@ AUTH_PASSWORD_VALIDATORS = [
 #Add 'mozilla_django_oidc' authentication backend
 
 
+if DEBUG:
+    AUTHENTICATION_BACKENDS = [
+        'django.contrib.auth.backends.ModelBackend',
+    ]
+else:
+    AUTHENTICATION_BACKENDS = [
+        'asta-administration.auth.CustomOpenidBackend',
+    ]
 
-AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
-    'asta-administration.auth.CustomOpenidBackend',
-]
 
 OIDC_RP_CLIENT_ID = os.getenv('OIDC_RP_CLIENT_ID')
 OIDC_RP_CLIENT_SECRET = os.getenv('OIDC_RP_CLIENT_SECRET')
@@ -178,7 +182,7 @@ OIDC_OP_USER_ENDPOINT = "https://collaborating.tuhh.de/oauth/userinfo"
 OIDC_RP_SCOPES = "openid email read_user"
 
 LOGIN_REDIRECT_URL = "/"
-LOGIN_REDIRECT_URL_FAILURE = "/"
+LOGIN_REDIRECT_URL_FAILURE = "/accounts/login/"
 LOGOUT_REDIRECT_URL = "/"
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/

@@ -85,7 +85,7 @@ class CustomOpenidBackend(OIDCAuthenticationBackend):
                 groups.append(group.id)
                 logging.info("Adding 'Schlüsselverwaltung' to the users groups")
             except ObjectDoesNotExist:
-                logging.critical("Can't find the group 'Schlüsselverwaltung', create it in the admin first.")
+                logging.critical("Can't find the group 'Schlüsselverwaltung', create it in the django admin first.")
         else:
             logging.debug("None of the claimed of groups is allowed to administer the Schlüsselverwaltung")
 

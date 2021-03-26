@@ -1,0 +1,24 @@
+{% spaceless %}
+<input list="{{ widget.name }}s" name="{{ widget.name }}" {% include "widgets/attrs.html" %}>
+
+<datalist id="{{ widget.name }}s">
+    
+    {% for group_name, group_choices, group_index in widget.optgroups %}
+
+        {% if group_name %}
+            <optgroup label="{{ group_name }}">
+        {% endif %}
+
+        {% for group in group_choices %}
+            <option data-value="{{ group.value }}">{{ group.label }}</option>
+        {% endfor %}
+
+        {% if group_name %}
+            </optgroup>
+        {% endif %}
+
+    {% endfor %}
+
+</datalist>
+<input type="hidden" name="answer" id="{{ widget.attrs.id }}-hidden">
+{% endspaceless %}

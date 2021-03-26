@@ -13,7 +13,7 @@ urlpatterns = [
 
     path('rooms/', lambda r: redirect('keys:room-list-building'), name='room-list'),
     path('rooms/building', views.RoomListBuilding.as_view(), name='room-list-building'),
-    path('rooms/groups', views.RoomListGroup.as_view(), name='room-list-group'),
+    path('rooms/purpose', views.RoomListPurpose.as_view(), name='room-list-purpose'),
     path('rooms/search', views.RoomSearchResults.as_view(), name='room-search-results'),
     path('room/<slug:slug>', views.RoomDetail.as_view(), name='room-detail'),
 
@@ -41,7 +41,7 @@ urlpatterns = [
     path('person/<str:pk_p>/deposit/<str:pk_d>/retain', views.DepositRetain.as_view(), name='deposit-retain'),
     path('person/<str:pk_p>/deposit/<str:pk_d>/return', views.DepositReturn.as_view(), name='deposit-return'),
     path('person/<str:pk_p>/deposit/<str:pk_d>/delete', views.DepositDelete.as_view(), name='deposit-delete'),
-    
+
     path('person/<str:pk>/issue/new', views.IssueNew.as_view(), name='issue-new'),
 
 

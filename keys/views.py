@@ -357,9 +357,9 @@ class RoomListBuilding(LoginRequiredMixin, generic.ListView):
     template_name = "keys/room_list_building.html"
 
 
-class RoomListGroup(LoginRequiredMixin, generic.ListView):
-    model = Group
-    template_name = "keys/room_list_group.html"
+class RoomListPurpose(LoginRequiredMixin, generic.ListView):
+    model = Purpose
+    template_name = "keys/room_list_purpose.html"
 
 
 class RoomSearchResults(LoginRequiredMixin, generic.ListView):

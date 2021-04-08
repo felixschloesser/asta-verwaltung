@@ -11,11 +11,13 @@ from mozilla_django_oidc.views import OIDCAuthenticationCallbackView
 class OIDCAuthenticationCallbackWithMessagesView(OIDCAuthenticationCallbackView):
 
     def login_failure(self):
-        messages.success(self.request, 'Anmeldung erfolgreich.')
+        messages.add_message(self.request, 50, 'Angemeldung fehlgeschlagen.', extra_tags="danger")
+
         return HttpResponseRedirect(self.failure_url)
 
     def login_success(self):
-        messages.add_message(self.request, 50, 'Angemeldung fehlgeschlagen.', extra_tags="danger")
+        messages.success(self.request, 'Anmeldung erfolgreich.')
+
         auth.login(self.request, self.user)
 
         # Figure out when this id_token will expire. This is ignored unless you're

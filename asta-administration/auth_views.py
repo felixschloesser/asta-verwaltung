@@ -1,3 +1,5 @@
+import time
+
 from django.views.generic import View
 
 from django.contrib import messages, auth

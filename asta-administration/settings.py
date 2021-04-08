@@ -185,7 +185,7 @@ OIDC_RP_SCOPES = "openid email read_user"
 OIDC_CALLBACK_CLASS = 'asta-administration.auth_views.OIDCAuthenticationCallbackWithMessagesView'
 
 LOGIN_REDIRECT_URL = "/"
-LOGIN_REDIRECT_URL_FAILURE = "/accounts/login/"
+LOGIN_REDIRECT_URL_FAILURE = "/"
 LOGOUT_REDIRECT_URL = "/"
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/

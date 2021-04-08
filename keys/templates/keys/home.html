@@ -17,15 +17,17 @@
 
 
 {% block content %}
-	 {% if messages %}
-        {% for message in messages %}
-        <article class="message is-{{ message.extra_tags }}">
-            <div class="message-body">
-                {{ message }}
-            </div>
-        </article>
-        {% endfor %}
-    {% endif %}
+	<div class="container is-max-desktop">
+		{% if messages %}
+	        {% for message in messages %}
+		        <article class="message is-{{ message.tags }}">
+		            <div class="message-body">
+		                {{ message }}
+		            </div>
+		        </article>
+	        {% endfor %}
+	    {% endif %}
+	</div>
 
 	{% if user.is_authenticated %}
 		<div class="container is-max-desktop">
@@ -33,168 +35,167 @@
 			    <h1 class="title is-2">Dashboard</h1>
 			    <p class="text">Wilkommen, {{ user.first_name }}! Das hier ist unser neues Schlüsselsystem. Toll oder?</p>
 			</div>
-		</div>
-		<div class="container is-max-widescreen py-5">
-	   		<div class="grid-container mb-6">
-				<div class="issues box has-background-light">
-					<div class="content">
-				        <h2 class="title mb-4">Ausleihen</h2>
-				        {% if issues %}
-					        <table class="table is-hoverable has-background-light">
-						        <thead>
-				                    <th>Schlüssel</th>
-				                        <th>Person</th>
-				                    </thead>
-				                <tbody>
-				                    {% for issue in issues %}
-				                        <tr data-href={{ issue.get_absolute_url }} tabindex="0">
-				                            <td>
-				                                <a class="subtitle is-6" href={{ issue.get_absolute_url }} tabindex="-1">{{ issue.key }}</a>
-				                            </td>
-				                            <td>
-
-				                                {{ issue.person }}
-				                            </td>
-				                        </tr>
-				                    {% endfor %}
-				                </tbody>
-					        </table>
-					    {% else %}
-					        <p>Keine aktiven Ausleihen.</p>
-					    {% endif %}
-				    </div>
-				</div>
-				<div class="shortcuts-container">
-					<div class="box">
-					    <div class="asta">
-					    	<h2 class="title">Kurzbefehle</h2>
-					    	<div class="columns">
-					    		<div class="column is-one-third">
-					    			<h3 class="title is-4">AStA:</h3>
-					    		</div>
-						    	<div class="column">
-						       		<div class="content">
-									 	<a href="{% url 'keys:room-search-results' %}?group=AStA">
-									 		<span class="tag is-medium is-light">Räume</span>
-									 	</a>
-									 	<a href="{% url 'keys:person-search-results' %}?group=AStA">
-									 		<span class="tag is-medium is-dark">Personen</span>
-									 	</a>
-									</div>
-						    	</div>
-						    </div>
+			<div class="container is-max-widescreen py-5">
+		   		<div class="grid-container mb-6">
+					<div class="issues box has-background-light">
+						<div class="content">
+					        <h2 class="title mb-4">Ausleihen</h2>
+					        {% if issues %}
+						        <table class="table is-hoverable has-background-light">
+							        <thead>
+					                    <th>Schlüssel</th>
+					                        <th>Person</th>
+					                    </thead>
+					                <tbody>
+					                    {% for issue in issues %}
+					                        <tr data-href={{ issue.get_absolute_url }} tabindex="0">
+					                            <td>
+					                                <a class="subtitle is-6" href={{ issue.get_absolute_url }} tabindex="-1">{{ issue.key }}</a>
+					                            </td>
+					                            <td>
+					                                {{ issue.person }}
+					                            </td>
+					                        </tr>
+					                    {% endfor %}
+					                </tbody>
+						        </table>
+						    {% else %}
+						        <p>Keine aktiven Ausleihen.</p>
+						    {% endif %}
 					    </div>
-					    <div class="divider is-right"></div>
-					    <div class="fsr">
-					 		<div class="columns">
-					    		<div class="column is-one-third">
-					    			<h3 class="title is-4">FSRe:</h3>
-					    		</div>
-						    	<div class="column">
-						       		<div class="content block">
-									 	<a href="{% url 'keys:room-search-results' %}?group=FSR">
-									 		<span class="tag is-medium is-light">Räume</span>
-									 	</a>
-									 	<a href="{% url 'keys:person-search-results' %}?group=FSR">
-									 		<span class="tag is-medium is-dark">Personen</span>
-									 	</a>
-									</div>
-						    	</div>
+					</div>
+					<div class="shortcuts-container">
+						<div class="box">
+						    <div class="asta">
+						    	<h2 class="title">Kurzbefehle</h2>
+						    	<div class="columns">
+						    		<div class="column is-one-third">
+						    			<h3 class="title is-4">AStA:</h3>
+						    		</div>
+							    	<div class="column">
+							       		<div class="content">
+										 	<a href="{% url 'keys:room-search-results' %}?group=AStA">
+										 		<span class="tag is-medium is-light">Räume</span>
+										 	</a>
+										 	<a href="{% url 'keys:person-search-results' %}?group=AStA">
+										 		<span class="tag is-medium is-dark">Personen</span>
+										 	</a>
+										</div>
+							    	</div>
+							    </div>
 						    </div>
+						    <div class="divider is-right"></div>
+						    <div class="fsr">
+						 		<div class="columns">
+						    		<div class="column is-one-third">
+						    			<h3 class="title is-4">FSRe:</h3>
+						    		</div>
+							    	<div class="column">
+							       		<div class="content block">
+										 	<a href="{% url 'keys:room-search-results' %}?group=FSR">
+										 		<span class="tag is-medium is-light">Räume</span>
+										 	</a>
+										 	<a href="{% url 'keys:person-search-results' %}?group=FSR">
+										 		<span class="tag is-medium is-dark">Personen</span>
+										 	</a>
+										</div>
+							    	</div>
+							    </div>
+						    </div>
+						    <div class="divider is-right"></div>
+						    <div class="ag">
+						    	<div class="columns">
+						    		<div class="column is-one-third">
+						    			<h3 class="title is-4">AGs:</h3>
+						    		</div>
+							    	<div class="column">
+							       		<div class="content">
+										 	<a href="{% url 'keys:room-search-results' %}?group=AG">
+										 		<span class="tag is-medium is-light">Räume</span>
+										 	</a>
+										 	<a href="{% url 'keys:person-search-results' %}?group=AG">
+										 		<span class="tag is-medium is-dark">Personen</span>
+										 	</a>
+										</div>
+							    	</div>
+							    </div>
+							</div>
 					    </div>
-					    <div class="divider is-right"></div>
-					    <div class="ag">
-					    	<div class="columns">
-					    		<div class="column is-one-third">
-					    			<h3 class="title is-4">AGs:</h3>
-					    		</div>
-						    	<div class="column">
-						       		<div class="content">
-									 	<a href="{% url 'keys:room-search-results' %}?group=AG">
-									 		<span class="tag is-medium is-light">Räume</span>
-									 	</a>
-									 	<a href="{% url 'keys:person-search-results' %}?group=AG">
-									 		<span class="tag is-medium is-dark">Personen</span>
-									 	</a>
-									</div>
-						    	</div>
-						    </div>
+				  	</div>
+				 	<div class="person-search">
+				 		<div class="box has-background-primary">
+				 			<h2 class="title is-4 has-text-light">Personensuche</h2>
+			  				<form action={% url 'keys:person-search-results' %} method='get'>
+			  					<div class="field has-addons">
+			                    	<div class="control is-expanded">
+			                            <input class="input is-fullwidth" aria-label="Personensuche" name='q' type="text" placeholder="Vor-/Nachname/Gruppe" required>
+			                    	</div>
+			                    	<div class="control">
+				                        <button type='submit' class="button is-info">Suchen</button>
+			                		</div>
+								</div>
+							</form>
 						</div>
-				    </div>
-			  	</div>
-			 	<div class="person-search">
-			 		<div class="box has-background-primary">
-			 			<h2 class="title is-4 has-text-light">Personensuche</h2>
-		  				<form action={% url 'keys:person-search-results' %} method='get'>
-		  					<div class="field has-addons">
-		                    	<div class="control is-expanded">
-		                            <input class="input is-fullwidth" aria-label="Personensuche" name='q' type="text" placeholder="Vor-/Nachname/Gruppe" required>
-		                    	</div>
-		                    	<div class="control">
-			                        <button type='submit' class="button is-info">Suchen</button>
-		                		</div>
-							</div>
-						</form>
+				 	</div>
+					<div class="key-search">
+						<div class="box has-background-light">
+				 			<h2 class="title is-4">Schlüsselsuche</h2>
+							<form action={% url 'keys:key-search-results' %} method='get'>
+			  					<div class="field has-addons">
+			                    	<div class="control is-expanded">
+			                            <input class="input is-fullwidth" aria-label="Schlüsselsuche" name='q' type="text" placeholder="Schlüsselnr./Modell" required>
+			                    	</div>
+			                    	<div class="control">
+				                        <button type='submit' class="button is-info">Suchen</button>
+			                		</div>
+								</div>
+							</form>
+						</div>
 					</div>
-			 	</div>
-				<div class="key-search">
-					<div class="box has-background-light">
-			 			<h2 class="title is-4">Schlüsselsuche</h2>
-						<form action={% url 'keys:key-search-results' %} method='get'>
-		  					<div class="field has-addons">
-		                    	<div class="control is-expanded">
-		                            <input class="input is-fullwidth" aria-label="Schlüsselsuche" name='q' type="text" placeholder="Schlüsselnr./Modell" required>
-		                    	</div>
-		                    	<div class="control">
-			                        <button type='submit' class="button is-info">Suchen</button>
-		                		</div>
-							</div>
-						</form>
-					</div>
+				 	<div class="statistics box">
+				 		<h2 class="title">Statistiken</h2>
+			        	<div class="columns">
+			        		<div class="column key">
+				        		<div class="content">
+				          			<p class="title is-5 mb-2">Schlüssel</p>
+			          				<p>
+			          					Gesamtzahl: {{ keys.count }}<br>
+			          					Ausgeliehen: {{ keys.currently_issued.count }}&nbsp;({{ keys.currently_issued_percent }}%)<br>
+			          					Verloren: {{ keys.stolen_or_lost.count }}&nbsp;({{ keys.stolen_or_lost_percent }}%)<br>
+				          			</p>
+				          		</div>
+				          	</div>
+
+
+							<hr class="person">
+							<div class="person divider is-vertical is-right"></div>
+			        		<div class="column person">
+				        		<div class="content">
+				          			<p class="title is-5 mb-2">Personen</p>
+				          			<p>
+				          				Gesamtzahl: {{ people.count }}<br>
+				          				Kaution&nbsp;bezahlt: {{ people.paid_deposit.count }}&nbsp;({{ people.paid_deposit_percent }}%)<br>
+				          				Mit Ausleihen: {{ people.active_issues.count }}&nbsp;({{ people.active_issues_percent }}%)<br>
+				          			</p>
+				          		</div>
+				          	</div>
+
+							<hr class="room">
+							<div class="room divider is-vertical is-right"></div>
+
+			        		<div class="column room">
+				        		<div class="content">
+				        			<p class="title is-5 mb-2">Räume</p>
+				          			<p>
+				          				Gesamtzahl: {{ rooms.all.count }}<br>
+				          				AStA: {{ rooms.of_asta.count }}&nbsp;({{ rooms.of_asta_percent }}%)<br>
+				          				FSRe: {{ rooms.of_fsr.count }}&nbsp;({{ rooms.of_fsr_percent }}%)
+				          			</p>
+				          		</div>
+			        		</div>
+			        	</div>
+			 		</div>
 				</div>
-			 	<div class="statistics box">
-			 		<h2 class="title">Statistiken</h2>
-		        	<div class="columns">
-		        		<div class="column key">
-			        		<div class="content">
-			          			<p class="title is-5 mb-2">Schlüssel</p>
-		          				<p>
-		          					Gesamtzahl: {{ keys.count }}<br>
-		          					Ausgeliehen: {{ keys.currently_issued.count }}&nbsp;({{ keys.currently_issued_percent }}%)<br>
-		          					Verloren: {{ keys.stolen_or_lost.count }}&nbsp;({{ keys.stolen_or_lost_percent }}%)<br>
-			          			</p>
-			          		</div>
-			          	</div>
-
-
-						<hr class="person">
-						<div class="person divider is-vertical is-right"></div>
-		        		<div class="column person">
-			        		<div class="content">
-			          			<p class="title is-5 mb-2">Personen</p>
-			          			<p>
-			          				Gesamtzahl: {{ people.count }}<br>
-			          				Kaution&nbsp;bezahlt: {{ people.paid_deposit.count }}&nbsp;({{ people.paid_deposit_percent }}%)<br>
-			          				Mit Ausleihen: {{ people.active_issues.count }}&nbsp;({{ people.active_issues_percent }}%)<br>
-			          			</p>
-			          		</div>
-			          	</div>
-
-						<hr class="room">
-						<div class="room divider is-vertical is-right"></div>
-
-		        		<div class="column room">
-			        		<div class="content">
-			        			<p class="title is-5 mb-2">Räume</p>
-			          			<p>
-			          				Gesamtzahl: {{ rooms.all.count }}<br>
-			          				AStA: {{ rooms.of_asta.count }}&nbsp;({{ rooms.of_asta_percent }}%)<br>
-			          				FSRe: {{ rooms.of_fsr.count }}&nbsp;({{ rooms.of_fsr_percent }}%)
-			          			</p>
-			          		</div>
-		        		</div>
-		        	</div>
-		 		</div>
 			</div>
 		</div>
 	{% else %}

@@ -1,6 +1,8 @@
 from django.views.generic import View
 
-from django.contrib import messages
+from django.contrib import messages, auth
+
+from django.http import HttpResponseRedirect
 
 from mozilla_django_oidc.views import OIDCAuthenticationCallbackView
 

@@ -16,6 +16,7 @@ from dotenv import load_dotenv
 
 import logging
 
+
 # Get secrets from .env file
 load_dotenv()
 
@@ -180,6 +181,8 @@ OIDC_OP_AUTHORIZATION_ENDPOINT = "https://collaborating.tuhh.de/oauth/authorize"
 OIDC_OP_TOKEN_ENDPOINT = "https://collaborating.tuhh.de/oauth/token"
 OIDC_OP_USER_ENDPOINT = "https://collaborating.tuhh.de/oauth/userinfo"
 OIDC_RP_SCOPES = "openid email read_user"
+
+OIDC_CALLBACK_CLASS = 'asta-administration.auth_views.OIDCAuthenticationCallbackWithMessagesView'
 
 LOGIN_REDIRECT_URL = "/"
 LOGIN_REDIRECT_URL_FAILURE = "/accounts/login/"

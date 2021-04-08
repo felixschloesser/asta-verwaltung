@@ -17,6 +17,16 @@
 
 
 {% block content %}
+	 {% if messages %}
+        {% for message in messages %}
+        <article class="message is-{{ message.extra_tags }}">
+            <div class="message-body">
+                {{ message }}
+            </div>
+        </article>
+        {% endfor %}
+    {% endif %}
+
 	{% if user.is_authenticated %}
 		<div class="container is-max-desktop">
 			<div class="block">

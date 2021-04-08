@@ -10,6 +10,9 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 
+from django.contrib import messages
+
+
 from .models import *
 from .forms import *
 

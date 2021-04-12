@@ -32,17 +32,22 @@ class PersonForm(forms.ModelForm):
         cleaned_data = super().clean()
         university_email = cleaned_data.get("university_email")
         private_email = cleaned_data.get("private_email")
+        gdpr_consent = cleaned_data.get("gdpr_consent")
 
         logging.debug("Checking if mail adresses are not identical...")
         logging.debug("{}, {}".format(university_email, private_email))
 
         if university_email == private_email:
-            logging.warning("university_email and private_email can't be identical")
+            logging.warning("university_email and private_email can't be identical: {}".format(private_email))
 
             msg = "Private- und Unimail dürfen nicht indentisch sein."
             self.add_error('university_email', "")
             self.add_error('private_email', "Bitte wählen Sie eine andere Mailadresse." )
             raise ValidationError(msg, "mails-not-identical")
+
+        if not gdpr_consent:
+            logging.warning("need to consent to gdpr statement")
+            self.add_error('gdpr_consent', "Die Zustimmung ist auf Grund der Datenschutz-Grundverordnung notwendig." )
 
 
 

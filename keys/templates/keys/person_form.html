@@ -145,10 +145,17 @@
             <p>Die betreffende Person hat das Recht, ihre Einwilligung jederzeit ohne Angabe von Gründen für die Zukunft zu widerrufen. Hierfür genügt eine E-Mail an <a href="mailto:dsgvo@asta.tuhh.de">dsgvo@asta.tuhh.de</a>. Die aktuell der Person ausgeliehenen Schlüssel müssen in diesem Zuge zurückgegeben werden. Die Rechtmäßigkeit der aufgrund der Einwilligung bis zum Widerruf erfolgten Verarbeitung wird durch den Widerruf nicht berührt.</p>
 
             <div class="field mt-6">
-                {{ form.gdpr_consent |add_class:"is-checkradio"}}
+                {% if not form.gdpr_consent.errors %}
+                    {{ form.gdpr_consent |add_class:"is-checkradio"}}
+                {% else %}
+                    {{ form.gdpr_consent |add_class:"is-checkradio has-background-color is-danger"}}
+                {% endif %}
                 <label for="{{ form.gdpr_consent.id_for_label }}">
                     Die Person stimmt der Erhebung und Verarbeitung ihrer Daten zu und ist über ihre Rechte belehrt worden.
                 </label>
+                {% for error in form.gdpr_consent.errors %}
+                    <p class="help is-danger">{{ error }}</p>
+                {% endfor %}
             </div>
         </div>
 

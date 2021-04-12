@@ -3,7 +3,7 @@
         <div class="letter layout">
             <div class="logo">
                 <div class="asta_logo">
-                    {% include 'keys/asta_logo.html' %}
+                    {% include 'keys/includes/asta_logo.svg' %}
                 </div>
             </div>
             <div class="head">
@@ -20,16 +20,16 @@
                 </p>
             </div>
             <div class="body">
-            
+
                 <h1>Schüsselübersicht</h1>
 
 
                 {% if person.get_active_issues_today %}
                     <p>Hiermit bestätige ich, dass mir heute die folgenden Schlüssel ausgehändigt wurden:</p>
-                
+
                     <ul>
                         {% for issue in person.get_active_issues_today %}
-                            <li>{{ issue.key }} 
+                            <li>{{ issue.key }}
                                 {% if issue.comment %}
                                     <p>Kommentar: <span class="comment">{{ deposit.comment }}</span></p>
                                 {% endif %}
@@ -40,10 +40,10 @@
 
                 {% if person.get_inactive_issues_today %}
                     <p>{% if person.get_active_issues_today %}Ausserdem{% else %}Hiermit{% endif %} bestätige ich heute die folgenden Schlüssel zurückgegeben zu haben:</p>
-                
+
                     <ul>
                         {% for issue in person.get_inactive_issues_today %}
-                            <li>{{ issue.key }} 
+                            <li>{{ issue.key }}
                                 {% if issue.comment %}
                                     <p>Kommentar: <span class="comment">{{ deposit.comment }}</span></p>
                                 {% endif %}
@@ -62,7 +62,7 @@
                 {% endif %}
 
                 {% if not person.get_active_issues  %}
-                    <p> 
+                    <p>
                         Ich habe habe zum heutigen Tag keine aktiven Schlüsselausleihen.
                     </p>
                 {% endif %}
@@ -78,7 +78,7 @@
                     <line x1="1" y1="1" x2="161" y2="1" id="Line" stroke="black"></line>
                 </svg>
                 <p class="signature">Unterschrift {{ person.get_full_name }}</p>
-            
+
             </div>
             <div class="aside">
                 <p class="adress">
@@ -104,41 +104,41 @@
                     <h2>Quittung</h2>
 
                     {% if person.get_active_issues_today and person.get_inactive_issues_today %}
-                        <p> 
-                            {{ person.get_full_name }} hat heute 
+                        <p>
+                            {{ person.get_full_name }} hat heute
                             {% for issue in person.get_active_issues_today %}
                                 {{ issue.key }}{% if not forloop.last %}{% ifequal forloop.revcounter 2 %} und {% else %}, {% endifequal %}{% else %}{% endif %}
-                            {% endfor %} ausgeliehen und 
+                            {% endfor %} ausgeliehen und
                             {% for issue in person.get_inactive_issues_today %}
                                 {{ issue.key }}{% if not forloop.last %}{% ifequal forloop.revcounter 2 %} und {% else %}, {% endifequal %}{% else %}{% endif %}
                             {% endfor %} zurückgegeben.
                         </p>
 
                     {% elif person.get_active_issues_today %}
-                        <p> 
-                            {{ person.get_full_name }} hat heute 
+                        <p>
+                            {{ person.get_full_name }} hat heute
                             {% for issue in person.get_active_issues_today %}
                                 {{ issue.key }}{% if not forloop.last %}{% ifequal forloop.revcounter 2 %} und {% else %}, {% endifequal %}{% else %}{% endif %}
                             {% endfor %} ausgeliehen.
                         </p>
-                    
+
                     {% elif person.get_inactive_issues_today %}
-                        <p> 
-                            {{ person.get_full_name }} hat heute 
+                        <p>
+                            {{ person.get_full_name }} hat heute
                             {% for issue in person.get_inactive_issues_today %}
                                 {{ issue.key }}{% if not forloop.last %}{% ifequal forloop.revcounter 2 %} und {% else %}, {% endifequal %}{% else %}{% endif %}
                             {% endfor %} zurückgegeben.
                         </p>
 
                     {% elif person.get_active_issues_earlier %}
-                        <p> 
-                            {{ person.get_full_name }} hat 
+                        <p>
+                            {{ person.get_full_name }} hat
                             {% for issue in person.get_active_issues_earlier %}
                                 {{ issue.key }}{% if not forloop.last %}{% ifequal forloop.revcounter 2 %} und {% else %}, {% endifequal %}{% else %}{% endif %}
                             {% endfor %} ausgeliehen.
                         </p>
                     {% else %}
-                        <p> 
+                        <p>
                             {{ person.get_full_name }} hat zum heutigen Tag keine aktiven Schlüsselausleihen.
                         </p>
                     {% endif %}
@@ -158,7 +158,7 @@
                         {% now "j. F Y" %}
                     </p>
                     <div class="reciept_asta_logo">
-                        {% include 'keys/asta_logo.html' %}
+                        {% include 'keys/includes/asta_logo.svg' %}
                     </div>
                 </div>
             </div>

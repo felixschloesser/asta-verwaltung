@@ -3,7 +3,7 @@
         <div class="letter layout">
             <div class="logo">
                 <div class="asta_logo">
-                    {% include 'keys/asta_logo.html' %}
+                    {% include 'keys/includes/asta_logo.svg' %}
                 </div>
             </div>
             <div class="head">
@@ -20,7 +20,7 @@
                 </p>
             </div>
             <div class="body">
-            
+
                 <h1>Schlüsselausleihe</h1>
                 {% if issue.active %}
                     <p>Hiermit bestätige ich, dass mir der {{ issue.key }} am {{ issue.out_date }} ausgehändigt wurde.</p>
@@ -33,7 +33,7 @@
                 {% if issue.comment %}
                     <p>Kommentar: <span class="comment">{{ deposit.comment }}</span></p>
                 {% endif %}
-                
+
                 <br>
                 <br>
 
@@ -41,7 +41,7 @@
                     <line x1="1" y1="1" x2="161" y2="1" id="Line" stroke="black"></line>
                 </svg>
                 <p class="signature">Unterschrift {{ issue.person }}</p>
-            
+
             </div>
             <div class="aside">
                 <p class="adress">
@@ -83,7 +83,7 @@
                         {% now "j. F Y" %}
                     </p>
                     <div class="reciept_asta_logo">
-                        {% include 'keys/asta_logo.html' %}
+                        {% include 'keys/includes/asta_logo.svg' %}
                     </div>
                 </div>
             </div>

@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="de">
     <head>
@@ -23,7 +24,7 @@
             <div class="container is-max-widescreen safe-nav">
                 <div class="navbar-brand">
                     <a class="navbar-item logo" aria-label="Startseite" href="{% url 'keys:home' %}">
-                        {% include 'keys/logo.svg' %}
+                        {% include 'keys/includes/asta_cloud_logo.svg' %}
                     </a>
                     <a role="button" class="navbar-burger" data-target="navMenu" aria-label="menu" aria-expanded="false" >
                         <!--Hamburger Button-->
@@ -34,7 +35,7 @@
                 </div>
                 <div class="navbar-menu" aria-label="Navigations-Links" id="navMenu">
                     <div class="navbar-start">
-                        {%block navbar_items %}
+                        {% block navbar_items %}
                         {% endblock %}
                     </div>
                     <div class="navbar-end">
@@ -55,18 +56,7 @@
 
         <!-- Footer -->
         <footer class="footer safe-body content has-text-centered" aria-label="Fußbereich">
-            {% spaceless %}
-            <div aria-label="Lizenzinformationen">
-                <a href="https://asta-tuhh.de/euer_asta/it/">TinTin's </a><strong>Schlüsselverwaltungssystem</strong>. <a href="https://collaborating.tuhh.de/asta/verwaltung">Quelltext</a> unter der
-                <a href="https://www.gnu.org/licenses/agpl-3.0.html" rel="license">AGPL 3.0</a>.
-            </div>
-            {% if user.is_authenticated %}
-                <span aria-label="Anmeldestatus">
-                    <strong>Benutzer:</strong> {{ user.username }} -
-                    <a class="has-text-primary" href="{% url 'logout' %}?next=/">Abmelden</a>
-                </span>
-            {% endif %}
-            {% endspaceless %}
+            {% include 'keys/includes/footer.html' %}
         </footer>
 
         <!-- Print-->

@@ -119,15 +119,15 @@ table > tbody > tr {
 
 
 @media screen and (max-width: 640px) {
-	
+
 	.grid-container {
 		grid-template-columns: 1fr;
 		grid-template-rows: auto;
 		border-radius: 60px 0;
 
     grid-template-areas:
-      'issues'
       'shortcuts'
+      'issues'
       'person-search'
       'key-search'
       'statistics';

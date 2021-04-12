@@ -1,0 +1,13 @@
+{% spaceless %}
+<div aria-label="Lizenzinformationen">
+    <a href="https://asta-tuhh.de/euer_asta/it/">TinTin's </a><strong>Schlüsselverwaltungssystem</strong>.
+    <a href="https://collaborating.tuhh.de/asta/verwaltung">Quelltext</a> unter der
+    <a href="https://www.gnu.org/licenses/agpl-3.0.html" rel="license">AGPL 3.0</a>.
+</div>
+{% if user.is_authenticated %}
+    <span aria-label="Anmeldestatus">
+        <strong>Benutzer:</strong> {{ user.username }} -
+        <a class="has-text-primary" href="{% url 'logout' %}?next=/">Abmelden</a>
+    </span>
+{% endif %}
+{% endspaceless %}

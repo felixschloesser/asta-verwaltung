@@ -2,6 +2,10 @@
 
 {% block title %}Neue Person | Schlüsselsystem{% endblock %}
 
+{% block additional_css %}
+    {% load static %}
+    <link href="{% static 'fontawesome_free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
 
 {% load widget_tweaks %}
 
@@ -9,46 +13,146 @@
 <div class="container is-max-desktop">
 
     <h1 class="title is-2">Neue Person anlegen</h1>
-
+    <p class="block">Die Daten einer bisher noch nicht im Schlüsselsystem vorhandenen Person neu Aufnehmen.</p>
     <form method='post' autocomplete="off">
         {% csrf_token %}
 
         {% if form.non_field_errors %}
-        <article class="message is-danger">
-            <div class="message-body">
-                {{ form.non_field_errors }}
-            </div>
-        </article>
+            <article class="message is-danger">
+                <div class="message-body">
+                    {{ form.non_field_errors }}
+                </div>
+            </article>
         {% endif %}
 
-        <div class="columns is-deskop">
-        {% for field in form %}
-            {% if forloop.counter|divisibleby:2 %}
-            {% else %}
-                <div class="column">
-            {% endif %}
+        <h2 class="title is-4">Kontaktinformationen</h2>
 
-            <div class="field">
-                <label class="label" for="{{ field.id_for_label }}">{{ field.label_tag }}</label>
+        <div class="columns">
+            <div class="column">
+                <div class="field">
+                    <label class="label" for="{{ form.first_name.id_for_label }}">{{ form.first_name.label_tag }}</label>
                     <div class="control">
-                        {% if not field.errors %}
-                            {{ field|add_class:"input" }}
+                        {% if not form.first_name.errors %}
+                            {{ form.first_name |add_class:"input" }}
                         {% else %}
-                            {{ field|add_class:"input is-danger"}}
+                            {{ form.first_name |add_class:"input is-danger" }}
                         {% endif %}
                     </div>
-                {% for error in field.errors %}
-                    <p class="help is-danger">{{ error }}</p>
-                {% endfor %}
-            </div>
-
-            {% if forloop.counter|divisibleby:2 %}
+                    {% for error in form.first_name.errors %}
+                        <p class="help is-danger">{{ error }}</p>
+                    {% endfor %}
                 </div>
-            {% else %}
-
-            {% endif %}
-        {% endfor %}
+            </div>
+            <div class="column">
+                <div class="field">
+                    <label class="label" for="{{ form.last_name.id_for_label }}">{{ form.last_name.label_tag }}</label>
+                    <div class="control">
+                        {% if not form.last_name.errors %}
+                            {{ form.last_name |add_class:"input" }}
+                        {% else %}
+                            {{ form.last_name |add_class:"input is-danger" }}
+                        {% endif %}
+                    </div>
+                    {% for error in form.last_name.errors %}
+                        <p class="help is-danger">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
         </div>
+        <div class="columns">
+            <div class="column">
+                <div class="field">
+                    <label class="label" for="{{ form.university_email.id_for_label }}">{{ form.university_email.label_tag }}</label>
+                    <div class="control">
+                        {% if not form.university_email.errors %}
+                            {{ form.university_email |add_class:"input" }}
+                        {% else %}
+                            {{ form.university_email |add_class:"input is-danger" }}
+                        {% endif %}
+                    </div>
+                    {% for error in form.university_email.errors %}
+                        <p class="help is-danger">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="column">
+                <div class="field">
+                    <label class="label" for="{{ form.private_email.id_for_label }}">{{ form.private_email.label_tag }}</label>
+                    <div class="control">
+                        {% if not form.private_email.errors %}
+                            {{ form.private_email |add_class:"input" }}
+                        {% else %}
+                            {{ form.private_email |add_class:"input is-danger" }}
+                        {% endif %}
+                    </div>
+                    {% for error in form.private_email.errors %}
+                        <p class="help is-danger">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="columns">
+            <div class="column is-half">
+                <div class="field">
+                    <label class="label" for="{{ form.phone_number.id_for_label }}">{{ form.phone_number.label_tag }}</label>
+                    <div class="control">
+                        {% if not form.phone_number.errors %}
+                            {{ form.phone_number |add_class:"input" }}
+                        {% else %}
+                            {{ form.phone_number |add_class:"input is-danger" }}
+                        {% endif %}
+                    </div>
+                    {% for error in form.phone_number.errors %}
+                        <p class="help is-danger">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="columns">
+            <div class="column">
+                <div class="field">
+                    <label class="label" for="{{ form.group.id_for_label }}">{{ form.group.label_tag }}</label>
+                    <div class="control has-icons-left">
+                        {% if not form.group.errors %}
+                            <div class="select">
+                                {{ form.group }}
+                            </div>
+                        {% else %}
+                            <div class="select is-danger">
+                                {{ form.group }}
+                            </div>
+                        {% endif %}
+                        <span class="icon is-left">
+                            <i class="fas fa-users"></i>
+                        </span>
+                    </div>
+                    {% for error in form.group.errors %}
+                        <p class="help is-danger">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="content is-regular">
+            <h3>Zustimmung zur Datenverarbeitung</h2>
+            <p>Für die Schlüsselverwaltung ist die Erhebung und Verarbeitung der oben angegebenen personenbezogener Daten zum Zweck der Kontaktaufnahme mit den ausleihenden Personen notwendig.<br>
+            Die Daten werden ausschließlich auf vom Rechenzentrum der TU-Hamburg zur Verfügung gestellten Servern gespeichert und können ausschließlich von berechtigten Personen eingesehen und bearbeitet werden.<br>
+            Zwölf Monate nachdem der letzte Schlüssel von der betreffenden Person zurückgegeben wurde, werden die im Zusammenhang mit dieser Person erhobenen Daten automatische gelöscht.</p>
+
+            <h4>Widerrufsrecht</h3>
+            <p>Die betreffende Person hat das Recht, ihre Einwilligung jederzeit ohne Angabe von Gründen für die Zukunft zu widerrufen. Hierfür genügt eine E-Mail an <a href="mailto:dsgvo@asta.tuhh.de">dsgvo@asta.tuhh.de</a>. Die aktuell der Person ausgeliehenen Schlüssel müssen in diesem Zuge zurückgegeben werden. Die Rechtmäßigkeit der aufgrund der Einwilligung bis zum Widerruf erfolgten Verarbeitung wird durch den Widerruf nicht berührt.</p>
+
+            <div class="field mt-6">
+                {{ form.gdpr_consent |add_class:"is-checkradio"}}
+                <label for="{{ form.gdpr_consent.id_for_label }}">
+                    Die Person stimmt der Erhebung und Verarbeitung ihrer Daten zu und ist über ihre Rechte belehrt worden.
+                </label>
+            </div>
+        </div>
+
+        <hr>
 
         <div class="buttons is-right">
             <p class="control">

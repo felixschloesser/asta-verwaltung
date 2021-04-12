@@ -17,8 +17,10 @@ class CustomOpenidBackend(OIDCAuthenticationBackend):
 
         # Groups as set in GitLab
         authorized_groups = [
-            'asta/mitarbeitende',
-            'asta/mitglieder/vorstand',
+            'asta/mitarbeitende/sekretariat',
+            'asta/mitarbeitende/buchhaltung',
+            'asta/mitglieder/vorstand/vorsitz'
+            'asta/mitglieder/vorstand/finanzen',
             'asta/mitglieder/referate/it',
         ]
 
@@ -75,8 +77,11 @@ class CustomOpenidBackend(OIDCAuthenticationBackend):
 
         # Group with permission to access the Key Management System
         # Groups who can access it as set in GitLab
-        schlüsselsystem_groups = ['asta/mitarbeitende',
-                                  'asta/mitglieder/referate/it']
+        schlüsselsystem_groups = [ 'asta/mitarbeitende/sekretariat',
+                                   'asta/mitarbeitende/buchhaltung',
+                                   'asta/mitglieder/vorstand/vorsitz'
+                                   'asta/mitglieder/vorstand/finanzen',
+                                   'asta/mitglieder/referate/it']
 
         if any(group in claimed_groups for group in schlüsselsystem_groups):
             # Check if the group "Schlüsselverwaltung" exists in Django
@@ -107,7 +112,8 @@ class CustomOpenidBackend(OIDCAuthenticationBackend):
         claimed_groups = claims.get('groups', [])
 
         # Groups as set in GitLab
-        staff_groups = ['asta/mitarbeitende',
+        staff_groups = ['asta/mitarbeitende/sekretariat',
+                        'asta/mitarbeitende/buchhaltung',
                         'asta/mitglieder/referate/it']
 
         is_staff = any(group in claimed_groups for group in staff_groups)

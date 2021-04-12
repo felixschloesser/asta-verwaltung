@@ -158,7 +158,7 @@ class Room(models.Model):
 
     def get_identifier(self):
         return "{}{}".format(self.building.identifier, self.number)
-        
+
     get_identifier.short_description = "Raumnummer"
 
 
@@ -251,8 +251,8 @@ class Key(models.Model):
         return reverse('keys:key-detail', args=[str(self.id)])
 
     def get_current_issue(self):
-        """ 
-        If the key is currently issued, return the issue instance, 
+        """
+        If the key is currently issued, return the issue instance,
         otherwise return Null.
         """
         issue_set = self.issues.active()
@@ -264,8 +264,8 @@ class Key(models.Model):
             return None
 
     def is_currently_issued(self):
-        """ 
-        If the key is currently issued, return True, 
+        """
+        If the key is currently issued, return True,
         otherwise return False. Used in admin.
         """
         if self.issues.active():
@@ -307,7 +307,7 @@ class LockingSystem(models.Model):
                                        default=('mechanical', 'mechanisch'))
     company = models.CharField('Firma', max_length=32, unique=True, blank=True, null=True)
     comment = models.CharField('Kommentar', max_length=500, blank=True, null=True)
-    
+
     created_at = models.DateTimeField('Erstellungszeitpunkt', auto_now_add=True)
     updated_at = models.DateTimeField('Aktualisierungszeitpunkt', auto_now=True)
 
@@ -328,7 +328,7 @@ class LockingSystem(models.Model):
 
     def get_method(self):
         """
-        Sadly Django does not seem to provide a good way 
+        Sadly Django does not seem to provide a good way
         to access the fields verbose name.
         """
         if self.method == 'mechanical':
@@ -348,7 +348,7 @@ class LockingSystem(models.Model):
 class StorageLocation(models.Model):
     name = models.CharField("Name", max_length=32)
     location = models.ForeignKey("room", related_name='storage_locations', verbose_name='Ort', on_delete=models.CASCADE)
-    
+
     created_at = models.DateTimeField('Erstellungszeitpunkt', auto_now_add=True)
     updated_at = models.DateTimeField('Aktualisierungszeitpunkt', auto_now=True)
 
@@ -379,6 +379,8 @@ class Person(models.Model): # Add a chron job ro delete after a 2 years of not r
     private_email = models.EmailField('Private Mail', unique=True)
     phone_number = PhoneNumberField('Telefon', unique=True)
     group = models.ForeignKey('Group', related_name='people', verbose_name='Gruppe', on_delete=models.PROTECT, null=True)
+
+    gdpr_consent = models.BooleanField('Zustimmung Datenverarbeitung')
 
     history = HistoricalRecords()
 
@@ -441,7 +443,7 @@ class Person(models.Model): # Add a chron job ro delete after a 2 years of not r
             elif len(deposits) == 1:
                 deposit = deposits.get()
                 return deposit
-            
+
             else:
                 logging.error("Person has {} active deposit: {}".format(len(deposits), deposits))
                 raise ValueError("Person has more than one active deposit")
@@ -488,18 +490,18 @@ class Deposit(models.Model):
 
     state = models.CharField('Status', max_length=8, choices=state_choices, default='in')
     person = models.ForeignKey('Person', related_name='deposits', verbose_name='Person', on_delete=models.CASCADE)
-    amount = models.DecimalField('Betrag', max_digits=5, decimal_places=2, default=50, 
+    amount = models.DecimalField('Betrag', max_digits=5, decimal_places=2, default=50,
                                            validators=[amount_is_not_negative_and_reasonable], blank=True)
     currency = models.CharField('Währung', max_length=3, choices=currency_choices, default='EUR')
     comment = models.CharField('Kommentar', max_length=500, null=True, blank=True, validators=[NoControlCharactersValidator, NoWhitespaceValidator])
 
-    in_datetime = models.DateTimeField('Einzahlungszeitpunkt', default=timezone.now, 
+    in_datetime = models.DateTimeField('Einzahlungszeitpunkt', default=timezone.now,
                                                                validators=[present_or_max_3_days_ago])
-    in_method = models.CharField('Einzahlungsmittel', max_length=64, choices=method_choices, default='cash')    
-    
-    retained_datetime = models.DateTimeField('Einbehaltungszeitpunkt', null=True, 
+    in_method = models.CharField('Einzahlungsmittel', max_length=64, choices=method_choices, default='cash')
+
+    retained_datetime = models.DateTimeField('Einbehaltungszeitpunkt', null=True,
                                                                        validators=[present_or_max_3_days_ago])
-    out_datetime = models.DateTimeField('Rückzahlungszeitpunkt', null=True, 
+    out_datetime = models.DateTimeField('Rückzahlungszeitpunkt', null=True,
                                                                  validators=[present_or_max_3_days_ago])
     out_method = models.CharField('Auszahlungsmittel', max_length=64, choices=method_choices, null=True)
 

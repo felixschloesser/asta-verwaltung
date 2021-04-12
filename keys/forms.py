@@ -17,7 +17,16 @@ class PersonForm(forms.ModelForm):
                   'university_email',
                   'private_email',
                   'phone_number',
-                  'group']
+                  'group',
+                  'gdpr_consent']
+
+        widgets = {
+            'first_name': forms.TextInput(attrs={'required':'true', 'placeholder': "Erika"}),
+            'last_name': forms.TextInput(attrs={'required':'true', 'placeholder': "Mustermann"}),
+            'university_email': forms.EmailInput(attrs={'required':'true', 'placeholder': "erika.mustermann@tuhh.de"}),
+            'private_email': forms.EmailInput(attrs={'required':'true', 'placeholder': "erika.mustermann@gmx.de"}),
+            'phone_number': forms.NumberInput(attrs={'required':'true', 'placeholder': "0170 1234567"}),
+        }
 
     def clean(self):
         cleaned_data = super().clean()
@@ -29,7 +38,7 @@ class PersonForm(forms.ModelForm):
 
         if university_email == private_email:
             logging.warning("university_email and private_email can't be identical")
-            
+
             msg = "Private- und Unimail dürfen nicht indentisch sein."
             self.add_error('university_email', "")
             self.add_error('private_email', "Bitte wählen Sie eine andere Mailadresse." )
@@ -96,7 +105,7 @@ class KeyFoundForm(forms.ModelForm):
 
 class IssueForm(forms.ModelForm):
     key = forms.ModelChoiceField(
-        queryset=Key.objects.not_currently_issued(stolen_or_lost=False), 
+        queryset=Key.objects.not_currently_issued(stolen_or_lost=False),
         label="Schlüssel",
         widget = Datalist(attrs={'required':'required'})
     )
@@ -121,7 +130,7 @@ class IssueForm(forms.ModelForm):
                                         an {} verliehen".format(key.get_current_issue().person)),
                                         code='key-not-returned')
                 logging.warning("Key {} already issued to".format(key, get_current_issue().person))
-      
+
 
 
 class IssueReturnForm(forms.ModelForm):

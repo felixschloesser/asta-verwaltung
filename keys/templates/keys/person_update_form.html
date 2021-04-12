@@ -3,53 +3,138 @@
 
 {% block title %} {{ person.get_full_name }} bearbeiten | Schlüsselsystem{% endblock %}
 
+{% block additional_css %}
+    {% load static %}
+    <link href="{% static 'fontawesome_free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
 
 {% load widget_tweaks %}
 
 {% block content %}
 <div class="container is-max-desktop">
 
-    <h1 class="title is-2">Kontaktdaten bearbeiten</h1>
-
-    <form method='post'>
+    <h1 class="title is-2">{{ person.get_full_name }} bearbeiten</h1>
+    <p class="block">Die im System hinterlegten Daten von {{ person.get_full_name }} bearbeiten.</p>
+    <form method='post' autocomplete="off">
         {% csrf_token %}
 
         {% if form.non_field_errors %}
-        <article class="message is-danger">
-            <div class="message-body">
-                {{ form.non_field_errors }}
-            </div>
-        </article>
+            <article class="message is-danger">
+                <div class="message-body">
+                    {{ form.non_field_errors }}
+                </div>
+            </article>
         {% endif %}
 
-        <div class="columns is-deskop">
-        {% for field in form %}
-            {% if forloop.counter|divisibleby:2 %}
-            {% else %}
-                <div class="column">
-            {% endif %}
+        <h2 class="title is-4">Kontaktinformationen</h2>
 
-            <div class="field">
-                <label class="label" for="{{ field.id_for_label }}">{{ field.label_tag }}</label>
+        <div class="columns">
+            <div class="column">
+                <div class="field">
+                    <label class="label" for="{{ form.first_name.id_for_label }}">{{ form.first_name.label_tag }}</label>
                     <div class="control">
-                        {% if not field.errors %}
-                            {{ field|add_class:"input" }}
+                        {% if not form.first_name.errors %}
+                            {{ form.first_name |add_class:"input" }}
                         {% else %}
-                            {{ field|add_class:"input is-danger"}}
+                            {{ form.first_name |add_class:"input is-danger" }}
                         {% endif %}
                     </div>
-                {% for error in field.errors %}
-                    <p class="help is-danger">{{ error }}</p>
-                {% endfor %}
-            </div>
-
-            {% if forloop.counter|divisibleby:2 %}
+                    {% for error in form.first_name.errors %}
+                        <p class="help is-danger">{{ error }}</p>
+                    {% endfor %}
                 </div>
-            {% else %}
-
-            {% endif %}
-        {% endfor %}
+            </div>
+            <div class="column">
+                <div class="field">
+                    <label class="label" for="{{ form.last_name.id_for_label }}">{{ form.last_name.label_tag }}</label>
+                    <div class="control">
+                        {% if not form.last_name.errors %}
+                            {{ form.last_name |add_class:"input" }}
+                        {% else %}
+                            {{ form.last_name |add_class:"input is-danger" }}
+                        {% endif %}
+                    </div>
+                    {% for error in form.last_name.errors %}
+                        <p class="help is-danger">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
         </div>
+        <div class="columns">
+            <div class="column">
+                <div class="field">
+                    <label class="label" for="{{ form.university_email.id_for_label }}">{{ form.university_email.label_tag }}</label>
+                    <div class="control">
+                        {% if not form.university_email.errors %}
+                            {{ form.university_email |add_class:"input" }}
+                        {% else %}
+                            {{ form.university_email |add_class:"input is-danger" }}
+                        {% endif %}
+                    </div>
+                    {% for error in form.university_email.errors %}
+                        <p class="help is-danger">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="column">
+                <div class="field">
+                    <label class="label" for="{{ form.private_email.id_for_label }}">{{ form.private_email.label_tag }}</label>
+                    <div class="control">
+                        {% if not form.private_email.errors %}
+                            {{ form.private_email |add_class:"input" }}
+                        {% else %}
+                            {{ form.private_email |add_class:"input is-danger" }}
+                        {% endif %}
+                    </div>
+                    {% for error in form.private_email.errors %}
+                        <p class="help is-danger">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="columns">
+            <div class="column is-half">
+                <div class="field">
+                    <label class="label" for="{{ form.phone_number.id_for_label }}">{{ form.phone_number.label_tag }}</label>
+                    <div class="control">
+                        {% if not form.phone_number.errors %}
+                            {{ form.phone_number |add_class:"input" }}
+                        {% else %}
+                            {{ form.phone_number |add_class:"input is-danger" }}
+                        {% endif %}
+                    </div>
+                    {% for error in form.phone_number.errors %}
+                        <p class="help is-danger">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="columns">
+            <div class="column">
+                <div class="field">
+                    <label class="label" for="{{ form.group.id_for_label }}">{{ form.group.label_tag }}</label>
+                    <div class="control has-icons-left">
+                        {% if not form.group.errors %}
+                            <div class="select">
+                                {{ form.group }}
+                            </div>
+                        {% else %}
+                            <div class="select is-danger">
+                                {{ form.group }}
+                            </div>
+                        {% endif %}
+                        <span class="icon is-left">
+                            <i class="fas fa-users"></i>
+                        </span>
+                    </div>
+                    {% for error in form.group.errors %}
+                        <p class="help is-danger">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <hr>
 
         <span class="buttons is-right">
             <a class="button" href={% url 'keys:person-detail' pk=person.id %}>Abbrechen</a >

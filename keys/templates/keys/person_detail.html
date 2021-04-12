@@ -55,7 +55,7 @@
             <strong>Telefon:</strong> {{ person.phone_number }}
         </div>
         <div class="block" aria-label="Kaution(en)">
-            <strong> 
+            <strong>
                 {% if person.deposits.count <= 1 %}
                     Kaution:
                 {% else %}
@@ -144,6 +144,7 @@
             </details>
         {% endif %}
     </div>
+
     <nav class="level" aria-label="Aktionen">
         <div class="level-lelft">
             <div class="level-item py-4">

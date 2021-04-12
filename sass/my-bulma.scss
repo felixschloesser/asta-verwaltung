@@ -36,11 +36,12 @@ $navbar-breakpoint: $tablet;
 // Bulma Divider
 @import "../node_modules/@creativebulma/bulma-divider/src/sass/index.sass";
 
-
+// Import Bulma Checkradio
+@import "../node_modules/bulma-checkradio/src/sass/index.sass";
 
 // Bulma Responsive Tables
 @import "../node_modules/bulma-responsive-tables/bulma-responsive-tables";
- 
+
 // Bulma Responsive Tables
 @import "../node_modules/bulma/bulma";
 

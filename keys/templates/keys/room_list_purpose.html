@@ -66,8 +66,8 @@
                                 <table class="table is-fullwidth is-hoverable">
                                     <thead>
                                          <th>Raum</th>
+                                         <th>Gebäude</th>
                                          <th>Gruppe</th>
-                                         <th>Türen</th>
                                     </thead>
 
                                     <tbody>
@@ -76,11 +76,11 @@
                                             <td data-label="Raum">
                                                 <a class="subtitle is-6" href={{ room.get_absolute_url }} tabindex="-1">{{ room }}</a>
                                             </td>
-                                            <td data-label="Zweck">
-                                                {{ room.purpose }}
+                                            <td data-label="Gebäude">
+                                                {{ room.building }}
                                             </td>
-                                            <td data-label="Türen">
-                                                {{ room.doors.count }}
+                                            <td data-label="Gruppe">
+                                                {{ room.group }}
                                             </td>
                                         </tr>
                                     {% endfor %}

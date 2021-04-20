@@ -49,10 +49,10 @@
             <strong>Uni Mail: </strong><a href="mailto:{{ person.university_email }}">{{ person.university_email }}</a>
         </div>
         <div class="block" aria-label="Private Mailadresse">
-            <strong>Private Mail: </strong><a href="mailto:{{ person.private_email }}">{{ person.private_email }}</a>
+            <strong>Private Mail: </strong><a href="mailto:{{ person.private_email }}">{{ person.private_email|default_if_none:"nicht angegeben"  }}</a>
         </div>
         <div class="block" aria-label="Telefonnummer">
-            <strong>Telefon:</strong> {{ person.phone_number }}
+            <strong>Telefon:</strong> {{ person.phone_number|default_if_none:"nicht angegeben" }}
         </div>
         <div class="block" aria-label="Kaution(en)">
             <strong>

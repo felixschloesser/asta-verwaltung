@@ -23,3 +23,4 @@ django-view-breadcrumbs==1.1.0
 mozilla-django-oidc==1.2.4
 django-import-export==2.5.0
 django-log-viewer==1.1.2
+sentry_sdk==1.0.0

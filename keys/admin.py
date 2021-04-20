@@ -18,7 +18,7 @@ import logging
 
 # Mixins
 class HashIdFieldAdminMixin:
- 
+
 
     def history_view(self, request, object_id, extra_context=None):
         decoded_id = self._decode_id(self.model, object_id)
@@ -58,7 +58,7 @@ class PuropseAdmin(admin.ModelAdmin):
         return False
 
     list_display = ['name']
- 
+
 
 
 @admin.register(Room)
@@ -139,7 +139,7 @@ class StorageLocationAdmin(admin.ModelAdmin):
     list_filter = [('location__name')]
 
 
-
+@admin.register(Person)
 class PersonAdmin(ImportExportMixin, HashIdFieldAdminMixin, admin.ModelAdmin):
     list_display = ('__str__', 'university_email', 'private_email', 'phone_number', 'paid_deposit')
     list_filter = ('group', 'deposits__amount', 'updated_at')
@@ -156,14 +156,13 @@ class GroupAdmin(admin.ModelAdmin):
     list_display = ['name']
 
 
-
 class IssueAdmin(ExportMixin, HashIdFieldAdminMixin, admin.ModelAdmin):
     autocomplete_fields = ['person', 'key']
 
     date_hierarchy = 'updated_at'
     list_display = ['person', 'key', 'comment', 'out_date', 'in_date']
     list_filter = ['active', 'out_date', 'updated_at']
-    
+
     search_fields = ['person__first_name', 'person__last_name', 'key__number']
 
     resource_class = IssueResource
@@ -172,6 +171,5 @@ class IssueAdmin(ExportMixin, HashIdFieldAdminMixin, admin.ModelAdmin):
 
 
 admin.site.register(Deposit, SimpleHistoryAdmin)
-admin.site.register(Person, SimpleHistoryAdmin)
 admin.site.register(Issue, SimpleHistoryAdmin)
 

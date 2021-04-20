@@ -26,6 +26,8 @@ admin.site.site_header = "Administration"
 admin.site.site_title = "Administration"
 admin.site.index_title = "Datenbank-Tabellen"
 
+def trigger_error(request):
+        division_by_zero = 1 / 0
 
 urlpatterns = [
     path('', lambda r: redirect('/keys/')),
@@ -37,6 +39,8 @@ urlpatterns = [
 
     path('api/', include('api.urls'), name='api'),
     path('keys/', include('keys.urls'), name='keys'),
+
+    path('sentry-debug/', trigger_error),
 ]
 
 if settings.DEBUG:
@@ -45,3 +49,5 @@ if settings.DEBUG:
     urlpatterns += [
         path('__debug__/', include(debug_toolbar.urls)),
     ]
+
+

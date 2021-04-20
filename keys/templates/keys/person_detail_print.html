@@ -16,7 +16,7 @@
                 <p class="adress">
                     {{ person.get_full_name }}, {{ person.group }}<br>
                     {{ person.university_email }}<br>
-                    {{ person.phone_number }}<br>
+                    {{ person.private_email|default_if_none:"Telefonnr. nicht angegeben"}}<br>
                 </p>
             </div>
             <div class="body">

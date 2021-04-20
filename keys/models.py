@@ -376,9 +376,11 @@ class Person(models.Model): # Add a chron job ro delete after a 2 years of not r
     last_name = models.CharField('Nachname', max_length=64, validators=[NoControlCharactersValidator,
                                                                         NoWhitespaceValidator])
     university_email = models.EmailField('Uni Mail', unique=True, validators=[validate_university_mail])
-    private_email = models.EmailField('Private Mail', unique=True)
-    phone_number = PhoneNumberField('Telefon', unique=True)
+    private_email = models.EmailField('Private Mail', unique=True, blank=True)
+    phone_number = PhoneNumberField('Telefon', unique=True, null=True)
     group = models.ForeignKey('Group', related_name='people', verbose_name='Gruppe', on_delete=models.PROTECT, null=True)
+
+    comment = models.CharField('Kommentar', max_length=500, blank=True, null=True)
 
     gdpr_consent = models.BooleanField('Zustimmung Datenverarbeitung')
 

@@ -141,7 +141,7 @@ class StorageLocationAdmin(admin.ModelAdmin):
 
 @admin.register(Person)
 class PersonAdmin(ImportExportMixin, HashIdFieldAdminMixin, admin.ModelAdmin):
-    list_display = ('__str__', 'university_email', 'private_email', 'phone_number', 'paid_deposit')
+    list_display = ('__str__', 'university_email', 'comment', 'paid_deposit')
     list_filter = ('group', 'deposits__amount', 'updated_at')
     search_fields = ['first_name', 'last_name']
 
@@ -156,6 +156,7 @@ class GroupAdmin(admin.ModelAdmin):
     list_display = ['name']
 
 
+@admin.register(Issue)
 class IssueAdmin(ExportMixin, HashIdFieldAdminMixin, admin.ModelAdmin):
     autocomplete_fields = ['person', 'key']
 
@@ -171,5 +172,3 @@ class IssueAdmin(ExportMixin, HashIdFieldAdminMixin, admin.ModelAdmin):
 
 
 admin.site.register(Deposit, SimpleHistoryAdmin)
-admin.site.register(Issue, SimpleHistoryAdmin)
-

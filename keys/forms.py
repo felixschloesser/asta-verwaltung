@@ -18,6 +18,7 @@ class PersonForm(forms.ModelForm):
                   'private_email',
                   'phone_number',
                   'group',
+                  'comment',
                   'gdpr_consent']
 
         widgets = {
@@ -26,6 +27,7 @@ class PersonForm(forms.ModelForm):
             'university_email': forms.EmailInput(attrs={'required':'true', 'placeholder': "erika.mustermann@tuhh.de"}),
             'private_email': forms.EmailInput(attrs={'required':'true', 'placeholder': "erika.mustermann@gmx.de"}),
             'phone_number': forms.NumberInput(attrs={'required':'true', 'placeholder': "0170 1234567"}),
+            'comment': forms.Textarea(attrs={'required':'true', 'cols': 80, 'rows': 3, 'placeholder': "Optionaler Kommentar...", 'spellcheck': 'true', 'lang': 'de-DE'}),
         }
 
     def clean(self):

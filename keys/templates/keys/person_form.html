@@ -132,6 +132,20 @@
                 </div>
             </div>
         </div>
+        <div class="field">
+            <label class="label" for="{{ form.comment.id_for_label }}">{{ form.comment.label_tag }}</label>
+            <div class="control">
+                {% if not form.comment.errors %}
+                    {{ form.comment |add_class:"input" }}
+                {% else %}
+                    {{ form.comment |add_class:"input is-danger" }}
+                {% endif %}
+            </div>
+            {% for error in form.comment.errors %}
+                <p class="help is-danger">{{ error }}</p>
+            {% endfor %}
+        </div>
+
 
         <hr>
 
